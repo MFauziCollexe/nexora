@@ -6,7 +6,12 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', [\App\Http\Controllers\ApiController::class, 'welcome'])->name('welcome');
+Route::get('/', function () {
+    return Inertia::render('Welcome', [
+        'appName' => config('app.name'),
+        'baseUrl' => env('APP_URL', 'http://localhost:8000'),
+    ]);
+})->name('welcome');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
