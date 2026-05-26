@@ -56,15 +56,15 @@ const colors = {
 
 <template>
     <div
-        class="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition hover:-translate-y-1"
+        class="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition hover:-translate-y-1 dark:border-slate-800 dark:bg-slate-900"
     >
         <div class="flex items-start justify-between gap-3">
             <div>
-                <p class="text-xs uppercase tracking-[0.16em] text-slate-500">
+                <p class="text-xs uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
                     {{ title }}
                 </p>
 
-                <h3 class="mt-1 text-2xl font-bold text-slate-900">
+                <h3 class="mt-1 text-2xl font-bold text-slate-900 dark:text-slate-100">
                     {{ value }}
                 </h3>
 

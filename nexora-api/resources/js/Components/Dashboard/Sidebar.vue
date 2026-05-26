@@ -9,7 +9,7 @@ const props = defineProps({
     },
 })
 
-const openMain = ref(false)
+const openMain = ref(true)
 const openApi = ref(false)
 const openDocs = ref(false)
 const openSys = ref(false)
@@ -18,7 +18,9 @@ const openSys = ref(false)
 <template>
     <aside
         class="fixed left-0 top-0 z-50 h-screen w-[260px] bg-[#081028] text-white flex flex-col transition-transform duration-300"
-        :class="props.open ? 'left-0' : '-left-[260px]'"
+        :style="{
+            left: props.open ? '0px' : '-260px'
+        }"
     >
         <div class="flex h-20 items-center border-b border-white/10 px-4">
             <div class="flex items-center gap-2">
@@ -33,7 +35,7 @@ const openSys = ref(false)
             </div>
         </div>
 
-        <div class="flex-1 overflow-y-auto px-3 py-3">
+        <div class="sidebar-scroll flex-1 overflow-y-auto px-3 py-3">
             <div class="space-y-3">
                 <div class="space-y-2">
                     <button type="button" @click="openMain = !openMain" class="flex w-full items-center justify-between px-3">
@@ -112,3 +114,31 @@ const openSys = ref(false)
         </div>
     </aside>
 </template>
+
+<style scoped>
+.sidebar-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.18) transparent;
+}
+
+/* Chrome */
+.sidebar-scroll::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.18);
+    border-radius: 999px;
+}
+
+/* HILANGKAN BUTTON */
+.sidebar-scroll::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+}
+</style>

@@ -16,6 +16,9 @@ import {
 } from 'lucide-vue-next';
 import { onMounted, ref } from 'vue';
 
+const REMEMBER_EMAIL_KEY = 'nexora-login-email';
+const REMEMBER_ENABLED_KEY = 'nexora-login-remember';
+
 defineProps({
     canResetPassword: {
         type: Boolean,
@@ -44,6 +47,13 @@ onMounted(() => {
 
     isDarkMode.value = savedTheme ? savedTheme === 'dark' : prefersDark;
     applyTheme(isDarkMode.value);
+
+    const rememberEnabled = localStorage.getItem(REMEMBER_ENABLED_KEY) === 'true';
+    form.remember = rememberEnabled;
+
+    if (rememberEnabled) {
+        form.email = localStorage.getItem(REMEMBER_EMAIL_KEY) || '';
+    }
 });
 
 const form = useForm({
@@ -53,6 +63,14 @@ const form = useForm({
 });
 
 const submit = () => {
+    if (form.remember) {
+        localStorage.setItem(REMEMBER_ENABLED_KEY, 'true');
+        localStorage.setItem(REMEMBER_EMAIL_KEY, form.email);
+    } else {
+        localStorage.removeItem(REMEMBER_ENABLED_KEY);
+        localStorage.removeItem(REMEMBER_EMAIL_KEY);
+    }
+
     form.post(route('login'), {
         onFinish: () => form.reset('password'),
     });
