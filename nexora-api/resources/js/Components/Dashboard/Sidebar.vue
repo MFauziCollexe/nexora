@@ -17,10 +17,8 @@ const openSys = ref(false)
 
 <template>
     <aside
-        class="fixed left-0 top-0 z-50 h-screen w-[260px] bg-[#081028] text-white flex flex-col transition-transform duration-300"
-        :style="{
-            left: props.open ? '0px' : '-260px'
-        }"
+        v-if="open"
+        class="fixed left-0 top-0 z-50 flex h-screen w-[260px] flex-col bg-[#081028] text-white"
     >
         <div class="flex h-20 items-center border-b border-white/10 px-4">
             <div class="flex items-center gap-2">
@@ -107,9 +105,16 @@ const openSys = ref(false)
         </div>
 
         <div class="px-4 py-3 border-t border-white/10">
-            <div class="rounded-3xl bg-white/5 p-3">
-                <p class="text-[13px] font-semibold text-white">Nexora API</p>
-                <p class="mt-1 text-[10px] text-slate-400">Online</p>
+            <p class="text-[13px] font-semibold text-white">
+                Nexora API Version 1.0
+            </p>
+
+            <div class="mt-1 flex items-center gap-1.5">
+                <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+
+                <p class="text-[10px] text-slate-400">
+                    Online
+                </p>
             </div>
         </div>
     </aside>

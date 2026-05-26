@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import Sidebar from '@/Components/Dashboard/Sidebar.vue'
 import Topbar from '@/Components/Dashboard/Topbar.vue'
 
-const sidebarOpen = ref(false)
+const sidebarOpen = ref(true)
 
 const toggleSidebar = () => {
     sidebarOpen.value = !sidebarOpen.value
