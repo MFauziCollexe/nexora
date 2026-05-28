@@ -1,30 +1,49 @@
-﻿<script setup>
+<script setup>
 import { Link } from '@inertiajs/vue3'
-import { ref } from 'vue'
+import { reactive } from 'vue'
+import { dashboardNavigation } from '@/modules/api-docs/registry/navigation'
 
-const props = defineProps({
+defineProps({
     open: {
         type: Boolean,
         default: true,
     },
 })
 
-const openMain = ref(true)
-const apiPages = [
-    'auth',
-    'users',
-    'products',
-    'orders',
-    'categories',
-    'dashboard-endpoint',
-    'notifications',
-    'settings',
-]
-const systemPages = ['api-keys', 'rate-limits', 'logs', 'webhooks']
 const currentPage = route().params?.page
-const openApi = ref(apiPages.includes(currentPage))
-const openDocs = ref(false)
-const openSys = ref(systemPages.includes(currentPage))
+const openedSections = reactive(
+    Object.fromEntries(
+        dashboardNavigation.map((section) => [
+            section.key,
+            Boolean(section.defaultOpen) || section.items.some((item) => item.page === currentPage),
+        ]),
+    ),
+)
+
+const toggleSection = (key) => {
+    openedSections[key] = !openedSections[key]
+}
+
+const itemHref = (item) => {
+    return item.page ? route(item.routeName, { page: item.page }) : route(item.routeName)
+}
+
+const isActiveItem = (item) => {
+    if (item.page) {
+        return route().current(item.routeName) && route().params?.page === item.page
+    }
+
+    return route().current(item.routeName)
+}
+
+const itemClass = (item) => {
+    return [
+        'block rounded-2xl px-3 py-2 text-[13px] transition',
+        isActiveItem(item)
+            ? 'bg-violet-600 font-semibold text-white'
+            : 'text-slate-300 hover:bg-white/5',
+    ]
+}
 </script>
 
 <template>
@@ -47,60 +66,49 @@ const openSys = ref(systemPages.includes(currentPage))
 
         <div class="sidebar-scroll flex-1 overflow-y-auto px-3 py-3">
             <div class="space-y-3">
-                <div class="space-y-2">
-                    <button type="button" @click="openMain = !openMain" class="flex w-full items-center justify-between px-3">
-                        <p class="text-[11px] uppercase tracking-[0.22em] text-slate-500">Main</p>
-                        <svg :class="openMain ? 'transform rotate-90' : ''" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400">
+                <div
+                    v-for="section in dashboardNavigation"
+                    :key="section.key"
+                    class="space-y-2"
+                >
+                    <button
+                        type="button"
+                        class="flex w-full items-center justify-between px-3"
+                        @click="toggleSection(section.key)"
+                    >
+                        <p class="text-[11px] uppercase tracking-[0.22em] text-slate-500">{{ section.label }}</p>
+                        <svg
+                            :class="openedSections[section.key] ? 'transform rotate-90' : ''"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="text-slate-400"
+                        >
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </button>
 
-                    <div v-show="openMain" class="space-y-1">
-                        <Link :href="route('dashboard')" class="block rounded-2xl px-3 py-2 text-[13px] font-semibold" :class="route().current('dashboard') ? 'bg-violet-600 text-white' : 'text-slate-300 hover:bg-white/5'">Dashboard</Link>
-                        <Link :href="route('dashboard.page', { page: 'overview' })" class="block rounded-2xl px-3 py-2 text-[13px] font-semibold" :class="route().current('dashboard.page') && route().params?.page === 'overview' ? 'bg-violet-600 text-white' : 'text-slate-300 hover:bg-white/5'">Overview</Link>
-                        <Link :href="route('dashboard.page', { page: 'analytics' })" class="block rounded-2xl px-3 py-2 text-[13px] font-semibold" :class="route().current('dashboard.page') && route().params?.page === 'analytics' ? 'bg-violet-600 text-white' : 'text-slate-300 hover:bg-white/5'">Analytics</Link>
-                    </div>
-                </div>
-
-                <div class="space-y-2">
-                    <button type="button" @click="openApi = !openApi" class="flex w-full items-center justify-between px-3">
-                        <p class="text-[11px] uppercase tracking-[0.22em] text-slate-500">API Endpoints</p>
-                        <svg :class="openApi ? 'transform rotate-90' : ''" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </button>
-
-                    <div v-show="openApi" class="space-y-1">
-                        <Link :href="route('dashboard.page', { page: 'auth' })" class="block rounded-2xl px-3 py-2 text-[13px] transition" :class="route().current('dashboard.page') && route().params?.page === 'auth' ? 'bg-violet-600 font-semibold text-white' : 'text-slate-300 hover:bg-white/5'">Auth</Link>
-                        <Link :href="route('dashboard.page', { page: 'users' })" class="block rounded-2xl px-3 py-2 text-[13px] text-slate-300 transition hover:bg-white/5">Users</Link>
-                        <Link :href="route('dashboard.page', { page: 'products' })" class="block rounded-2xl px-3 py-2 text-[13px] text-slate-300 transition hover:bg-white/5">Products</Link>
-                        <Link :href="route('dashboard.page', { page: 'orders' })" class="block rounded-2xl px-3 py-2 text-[13px] text-slate-300 transition hover:bg-white/5">Orders</Link>
-                        <Link :href="route('dashboard.page', { page: 'categories' })" class="block rounded-2xl px-3 py-2 text-[13px] text-slate-300 transition hover:bg-white/5">Categories</Link>
-                        <Link :href="route('dashboard.page', { page: 'dashboard-endpoint' })" class="block rounded-2xl px-3 py-2 text-[13px] text-slate-300 transition hover:bg-white/5">Dashboard</Link>
-                        <Link :href="route('dashboard.page', { page: 'notifications' })" class="block rounded-2xl px-3 py-2 text-[13px] text-slate-300 transition hover:bg-white/5">Notifications</Link>
-                        <Link :href="route('dashboard.page', { page: 'settings' })" class="block rounded-2xl px-3 py-2 text-[13px] text-slate-300 transition hover:bg-white/5">Settings</Link>
-                    </div>
-                </div>
-
-                <div class="space-y-2">
-                    <button type="button" @click="openSys = !openSys" class="flex w-full items-center justify-between px-3">
-                        <p class="text-[11px] uppercase tracking-[0.22em] text-slate-500">System</p>
-                        <svg :class="openSys ? 'transform rotate-90' : ''" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </button>
-
-                    <div v-show="openSys" class="space-y-1">
-                        <Link :href="route('dashboard.page', { page: 'api-keys' })" class="block rounded-2xl px-3 py-2 text-[13px] text-slate-300 transition hover:bg-white/5">API Keys</Link>
-                        <Link :href="route('dashboard.page', { page: 'rate-limits' })" class="block rounded-2xl px-3 py-2 text-[13px] text-slate-300 transition hover:bg-white/5">Rate Limits</Link>
-                        <Link :href="route('dashboard.page', { page: 'logs' })" class="block rounded-2xl px-3 py-2 text-[13px] text-slate-300 transition hover:bg-white/5">Logs</Link>
-                        <Link :href="route('dashboard.page', { page: 'webhooks' })" class="block rounded-2xl px-3 py-2 text-[13px] text-slate-300 transition hover:bg-white/5">Webhooks</Link>
+                    <div v-show="openedSections[section.key]" class="space-y-1">
+                        <Link
+                            v-for="item in section.items"
+                            :key="`${section.key}-${item.label}`"
+                            :href="itemHref(item)"
+                            :class="itemClass(item)"
+                        >
+                            {{ item.label }}
+                        </Link>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="px-4 py-3 border-t border-white/10">
+        <div class="border-t border-white/10 px-4 py-3">
             <p class="text-[13px] font-semibold text-white">
                 Nexora API Version 1.0
             </p>
@@ -122,7 +130,6 @@ const openSys = ref(systemPages.includes(currentPage))
     scrollbar-color: rgba(255,255,255,0.18) transparent;
 }
 
-/* Chrome */
 .sidebar-scroll::-webkit-scrollbar {
     width: 4px;
 }
@@ -136,7 +143,6 @@ const openSys = ref(systemPages.includes(currentPage))
     border-radius: 999px;
 }
 
-/* HILANGKAN BUTTON */
 .sidebar-scroll::-webkit-scrollbar-button {
     display: none;
     width: 0;
