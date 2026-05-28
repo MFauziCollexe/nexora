@@ -1,5 +1,5 @@
 export const productsNavigation = {
     label: "Products",
-    routeName: "dashboard.page",
+    routeName: "docs.page",
     page: "products",
 };

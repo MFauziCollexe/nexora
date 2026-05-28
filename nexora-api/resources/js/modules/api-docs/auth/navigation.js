@@ -1,5 +1,5 @@
 export const authNavigation = {
     label: "Auth",
-    routeName: "dashboard.page",
+    routeName: "docs.page",
     page: "auth",
 };

@@ -14,11 +14,11 @@ Route::middleware('auth')->group(function () {
         return Inertia::render('Dashboard/Index');
     })->name('dashboard');
 
-    Route::get('/dashboard/{page}', function ($page) {
+    Route::get('/docs/{page}', function ($page) {
         return Inertia::render('Dashboard/Placeholder', [
             'page' => $page,
         ]);
-    })->name('dashboard.page');
+    })->name('docs.page');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
