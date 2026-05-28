@@ -2,6 +2,7 @@
 import LoginInput from '@/Components/Auth/LoginInput.vue';
 import SocialLogin from '@/Components/Auth/SocialLogin.vue';
 import Checkbox from '@/Components/Checkbox.vue';
+import GlobalLoading from '@/Components/GlobalLoading.vue';
 import AuthLayout from '@/Layouts/AuthLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import {
@@ -87,6 +88,7 @@ const submit = () => {
 <template>
     <AuthLayout>
         <Head title="Login" />
+        <GlobalLoading :loading="form.processing" />
 
         <section class="grid w-full flex-1 overflow-hidden rounded-[18px] bg-white shadow-2xl shadow-violet-950/10 transition-colors duration-200 dark:bg-slate-900 dark:shadow-black/30 lg:max-h-[470px] lg:grid-cols-[0.86fr_1.14fr]">
             <aside class="relative hidden overflow-hidden bg-gradient-to-br from-violet-700 via-indigo-800 to-indigo-950 p-5 text-white lg:flex lg:flex-col">
