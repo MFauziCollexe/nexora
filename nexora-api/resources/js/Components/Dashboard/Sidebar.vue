@@ -10,9 +10,21 @@ const props = defineProps({
 })
 
 const openMain = ref(true)
-const openApi = ref(false)
+const apiPages = [
+    'auth',
+    'users',
+    'products',
+    'orders',
+    'categories',
+    'dashboard-endpoint',
+    'notifications',
+    'settings',
+]
+const systemPages = ['api-keys', 'rate-limits', 'logs', 'webhooks']
+const currentPage = route().params?.page
+const openApi = ref(apiPages.includes(currentPage))
 const openDocs = ref(false)
-const openSys = ref(false)
+const openSys = ref(systemPages.includes(currentPage))
 </script>
 
 <template>
@@ -47,8 +59,6 @@ const openSys = ref(false)
                         <Link :href="route('dashboard')" class="block rounded-2xl px-3 py-2 text-[13px] font-semibold" :class="route().current('dashboard') ? 'bg-violet-600 text-white' : 'text-slate-300 hover:bg-white/5'">Dashboard</Link>
                         <Link :href="route('dashboard.page', { page: 'overview' })" class="block rounded-2xl px-3 py-2 text-[13px] font-semibold" :class="route().current('dashboard.page') && route().params?.page === 'overview' ? 'bg-violet-600 text-white' : 'text-slate-300 hover:bg-white/5'">Overview</Link>
                         <Link :href="route('dashboard.page', { page: 'analytics' })" class="block rounded-2xl px-3 py-2 text-[13px] font-semibold" :class="route().current('dashboard.page') && route().params?.page === 'analytics' ? 'bg-violet-600 text-white' : 'text-slate-300 hover:bg-white/5'">Analytics</Link>
-                        <Link :href="route('dashboard.page', { page: 'endpoints' })" class="block rounded-2xl px-3 py-2 text-[13px] font-semibold" :class="route().current('dashboard.page') && route().params?.page === 'endpoints' ? 'bg-violet-600 text-white' : 'text-slate-300 hover:bg-white/5'">Endpoints</Link>
-                        <Link :href="route('dashboard.page', { page: 'authentication' })" class="block rounded-2xl px-3 py-2 text-[13px] font-semibold" :class="route().current('dashboard.page') && route().params?.page === 'authentication' ? 'bg-violet-600 text-white' : 'text-slate-300 hover:bg-white/5'">Authentication</Link>
                     </div>
                 </div>
 
@@ -61,7 +71,7 @@ const openSys = ref(false)
                     </button>
 
                     <div v-show="openApi" class="space-y-1">
-                        <Link :href="route('dashboard.page', { page: 'auth' })" class="block rounded-2xl px-3 py-2 text-[13px] text-slate-300 transition hover:bg-white/5">Auth</Link>
+                        <Link :href="route('dashboard.page', { page: 'auth' })" class="block rounded-2xl px-3 py-2 text-[13px] transition" :class="route().current('dashboard.page') && route().params?.page === 'auth' ? 'bg-violet-600 font-semibold text-white' : 'text-slate-300 hover:bg-white/5'">Auth</Link>
                         <Link :href="route('dashboard.page', { page: 'users' })" class="block rounded-2xl px-3 py-2 text-[13px] text-slate-300 transition hover:bg-white/5">Users</Link>
                         <Link :href="route('dashboard.page', { page: 'products' })" class="block rounded-2xl px-3 py-2 text-[13px] text-slate-300 transition hover:bg-white/5">Products</Link>
                         <Link :href="route('dashboard.page', { page: 'orders' })" class="block rounded-2xl px-3 py-2 text-[13px] text-slate-300 transition hover:bg-white/5">Orders</Link>
@@ -69,20 +79,6 @@ const openSys = ref(false)
                         <Link :href="route('dashboard.page', { page: 'dashboard-endpoint' })" class="block rounded-2xl px-3 py-2 text-[13px] text-slate-300 transition hover:bg-white/5">Dashboard</Link>
                         <Link :href="route('dashboard.page', { page: 'notifications' })" class="block rounded-2xl px-3 py-2 text-[13px] text-slate-300 transition hover:bg-white/5">Notifications</Link>
                         <Link :href="route('dashboard.page', { page: 'settings' })" class="block rounded-2xl px-3 py-2 text-[13px] text-slate-300 transition hover:bg-white/5">Settings</Link>
-                    </div>
-                </div>
-
-                <div class="space-y-2">
-                    <button type="button" @click="openDocs = !openDocs" class="flex w-full items-center justify-between px-3">
-                        <p class="text-[11px] uppercase tracking-[0.22em] text-slate-500">Documentation</p>
-                        <svg :class="openDocs ? 'transform rotate-90' : ''" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </button>
-
-                    <div v-show="openDocs" class="space-y-1">
-                        <Link :href="route('dashboard.page', { page: 'swagger-docs' })" class="block rounded-2xl px-3 py-2 text-[13px] text-slate-300 transition hover:bg-white/5">Swagger Docs</Link>
-                        <Link :href="route('dashboard.page', { page: 'api-reference' })" class="block rounded-2xl px-3 py-2 text-[13px] text-slate-300 transition hover:bg-white/5">API Reference</Link>
                     </div>
                 </div>
 
