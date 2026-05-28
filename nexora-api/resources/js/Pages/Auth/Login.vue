@@ -17,6 +17,7 @@ import {
 import { onMounted, ref } from 'vue';
 
 const REMEMBER_EMAIL_KEY = 'nexora-login-email';
+const REMEMBER_PASSWORD_KEY = 'nexora-login-password';
 const REMEMBER_ENABLED_KEY = 'nexora-login-remember';
 
 defineProps({
@@ -48,31 +49,37 @@ onMounted(() => {
     isDarkMode.value = savedTheme ? savedTheme === 'dark' : prefersDark;
     applyTheme(isDarkMode.value);
 
-    const rememberEnabled = localStorage.getItem(REMEMBER_ENABLED_KEY) === 'true';
-    form.remember = rememberEnabled;
+    const rememberEnabled = localStorage.getItem(REMEMBER_ENABLED_KEY);
 
-    if (rememberEnabled) {
-        form.email = localStorage.getItem(REMEMBER_EMAIL_KEY) || '';
+    if (rememberEnabled !== null) {
+        form.remember = rememberEnabled === 'true';
+
+        if (form.remember) {
+            form.email = localStorage.getItem(REMEMBER_EMAIL_KEY) || '';
+            form.password = localStorage.getItem(REMEMBER_PASSWORD_KEY) || '';
+        }
     }
 });
 
 const form = useForm({
     email: '',
     password: '',
-    remember: false,
+    remember: true,
 });
 
 const submit = () => {
     if (form.remember) {
         localStorage.setItem(REMEMBER_ENABLED_KEY, 'true');
         localStorage.setItem(REMEMBER_EMAIL_KEY, form.email);
+        localStorage.setItem(REMEMBER_PASSWORD_KEY, form.password);
     } else {
         localStorage.removeItem(REMEMBER_ENABLED_KEY);
         localStorage.removeItem(REMEMBER_EMAIL_KEY);
+        localStorage.removeItem(REMEMBER_PASSWORD_KEY);
     }
 
     form.post(route('login'), {
-        onFinish: () => form.reset('password'),
+        onSuccess: () => form.reset('password'),
     });
 };
 </script>
