@@ -26,8 +26,8 @@ const endpointModule = computed(() => apiEndpointPages[props.page] ?? null)
     <DashboardLayout>
         <div class="p-6">
             <div class="mb-6">
-                <h1 class="text-3xl font-bold text-slate-900">{{ endpointModule?.title ?? title }}</h1>
-                <p class="mt-1.5 text-sm text-slate-500">
+                <h1 class="text-3xl font-bold text-slate-900 dark:text-white">{{ endpointModule?.title ?? title }}</h1>
+                <p class="mt-1.5 text-sm text-slate-500 dark:text-slate-300">
                     {{ endpointModule?.description ?? 'This page is intentionally blank for now.' }}
                 </p>
             </div>

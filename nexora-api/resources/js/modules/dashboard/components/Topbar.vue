@@ -3,7 +3,6 @@ import {
     Menu,
     Moon,
     Sun,
-    Bell,
     ChevronDown,
     Calendar,
     Settings,
@@ -88,18 +87,6 @@ const logout = () => {
                 <Sun v-if="isDarkMode" class="h-3.5 w-3.5" aria-hidden="true" />
                 <Moon v-else class="h-3.5 w-3.5" aria-hidden="true" />
                 <span>{{ isDarkMode ? 'Light' : 'Dark' }}</span>
-            </button>
-
-            <!-- NOTIFICATION -->
-            <button
-                class="relative flex h-11 w-11 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100"
-            >
-                <Bell class="h-5 w-5" />
-
-                <!-- BADGE -->
-                <span
-                    class="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-red-500"
-                ></span>
             </button>
 
             <!-- USER -->
