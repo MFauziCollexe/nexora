@@ -65,7 +65,7 @@ const toggleTryOut = () => {
                     <span class="ml-3 text-sm text-slate-700">{{ endpoint.description }}</span>
                 </div>
             </div>
-            <span class="px-2 text-2xl font-light leading-none text-black">{{ expanded[endpoint.path] ? '^' : 'v' }}</span>
+            <span class="px-2 text-2xl font-light leading-none text-black">{{ expanded[endpoint.path] ? '-' : '+' }}</span>
         </button>
 
         <div v-show="expanded[endpoint.path]" class="bg-white">

@@ -18,9 +18,9 @@ export const dashboardNavigation = [
         key: "api",
         label: "API Endpoints",
         items: [
-            authApiDocsModule.navigation,
-            usersApiDocsModule.navigation,
-            productsApiDocsModule.navigation,
+            { label: authApiDocsModule.navigation.label, routeName: "docs.page", page: authApiDocsModule.navigation.page },
+            { label: usersApiDocsModule.navigation.label, routeName: "docs.page", page: usersApiDocsModule.navigation.page },
+            { label: productsApiDocsModule.navigation.label, routeName: "docs.page", page: productsApiDocsModule.navigation.page },
 
             { label: "Orders", routeName: "docs.page", page: "orders" },
             { label: "Categories", routeName: "docs.page", page: "categories" },

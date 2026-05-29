@@ -30,7 +30,7 @@ const {
             </div>
             <div class="flex items-center gap-5">
                 <a v-if="module.helpUrl" :href="module.helpUrl" class="text-base text-blue-700">Find out more about Nexora API</a>
-                <span class="text-2xl font-light leading-none text-black">^</span>
+                <!-- <span class="text-2xl font-light leading-none text-black">^</span> -->
             </div>
         </div>
 

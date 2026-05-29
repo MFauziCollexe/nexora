@@ -15,6 +15,11 @@ const toggleSidebar = () => {
     sidebarOpen.value = !sidebarOpen.value
 }
 
+const showLoading = () => {
+    clearTimeout(timeout)
+    loading.value = true
+}
+
 onMounted(() => {
     router.on('start', () => {
         timeout = setTimeout(() => {
@@ -45,7 +50,10 @@ onMounted(() => {
             :class="sidebarOpen ? 'ml-[260px]' : 'ml-0'"
             class="transition-all duration-300"
         >
-            <Topbar @toggle-sidebar="toggleSidebar" />
+            <Topbar
+                @toggle-sidebar="toggleSidebar"
+                @logout-start="showLoading"
+            />
 
             <main class="p-2">
                 <slot />

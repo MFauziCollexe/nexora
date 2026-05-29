@@ -1,6 +1,6 @@
 <script setup>
-import { Link } from '@inertiajs/vue3'
-import { reactive } from 'vue'
+import { Link, usePage } from '@inertiajs/vue3'
+import { ref, computed, onMounted, watch } from 'vue'
 import { dashboardNavigation } from '@/modules/api-docs/registry/navigation'
 
 defineProps({
@@ -10,31 +10,51 @@ defineProps({
     },
 })
 
-const currentPage = route().params?.page
-const openedSections = reactive(
-    Object.fromEntries(
-        dashboardNavigation.map((section) => [
-            section.key,
-            Boolean(section.defaultOpen) || section.items.some((item) => item.page === currentPage),
-        ]),
-    ),
-)
+const page = usePage()
+
+const currentPath = computed(() => page.url.split('?')[0])
+const currentPage = computed(() => {
+    const match = currentPath.value.match(/^\/docs\/([^/]+)/)
+
+    return match ? decodeURIComponent(match[1]) : null
+})
+
+const openedSections = ref({})
+
+const syncOpenedSections = () => {
+    dashboardNavigation.forEach((section) => {
+        openedSections.value[section.key] = Boolean(section.defaultOpen) ||
+            (section.items ?? []).some((item) => item?.page === currentPage.value)
+    })
+}
+
+onMounted(syncOpenedSections)
+
+watch(currentPage, syncOpenedSections)
 
 const toggleSection = (key) => {
-    openedSections[key] = !openedSections[key]
-}
+     openedSections.value[key] = !openedSections.value[key]
+ }
 
-const itemHref = (item) => {
-    return item.page ? route(item.routeName, { page: item.page }) : route(item.routeName)
-}
+ const itemHref = (item) => {
+     if (item.routeName === 'dashboard') {
+         return '/dashboard'
+     }
+
+     if (item.routeName === 'docs.page' && item.page) {
+         return `/docs/${encodeURIComponent(item.page)}`
+     }
+
+     return '#'
+ }
 
 const isActiveItem = (item) => {
-    if (item.page) {
-        return route().current(item.routeName) && route().params?.page === item.page
-    }
+     if (!item.page) {
+         return item.routeName === 'dashboard' && currentPath.value === '/dashboard'
+     }
 
-    return route().current(item.routeName)
-}
+     return currentPage.value === item.page
+ }
 
 const itemClass = (item) => {
     return [

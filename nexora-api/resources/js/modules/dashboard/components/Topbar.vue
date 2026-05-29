@@ -10,10 +10,10 @@ import {
     BellRing,
     LogOut,
 } from 'lucide-vue-next'
-import { usePage } from '@inertiajs/vue3'
+import { router, usePage } from '@inertiajs/vue3'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
-const emit = defineEmits(['toggleSidebar'])
+const emit = defineEmits(['toggleSidebar', 'logoutStart'])
 const page = usePage()
 
 const isDarkMode = ref(false)
@@ -52,7 +52,12 @@ onBeforeUnmount(() => {
 
 const user = page.props.auth?.user || {}
 const userInitial = user.name ? user.name.charAt(0).toUpperCase() : 'A'
-const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+
+const logout = () => {
+    profileOpen.value = false
+    emit('logoutStart')
+    router.post('/logout')
+}
 </script>
 
 <template>
@@ -172,8 +177,7 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribut
                         <!-- FOOTER -->
                         <div class="border-t border-slate-200 py-1 dark:border-slate-800">
 
-                            <form :action="route('logout')" method="post">
-                                <input type="hidden" name="_token" :value="csrfToken" />
+                            <form @submit.prevent="logout">
                                 <button
                                     type="submit"
                                     class="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-red-500 transition hover:bg-red-50 dark:hover:bg-red-500/10"
