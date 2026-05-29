@@ -20,11 +20,26 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $request->user(),
+                'user' => $request->user() ? [
+                    'id'   => $request->user()->id,
+                    'name' => $request->user()->name,
+                    // jangan tambahkan email, phone, dll kalau tidak perlu
+                ] : null,
             ],
             'ziggy' => fn () => [
-                ...(new Ziggy)->toArray(),
+                'url'      => config('app.url'),
+                'port'     => null,
+                'defaults' => [],
                 'location' => $request->url(),
+                'routes'   => collect((new Ziggy)->toArray()['routes'])
+                    ->only([
+                        'dashboard',
+                        'profile.edit',
+                        'logout',
+                        'docs.page',
+                        // tambahkan hanya route yang dibutuhkan frontend
+                    ])
+                    ->toArray(),
             ],
         ];
     }
