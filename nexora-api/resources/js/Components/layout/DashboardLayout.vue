@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { Menu } from 'lucide-vue-next'
 
-import Sidebar from '@/Components/Dashboard/Sidebar.vue'
+import Sidebar from '@/modules/dashboard/components/Sidebar.vue'
 
 const sidebarOpen = ref(true)
 
