@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+// @deprecated - dipindah ke Domains
+
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Domains\User\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
