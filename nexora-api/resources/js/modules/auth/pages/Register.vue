@@ -1,7 +1,6 @@
 <script setup>
-import LoginInput from '@/Components/Auth/LoginInput.vue';
-import SocialLogin from '@/Components/Auth/SocialLogin.vue';
-import AuthLayout from '@/Layouts/AuthLayout.vue';
+import LoginInput from '../components/LoginInput.vue'
+import AuthLayout from '../layouts/AuthLayout.vue'
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import {
     ArrowRight,
