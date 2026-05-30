@@ -11,7 +11,6 @@ defineProps({
 })
 
 const {
-    authState,
     requestBodies,
     executeResults,
     executing,
@@ -27,7 +26,6 @@ const {
             v-for="endpoint in module.endpoints"
             :key="endpoint.path"
             :endpoint="endpoint"
-            :auth-state="authState"
             :request-bodies="requestBodies"
             :execute-results="executeResults"
             :executing="executing"

@@ -9,7 +9,7 @@ const props = defineProps({
     },
     authState: {
         type: Object,
-        required: true,
+        default: null,
     },
     requestBodies: {
         type: Object,
@@ -70,7 +70,7 @@ const toggleTryOut = () => {
 
         <div v-show="expanded[endpoint.path]" class="bg-white dark:bg-slate-950">
             <section :class="['px-4 py-5 text-sm text-slate-700 dark:text-slate-200', methodTheme(endpoint.method).details]">
-                {{ endpoint.auth ? 'This operation requires a bearer token.' : endpoint.description }}
+                {{ endpoint.auth ? 'This operation uses your current login session.' : endpoint.description }}
             </section>
 
             <section class="flex items-center justify-between border-y border-slate-200 bg-white px-4 py-2.5 dark:border-slate-700 dark:bg-slate-900">

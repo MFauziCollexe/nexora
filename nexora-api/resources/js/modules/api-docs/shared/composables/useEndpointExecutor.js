@@ -6,9 +6,6 @@ export function useEndpointExecutor() {
     const requestBodies = reactive({})
     const executeResults = reactive({})
     const executing = reactive({})
-    const authState = reactive({
-        token: typeof localStorage !== 'undefined' ? localStorage.getItem('nexora_api_token') ?? '' : '',
-    })
 
     const resetRequestBody = (endpoint) => {
         requestBodies[endpoint.path] = endpoint.requestExample ? formatJson(endpoint.requestExample) : ''
@@ -32,16 +29,8 @@ export function useEndpointExecutor() {
                 data,
                 headers: {
                     Accept: 'application/json',
-                    ...(endpoint.auth && authState.token ? { Authorization: `Bearer ${authState.token}` } : {}),
                 },
             })
-
-            if (response.data?.access_token) {
-                authState.token = response.data.access_token
-                if (typeof localStorage !== 'undefined') {
-                    localStorage.setItem('nexora_api_token', response.data.access_token)
-                }
-            }
 
             executeResults[endpoint.path] = {
                 ok: true,
@@ -64,7 +53,6 @@ export function useEndpointExecutor() {
     }
 
     return {
-        authState,
         requestBodies,
         executeResults,
         executing,

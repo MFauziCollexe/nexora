@@ -8,6 +8,7 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthService
 {
@@ -56,7 +57,11 @@ class AuthService
      */
     public function logout(User $user): array
     {
-        $user->currentAccessToken()?->delete();
+        $token = $user->currentAccessToken();
+
+        if ($token && method_exists($token, 'delete')) {
+            $token->delete();
+        }
 
         return ['message' => 'Logged out successfully.'];
     }
@@ -118,9 +123,12 @@ class AuthService
      */
     public function refreshToken(User $user): array
     {
-        $tokenName = $user->currentAccessToken()?->name ?: 'api-client';
+        $token = $user->currentAccessToken();
+        $tokenName = $token instanceof PersonalAccessToken ? $token->name : 'api-client';
 
-        $user->currentAccessToken()?->delete();
+        if ($token && method_exists($token, 'delete')) {
+            $token->delete();
+        }
 
         return $this->tokenPayload($user, $tokenName);
     }
