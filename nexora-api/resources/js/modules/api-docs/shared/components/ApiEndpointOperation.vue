@@ -136,13 +136,6 @@ const toggleTryOut = () => {
                 </div>
 
                 <div v-if="tryOut[endpoint.path]" class="mt-3 flex flex-col gap-2 sm:flex-row">
-                    <input
-                        v-if="endpoint.auth"
-                        v-model="authState.token"
-                        type="text"
-                        class="h-8 min-w-0 flex-1 rounded border border-slate-400 bg-white px-3 text-xs text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
-                        placeholder="Bearer token"
-                    />
                     <button
                         type="button"
                         class="h-8 rounded bg-sky-600 px-6 text-xs font-bold text-white transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
