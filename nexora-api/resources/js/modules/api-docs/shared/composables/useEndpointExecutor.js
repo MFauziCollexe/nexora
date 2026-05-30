@@ -1,63 +1,116 @@
-import { reactive } from 'vue'
+import { reactive } from "vue";
 
-const formatJson = (value) => JSON.stringify(value ?? {}, null, 2)
+const formatJson = (value) => JSON.stringify(value ?? {}, null, 2);
+
+const getEndpointKey = (endpoint) => `${endpoint.method}:${endpoint.path}`;
 
 export function useEndpointExecutor() {
-    const requestBodies = reactive({})
-    const executeResults = reactive({})
-    const executing = reactive({})
+    const requestBodies = reactive({});
+    const requestParameters = reactive({});
+    const executeResults = reactive({});
+    const executing = reactive({});
 
     const resetRequestBody = (endpoint) => {
-        requestBodies[endpoint.path] = endpoint.requestExample ? formatJson(endpoint.requestExample) : ''
-    }
+        const key = getEndpointKey(endpoint);
+        requestBodies[key] = endpoint.requestExample
+            ? formatJson(endpoint.requestExample)
+            : "";
+    };
 
     const ensureRequestBody = (endpoint) => {
-        if (!requestBodies[endpoint.path]) {
-            resetRequestBody(endpoint)
+        const key = getEndpointKey(endpoint);
+        if (!requestBodies[key]) {
+            resetRequestBody(endpoint);
         }
-    }
+    };
+
+    const ensureRequestParameters = (endpoint) => {
+        const key = getEndpointKey(endpoint);
+        if (!requestParameters[key]) {
+            requestParameters[key] = {};
+            endpoint.parameters?.forEach((param) => {
+                requestParameters[key][param.name] =
+                    param.example ?? param.schema?.example ?? "";
+            });
+        }
+    };
 
     const executeEndpoint = async (endpoint) => {
-        executing[endpoint.path] = true
-        executeResults[endpoint.path] = null
+        const key = getEndpointKey(endpoint);
+        ensureRequestBody(endpoint);
+        ensureRequestParameters(endpoint);
+
+        executing[key] = true;
+        executeResults[key] = null;
 
         try {
-            const data = endpoint.requestExample ? JSON.parse(requestBodies[endpoint.path] || '{}') : undefined
+            const params = requestParameters[key] || {};
+            let url = endpoint.path;
+
+            endpoint.parameters?.forEach((param) => {
+                if (param.in === "path") {
+                    url = url.replace(
+                        `{${param.name}}`,
+                        encodeURIComponent(params[param.name] ?? ""),
+                    );
+                }
+            });
+
+            const query = new URLSearchParams();
+            endpoint.parameters?.forEach((param) => {
+                if (
+                    param.in === "query" &&
+                    params[param.name] != null &&
+                    params[param.name] !== ""
+                ) {
+                    query.append(param.name, params[param.name]);
+                }
+            });
+
+            if (query.toString()) {
+                url += `?${query.toString()}`;
+            }
+
+            const data = endpoint.requestExample
+                ? JSON.parse(requestBodies[key] || "{}")
+                : undefined;
             const response = await window.axios.request({
                 method: endpoint.method.toLowerCase(),
-                url: endpoint.path,
+                url,
                 data,
                 headers: {
-                    Accept: 'application/json',
+                    Accept: "application/json",
                 },
-            })
+            });
 
-            executeResults[endpoint.path] = {
+            executeResults[key] = {
                 ok: true,
                 status: response.status,
                 statusText: response.statusText,
                 data: response.data,
                 headers: response.headers,
-            }
+            };
         } catch (error) {
-            executeResults[endpoint.path] = {
+            executeResults[key] = {
                 ok: false,
-                status: error.response?.status ?? 'Error',
+                status: error.response?.status ?? "Error",
                 statusText: error.response?.statusText ?? error.message,
                 data: error.response?.data ?? { message: error.message },
                 headers: error.response?.headers ?? {},
-            }
+            };
         } finally {
-            executing[endpoint.path] = false
+            executing[key] = false;
         }
-    }
+    };
 
     return {
         requestBodies,
+        requestParameters,
         executeResults,
         executing,
         ensureRequestBody,
+        ensureRequestParameters,
         resetRequestBody,
         executeEndpoint,
-    }
+    };
 }

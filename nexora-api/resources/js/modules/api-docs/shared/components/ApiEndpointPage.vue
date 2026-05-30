@@ -12,9 +12,11 @@ defineProps({
 
 const {
     requestBodies,
+    requestParameters,
     executeResults,
     executing,
     ensureRequestBody,
+    ensureRequestParameters,
     resetRequestBody,
     executeEndpoint,
 } = useEndpointExecutor()
@@ -24,12 +26,14 @@ const {
     <div class="space-y-3">
         <ApiEndpointOperation
             v-for="endpoint in module.endpoints"
-            :key="endpoint.path"
+            :key="`${endpoint.method}:${endpoint.path}`"
             :endpoint="endpoint"
             :request-bodies="requestBodies"
+            :request-parameters="requestParameters"
             :execute-results="executeResults"
             :executing="executing"
             @ensure-request-body="ensureRequestBody"
+            @ensure-request-parameters="ensureRequestParameters"
             @reset-request-body="resetRequestBody"
             @execute="executeEndpoint"
         />
