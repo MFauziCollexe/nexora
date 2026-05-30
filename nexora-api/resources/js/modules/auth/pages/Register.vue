@@ -243,7 +243,7 @@ const submit = () => {
 
                     <p class="mt-2.5 text-center text-xs font-medium text-slate-600 dark:text-slate-400">
                         Already have an account?
-                        <Link :href="route('login')" class="font-bold text-violet-600 transition duration-200 hover:text-violet-800 hover:underline dark:text-violet-400 dark:hover:text-violet-300">
+                        <Link href="/login" class="font-bold text-violet-600 transition duration-200 hover:text-violet-800 hover:underline dark:text-violet-400 dark:hover:text-violet-300">
                             Login here
                         </Link>
                     </p>
