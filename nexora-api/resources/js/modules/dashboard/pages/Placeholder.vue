@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import DashboardLayout from '../layouts/DashboardLayout.vue'
 import ApiEndpointPage from '@/modules/api-docs/shared/components/ApiEndpointPage.vue'
 import EmptyDashboardPage from '@/modules/api-docs/shared/components/EmptyDashboardPage.vue'
+import Logs from './Logs.vue'
 import { apiEndpointPages } from '@/modules/api-docs/registry/pages'
 
 const props = defineProps({
@@ -20,20 +21,23 @@ const title = computed(() => {
 })
 
 const endpointModule = computed(() => apiEndpointPages[props.page] ?? null)
+const isLogsPage = computed(() => props.page === 'logs')
 </script>
 
 <template>
     <DashboardLayout>
         <div class="p-6">
-            <div class="mb-6">
+            <div v-if="!isLogsPage" class="mb-6">
                 <h1 class="text-3xl font-bold text-slate-900 dark:text-white">{{ endpointModule?.title ?? title }}</h1>
                 <p class="mt-1.5 text-sm text-slate-500 dark:text-slate-300">
                     {{ endpointModule?.description ?? 'This page is intentionally blank for now.' }}
                 </p>
             </div>
 
+            <Logs v-if="isLogsPage" />
+
             <ApiEndpointPage
-                v-if="endpointModule"
+                v-else-if="endpointModule"
                 :module="endpointModule"
             />
 

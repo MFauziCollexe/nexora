@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ApiDocsTryItOutController;
+use App\Http\Controllers\ApiActivityLogController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -22,6 +23,9 @@ Route::middleware('auth')->group(function () {
 })->name('docs.page');
 
     Route::post('/docs/try-it-out', ApiDocsTryItOutController::class)->name('docs.try-it-out');
+    Route::get('/system/api-activity-logs', [ApiActivityLogController::class, 'index'])->name('system.api-activity-logs.index');
+    Route::get('/system/api-activity-logs/export', [ApiActivityLogController::class, 'export'])->name('system.api-activity-logs.export');
+    Route::get('/system/api-activity-logs/{apiActivityLog}', [ApiActivityLogController::class, 'show'])->name('system.api-activity-logs.show');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

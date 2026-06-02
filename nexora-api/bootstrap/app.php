@@ -25,6 +25,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->api(prepend: [
             \App\Http\Middleware\CorsMiddleware::class,
+        ], append: [
+            \App\Http\Middleware\RecordApiActivity::class,
         ]);
 
         $middleware->validateCsrfTokens(except: [
