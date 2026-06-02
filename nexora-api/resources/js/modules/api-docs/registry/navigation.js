@@ -1,5 +1,4 @@
 import { authApiDocsModule } from "../auth";
-import { productsApiDocsModule } from "../products";
 import { usersApiDocsModule } from "../users";
 
 export const dashboardNavigation = [
@@ -20,20 +19,6 @@ export const dashboardNavigation = [
         items: [
             { label: authApiDocsModule.navigation.label, routeName: "docs.page", page: authApiDocsModule.navigation.page },
             { label: usersApiDocsModule.navigation.label, routeName: "docs.page", page: usersApiDocsModule.navigation.page },
-            { label: productsApiDocsModule.navigation.label, routeName: "docs.page", page: productsApiDocsModule.navigation.page },
-
-            { label: "Orders", routeName: "docs.page", page: "orders" },
-            { label: "Categories", routeName: "docs.page", page: "categories" },
-            {
-                label: "Dashboard",
-                routeName: "docs.page",
-                page: "dashboard-endpoint",
-            },
-            {
-                label: "Notifications",
-                routeName: "docs.page",
-                page: "notifications",
-            },
             { label: "Settings", routeName: "docs.page", page: "settings" },
         ],
     },
