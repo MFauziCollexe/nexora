@@ -14,12 +14,19 @@ class ApiActivityLogController extends Controller
     {
         $logs = $this->query($request)
             ->latest('created_at')
-            ->limit(200)
-            ->get()
-            ->map(fn (ApiActivityLog $log) => $this->transform($log));
+            ->paginate(10)
+            ->through(fn (ApiActivityLog $log) => $this->transform($log));
 
         return response()->json([
-            'data' => $logs,
+            'data' => $logs->items(),
+            'meta' => [
+                'current_page' => $logs->currentPage(),
+                'from' => $logs->firstItem(),
+                'last_page' => $logs->lastPage(),
+                'per_page' => $logs->perPage(),
+                'to' => $logs->lastItem(),
+                'total' => $logs->total(),
+            ],
             'filters' => [
                 'methods' => ApiActivityLog::query()->distinct()->orderBy('method')->pluck('method')->values(),
                 'statuses' => ApiActivityLog::query()->distinct()->orderBy('status_code')->pluck('status_code')->values(),

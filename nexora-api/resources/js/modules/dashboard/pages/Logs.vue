@@ -2,6 +2,8 @@
 import { computed, onMounted, reactive, ref } from 'vue'
 import {
     ChevronDown,
+    ChevronLeft,
+    ChevronRight,
     Download,
     Eye,
     Filter,
@@ -16,6 +18,15 @@ const users = ref([])
 const loading = ref(false)
 const selectedLog = ref(null)
 const detailLoading = ref(false)
+const currentPage = ref(1)
+const pagination = ref({
+    current_page: 1,
+    from: null,
+    last_page: 1,
+    per_page: 10,
+    to: null,
+    total: 0,
+})
 
 const filters = reactive({
     from: '',
@@ -45,7 +56,20 @@ const hasFilters = computed(() =>
     Object.values(filters).some((value) => value !== ''),
 )
 
-const queryString = () => {
+const pageNumbers = computed(() => {
+    const pages = []
+    const lastPage = pagination.value.last_page || 1
+    const start = Math.max(1, currentPage.value - 2)
+    const end = Math.min(lastPage, currentPage.value + 2)
+
+    for (let page = start; page <= end; page += 1) {
+        pages.push(page)
+    }
+
+    return pages
+})
+
+const queryString = (page = currentPage.value) => {
     const query = new URLSearchParams()
 
     Object.entries(filters).forEach(([key, value]) => {
@@ -54,17 +78,22 @@ const queryString = () => {
         }
     })
 
+    query.append('page', page)
+
     return query.toString()
 }
 
-const fetchLogs = async () => {
+const fetchLogs = async (page = currentPage.value) => {
     loading.value = true
+    currentPage.value = page
 
     try {
-        const query = queryString()
+        const query = queryString(page)
         const response = await window.axios.get(`/system/api-activity-logs${query ? `?${query}` : ''}`)
 
         logs.value = response.data.data ?? []
+        pagination.value = response.data.meta ?? pagination.value
+        currentPage.value = pagination.value.current_page ?? page
         methods.value = response.data.filters?.methods ?? []
         statuses.value = response.data.filters?.statuses ?? []
         users.value = response.data.filters?.users ?? []
@@ -78,11 +107,23 @@ const resetFilters = () => {
         filters[key] = ''
     })
 
-    fetchLogs()
+    fetchLogs(1)
+}
+
+const applyFilters = () => {
+    fetchLogs(1)
+}
+
+const goToPage = (page) => {
+    if (page < 1 || page > pagination.value.last_page || page === currentPage.value || loading.value) {
+        return
+    }
+
+    fetchLogs(page)
 }
 
 const exportLogs = () => {
-    const query = queryString()
+    const query = queryString(currentPage.value)
     window.location.href = `/system/api-activity-logs/export${query ? `?${query}` : ''}`
 }
 
@@ -180,7 +221,7 @@ onMounted(fetchLogs)
                         type="button"
                         class="inline-flex h-7 items-center justify-center gap-1 rounded bg-violet-600 px-2.5 text-[11px] font-semibold text-white transition hover:bg-violet-700 disabled:opacity-60"
                         :disabled="loading"
-                        @click="fetchLogs"
+                        @click="applyFilters"
                     >
                         <Filter class="h-3 w-3" />
                         Apply Filter
@@ -254,6 +295,54 @@ onMounted(fetchLogs)
                         </tr>
                     </tbody>
                 </table>
+            </div>
+
+            <div class="flex flex-col gap-2 border-t border-slate-200 px-2.5 py-2 text-[11px] font-semibold text-slate-600 dark:border-slate-800 dark:text-slate-300 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    Showing
+                    <span class="text-slate-900 dark:text-white">{{ pagination.from ?? 0 }}</span>
+                    to
+                    <span class="text-slate-900 dark:text-white">{{ pagination.to ?? 0 }}</span>
+                    of
+                    <span class="text-slate-900 dark:text-white">{{ pagination.total }}</span>
+                    logs
+                </div>
+
+                <div class="flex items-center gap-1">
+                    <button
+                        type="button"
+                        class="inline-flex h-7 w-7 items-center justify-center rounded border border-slate-200 text-slate-700 transition hover:bg-slate-50 disabled:opacity-40 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-800"
+                        :disabled="loading || currentPage <= 1"
+                        @click="goToPage(currentPage - 1)"
+                    >
+                        <ChevronLeft class="h-3.5 w-3.5" />
+                    </button>
+
+                    <button
+                        v-for="page in pageNumbers"
+                        :key="page"
+                        type="button"
+                        :class="[
+                            'inline-flex h-7 min-w-7 items-center justify-center rounded border px-2 text-[11px] transition disabled:opacity-50',
+                            page === currentPage
+                                ? 'border-violet-600 bg-violet-600 text-white'
+                                : 'border-slate-200 text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-800',
+                        ]"
+                        :disabled="loading || page === currentPage"
+                        @click="goToPage(page)"
+                    >
+                        {{ page }}
+                    </button>
+
+                    <button
+                        type="button"
+                        class="inline-flex h-7 w-7 items-center justify-center rounded border border-slate-200 text-slate-700 transition hover:bg-slate-50 disabled:opacity-40 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-800"
+                        :disabled="loading || currentPage >= pagination.last_page"
+                        @click="goToPage(currentPage + 1)"
+                    >
+                        <ChevronRight class="h-3.5 w-3.5" />
+                    </button>
+                </div>
             </div>
         </section>
 
