@@ -6,7 +6,6 @@ import {
     Eye,
     Filter,
     RefreshCcw,
-    Search,
     X,
 } from 'lucide-vue-next'
 
@@ -24,7 +23,6 @@ const filters = reactive({
     method: '',
     status: '',
     user: '',
-    search: '',
 })
 
 const methodClasses = {
@@ -122,78 +120,69 @@ onMounted(fetchLogs)
             <p class="mt-2 text-sm font-medium text-slate-500 dark:text-slate-400">Retrieve API activity logs.</p>
         </div>
 
-        <section class="rounded border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-            <div class="grid gap-3 xl:grid-cols-[minmax(0,1fr)_auto]">
-                <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-[170px_170px_130px_130px_150px_minmax(180px,1fr)]">
+        <section class="rounded border border-slate-200 bg-white p-2.5 shadow-sm dark:border-slate-800 dark:bg-slate-950">
+            <div class="flex flex-wrap items-center gap-1.5">
+                <div class="w-full sm:w-[118px]">
                     <input
                         v-model="filters.from"
                         type="date"
-                        class="h-10 rounded border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                        class="h-7 w-full rounded border border-slate-200 bg-white px-1.5 text-[11px] text-slate-700 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                     />
+                </div>
+                <div class="w-full sm:w-[118px]">
                     <input
                         v-model="filters.to"
                         type="date"
-                        class="h-10 rounded border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                        class="h-7 w-full rounded border border-slate-200 bg-white px-1.5 text-[11px] text-slate-700 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                     />
-                    <div class="relative">
-                        <select
-                            v-model="filters.method"
-                            class="h-10 w-full appearance-none rounded border border-slate-200 bg-white px-3 pr-8 text-sm font-medium text-slate-700 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                        >
-                            <option value="">All Methods</option>
-                            <option v-for="method in methods" :key="method" :value="method">{{ method }}</option>
-                        </select>
-                        <ChevronDown class="pointer-events-none absolute right-3 top-3 h-4 w-4 text-slate-400" />
-                    </div>
-                    <div class="relative">
-                        <select
-                            v-model="filters.status"
-                            class="h-10 w-full appearance-none rounded border border-slate-200 bg-white px-3 pr-8 text-sm font-medium text-slate-700 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                        >
-                            <option value="">All Status</option>
-                            <option v-for="status in statuses" :key="status" :value="status">{{ status }}</option>
-                        </select>
-                        <ChevronDown class="pointer-events-none absolute right-3 top-3 h-4 w-4 text-slate-400" />
-                    </div>
-                    <div class="relative">
-                        <select
-                            v-model="filters.user"
-                            class="h-10 w-full appearance-none rounded border border-slate-200 bg-white px-3 pr-8 text-sm font-medium text-slate-700 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                        >
-                            <option value="">All Users</option>
-                            <option v-for="user in users" :key="user" :value="user">{{ user }}</option>
-                        </select>
-                        <ChevronDown class="pointer-events-none absolute right-3 top-3 h-4 w-4 text-slate-400" />
-                    </div>
-                    <div class="relative">
-                        <input
-                            v-model="filters.search"
-                            type="search"
-                            placeholder="Search endpoint, IP, user..."
-                            class="h-10 w-full rounded border border-slate-200 bg-white px-3 pr-10 text-sm text-slate-700 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                            @keydown.enter="fetchLogs"
-                        />
-                        <Search class="absolute right-3 top-3 h-4 w-4 text-slate-400" />
-                    </div>
                 </div>
-
-                <div class="flex flex-col gap-3 sm:flex-row xl:border-l xl:border-slate-200 xl:pl-4 dark:xl:border-slate-800">
+                <div class="relative w-full sm:w-[116px]">
+                    <select
+                        v-model="filters.method"
+                        class="h-7 w-full appearance-none rounded border border-slate-200 bg-white px-1.5 pr-5 text-[10px] font-medium leading-none text-slate-700 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                    >
+                        <option value="">All Methods</option>
+                        <option v-for="method in methods" :key="method" :value="method">{{ method }}</option>
+                    </select>
+                    <ChevronDown class="pointer-events-none absolute right-1.5 top-2 h-3 w-3 text-slate-400" />
+                </div>
+                <div class="relative w-full sm:w-[108px]">
+                    <select
+                        v-model="filters.status"
+                        class="h-7 w-full appearance-none rounded border border-slate-200 bg-white px-1.5 pr-5 text-[10px] font-medium leading-none text-slate-700 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                    >
+                        <option value="">All Status</option>
+                        <option v-for="status in statuses" :key="status" :value="status">{{ status }}</option>
+                    </select>
+                    <ChevronDown class="pointer-events-none absolute right-1.5 top-2 h-3 w-3 text-slate-400" />
+                </div>
+                <div class="relative w-full sm:w-[106px]">
+                    <select
+                        v-model="filters.user"
+                        class="h-7 w-full appearance-none rounded border border-slate-200 bg-white px-1.5 pr-5 text-[10px] font-medium leading-none text-slate-700 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                    >
+                        <option value="">All Users</option>
+                        <option v-for="user in users" :key="user" :value="user">{{ user }}</option>
+                    </select>
+                    <ChevronDown class="pointer-events-none absolute right-1.5 top-2 h-3 w-3 text-slate-400" />
+                </div>
+                <div class="ml-auto flex w-full items-center justify-end gap-1.5 sm:w-auto">
                     <button
                         type="button"
-                        class="inline-flex h-10 items-center justify-center gap-2 rounded border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+                        class="inline-flex h-7 items-center justify-center gap-1 rounded border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
                         :disabled="loading || !hasFilters"
                         @click="resetFilters"
                     >
-                        <RefreshCcw class="h-4 w-4" />
+                        <RefreshCcw class="h-3 w-3" />
                         Reset
                     </button>
                     <button
                         type="button"
-                        class="inline-flex h-10 items-center justify-center gap-2 rounded bg-violet-600 px-4 text-sm font-semibold text-white transition hover:bg-violet-700 disabled:opacity-60"
+                        class="inline-flex h-7 items-center justify-center gap-1 rounded bg-violet-600 px-2.5 text-[11px] font-semibold text-white transition hover:bg-violet-700 disabled:opacity-60"
                         :disabled="loading"
                         @click="fetchLogs"
                     >
-                        <Filter class="h-4 w-4" />
+                        <Filter class="h-3 w-3" />
                         Apply Filter
                     </button>
                 </div>
@@ -201,64 +190,64 @@ onMounted(fetchLogs)
         </section>
 
         <section class="overflow-hidden rounded border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950">
-            <div class="flex items-center justify-end border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+            <div class="flex items-center justify-end border-b border-slate-200 px-2.5 py-2 dark:border-slate-800">
                 <button
                     type="button"
-                    class="inline-flex h-9 items-center gap-2 rounded border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+                    class="inline-flex h-7 items-center gap-1 rounded border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
                     @click="exportLogs"
                 >
-                    <Download class="h-4 w-4" />
+                    <Download class="h-3 w-3" />
                     Export
-                    <ChevronDown class="h-4 w-4 text-slate-400" />
+                    <ChevronDown class="h-3 w-3 text-slate-400" />
                 </button>
             </div>
 
             <div class="overflow-x-auto">
-                <table class="min-w-[980px] w-full text-left text-sm">
-                    <thead class="border-b border-slate-200 bg-slate-50 text-xs font-bold text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
+                <table class="min-w-[820px] w-full text-left text-[11px]">
+                    <thead class="border-b border-slate-200 bg-slate-50 text-[11px] font-bold text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
                         <tr>
-                            <th class="px-4 py-3">Time</th>
-                            <th class="px-4 py-3">User</th>
-                            <th class="px-4 py-3">Method</th>
-                            <th class="px-4 py-3">Endpoint</th>
-                            <th class="px-4 py-3">Status</th>
-                            <th class="px-4 py-3">IP Address</th>
-                            <th class="px-4 py-3">Response Time</th>
-                            <th class="px-4 py-3">User Agent</th>
-                            <th class="px-4 py-3 text-right">Action</th>
+                            <th class="px-2.5 py-2">Time</th>
+                            <th class="px-2.5 py-2">User</th>
+                            <th class="px-2.5 py-2">Method</th>
+                            <th class="px-2.5 py-2">Endpoint</th>
+                            <th class="px-2.5 py-2">Status</th>
+                            <th class="px-2.5 py-2">IP Address</th>
+                            <th class="px-2.5 py-2">Response Time</th>
+                            <th class="px-2.5 py-2">User Agent</th>
+                            <th class="px-2.5 py-2 text-right">Action</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-200 text-slate-700 dark:divide-slate-800 dark:text-slate-200">
                         <tr v-if="loading">
-                            <td colspan="9" class="px-4 py-10 text-center text-slate-500">Loading logs...</td>
+                            <td colspan="9" class="px-2.5 py-8 text-center text-slate-500">Loading logs...</td>
                         </tr>
                         <tr v-else-if="logs.length === 0">
-                            <td colspan="9" class="px-4 py-10 text-center text-slate-500">No API activity logs found.</td>
+                            <td colspan="9" class="px-2.5 py-8 text-center text-slate-500">No API activity logs found.</td>
                         </tr>
                         <tr v-for="log in logs" v-else :key="log.id" class="transition hover:bg-slate-50 dark:hover:bg-slate-900">
-                            <td class="whitespace-nowrap px-4 py-3 font-medium text-slate-900 dark:text-white">{{ log.time }}</td>
-                            <td class="px-4 py-3">{{ log.user }}</td>
-                            <td class="px-4 py-3">
-                                <span :class="['inline-flex h-6 items-center rounded px-2 text-xs font-bold ring-1', methodClasses[log.method] ?? 'bg-slate-50 text-slate-700 ring-slate-100']">
+                            <td class="whitespace-nowrap px-2.5 py-2 font-medium text-slate-900 dark:text-white">{{ log.time }}</td>
+                            <td class="px-2.5 py-2">{{ log.user }}</td>
+                            <td class="px-2.5 py-2">
+                                <span :class="['inline-flex h-5 items-center rounded px-1.5 text-[10px] font-bold ring-1', methodClasses[log.method] ?? 'bg-slate-50 text-slate-700 ring-slate-100']">
                                     {{ log.method }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 font-mono text-xs text-slate-800 dark:text-slate-200">{{ log.endpoint }}</td>
-                            <td class="px-4 py-3">
-                                <span :class="['inline-flex h-6 items-center rounded px-2 text-xs font-bold ring-1', statusClass(log.status)]">
+                            <td class="px-2.5 py-2 font-mono text-[10px] text-slate-800 dark:text-slate-200">{{ log.endpoint }}</td>
+                            <td class="px-2.5 py-2">
+                                <span :class="['inline-flex h-5 items-center rounded px-1.5 text-[10px] font-bold ring-1', statusClass(log.status)]">
                                     {{ log.status }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3">{{ log.ip_address ?? '-' }}</td>
-                            <td class="px-4 py-3">{{ log.response_time }} ms</td>
-                            <td class="px-4 py-3">{{ truncate(log.user_agent) }}</td>
-                            <td class="px-4 py-3 text-right">
+                            <td class="px-2.5 py-2">{{ log.ip_address ?? '-' }}</td>
+                            <td class="px-2.5 py-2">{{ log.response_time }} ms</td>
+                            <td class="px-2.5 py-2">{{ truncate(log.user_agent) }}</td>
+                            <td class="px-2.5 py-2 text-right">
                                 <button
                                     type="button"
-                                    class="inline-flex h-8 items-center gap-1.5 rounded border border-slate-200 px-3 text-xs font-bold text-violet-700 transition hover:bg-violet-50 dark:border-slate-700 dark:text-violet-300 dark:hover:bg-violet-500/10"
+                                    class="inline-flex h-6 items-center gap-1 rounded border border-slate-200 px-2 text-[10px] font-bold text-violet-700 transition hover:bg-violet-50 dark:border-slate-700 dark:text-violet-300 dark:hover:bg-violet-500/10"
                                     @click="viewLog(log)"
                                 >
-                                    <Eye class="h-3.5 w-3.5" />
+                                    <Eye class="h-3 w-3" />
                                     View
                                 </button>
                             </td>

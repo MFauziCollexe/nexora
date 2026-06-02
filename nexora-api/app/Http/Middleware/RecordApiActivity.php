@@ -88,8 +88,31 @@ class RecordApiActivity
             if (isset($decoded['user']) && is_array($decoded['user'])) {
                 unset($decoded['user']['password'], $decoded['user']['remember_token']);
             }
+
+            if (isset($decoded['message']) && is_string($decoded['message'])) {
+                $decoded['message'] = $this->shortenModelNamespace($decoded['message']);
+
+                if ($response->getStatusCode() === 404 || array_key_exists('exception', $decoded)) {
+                    return ['message' => $decoded['message']];
+                }
+            }
         }
 
         return $decoded;
+    }
+
+    private function shortenModelNamespace(string $message): string
+    {
+        $message = preg_replace_callback('/\[([A-Za-z_\\\\][A-Za-z0-9_\\\\]*)\]/', function (array $matches) {
+            $segments = explode('\\', $matches[1]);
+
+            return '['.end($segments).']';
+        }, $message) ?? $message;
+
+        if (str_starts_with($message, 'No query results for model') && ! str_ends_with($message, '.')) {
+            return $message.'.';
+        }
+
+        return $message;
     }
 }

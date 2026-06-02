@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class ApiDocsTryItOutController extends Controller
@@ -20,10 +21,11 @@ class ApiDocsTryItOutController extends Controller
         $method = strtoupper($validated['method']);
         $url = $validated['url'];
         $payload = $validated['data'] ?? null;
+        $bodyParameters = is_array($payload) ? $payload : [];
 
         $content = in_array($method, ['GET', 'DELETE'], true)
             ? null
-            : json_encode($payload ?? [], JSON_THROW_ON_ERROR);
+            : json_encode($bodyParameters, JSON_THROW_ON_ERROR);
 
         $server = [
             'HTTP_ACCEPT' => 'application/json',
@@ -33,17 +35,29 @@ class ApiDocsTryItOutController extends Controller
         $subRequest = Request::create(
             $url,
             $method,
-            [],
+            in_array($method, ['GET', 'DELETE'], true) ? [] : $bodyParameters,
             $request->cookies->all(),
             [],
             $server,
             $content
         );
 
+        if (! in_array($method, ['GET', 'DELETE'], true)) {
+            $subRequest->setJson(new InputBag($bodyParameters));
+        }
+
         $subRequest->setUserResolver(fn () => $request->user());
         $subRequest->setLaravelSession($request->session());
 
-        $response = Route::dispatch($subRequest);
+        $originalRequest = app('request');
+
+        try {
+            app()->instance('request', $subRequest);
+            $response = Route::dispatch($subRequest);
+        } finally {
+            app()->instance('request', $originalRequest);
+        }
+
         $status = $response->getStatusCode();
         $body = $response->getContent();
         $decodedBody = json_decode($body, true);
