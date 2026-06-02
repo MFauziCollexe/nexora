@@ -26,14 +26,12 @@ export const dashboardNavigation = [
         key: "system",
         label: "System",
         items: [
-            { label: "API Keys", routeName: "docs.page", page: "api-keys" },
             {
                 label: "Rate Limits",
                 routeName: "docs.page",
                 page: "rate-limits",
             },
             { label: "Logs", routeName: "docs.page", page: "logs" },
-            { label: "Webhooks", routeName: "docs.page", page: "webhooks" },
         ],
     },
 ];
