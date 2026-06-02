@@ -6,7 +6,6 @@ use App\Domains\User\Requests\UpdateUserRequest;
 use App\Domains\User\Services\UserService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
 class UserController extends Controller
@@ -19,12 +18,8 @@ class UserController extends Controller
         path: '/users',
         tags: ['Users'],
         summary: 'List all users',
-        description: 'Returns a paginated list of all users. Requires authentication.',
+        description: 'Returns all users. Requires authentication.',
         security: [['bearerAuth' => []]],
-        parameters: [
-            new OA\Parameter(name: 'per_page', in: 'query', required: false, schema: new OA\Schema(type: 'integer', example: 15)),
-            new OA\Parameter(name: 'page', in: 'query', required: false, schema: new OA\Schema(type: 'integer', example: 1)),
-        ],
         responses: [
             new OA\Response(
                 response: 200,
@@ -32,24 +27,16 @@ class UserController extends Controller
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'data', type: 'array', items: new OA\Items(ref: '#/components/schemas/UserItem')),
-                        new OA\Property(property: 'meta', type: 'object', properties: [
-                            new OA\Property(property: 'current_page', type: 'integer', example: 1),
-                            new OA\Property(property: 'last_page', type: 'integer', example: 5),
-                            new OA\Property(property: 'per_page', type: 'integer', example: 15),
-                            new OA\Property(property: 'total', type: 'integer', example: 72),
-                        ]),
                     ]
                 )
             ),
             new OA\Response(response: 401, description: 'Unauthenticated'),
         ]
     )]
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
-        $perPage = (int) $request->query('per_page', 15);
-
         return response()->json(
-            $this->userService->index($perPage)
+            $this->userService->index()
         );
     }
 

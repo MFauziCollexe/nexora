@@ -14,11 +14,11 @@ class UserService
     ) {}
 
     /**
-     * Get paginated list of all users.
+     * Get all users.
      */
-    public function index(int $perPage = 15): AnonymousResourceCollection
+    public function index(): AnonymousResourceCollection
     {
-        $users = User::latest()->paginate($perPage);
+        $users = User::latest()->get();
 
         return UserResource::collection($users);
     }

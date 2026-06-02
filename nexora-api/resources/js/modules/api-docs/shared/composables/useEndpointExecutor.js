@@ -4,9 +4,45 @@ const formatJson = (value) => JSON.stringify(value ?? {}, null, 2);
 
 const getEndpointKey = (endpoint) => `${endpoint.method}:${endpoint.path}`;
 
-const getResponseDescription = (endpoint, status) =>
-    endpoint.responses?.find((response) => String(response.code) === String(status))
-        ?.description;
+const getResponseDefinition = (endpoint, status) =>
+    endpoint.responses?.find(
+        (response) => String(response.code) === String(status),
+    );
+
+const shortenModelNamespace = (message) =>
+    message
+        .replace(/\[([A-Za-z_\\][A-Za-z0-9_\\]*)\]/g, (_, model) => {
+            const segments = model.split("\\");
+
+            return `[${segments.at(-1)}]`;
+        })
+        .replace(/^(No query results for model .+?)(?<!\.)$/, "$1.");
+
+const normalizeResponseData = (data) => {
+    if (!data || typeof data !== "object" || Array.isArray(data)) {
+        return data;
+    }
+
+    const normalized = { ...data };
+
+    if (typeof normalized.message === "string") {
+        normalized.message = shortenModelNamespace(normalized.message);
+    }
+
+    if (normalized.exception) {
+        return normalized.message ? { message: normalized.message } : {};
+    }
+
+    return normalized;
+};
+
+const dataOrExample = (data, responseDefinition) => {
+    if (data !== undefined && data !== null && data !== "") {
+        return normalizeResponseData(data);
+    }
+
+    return responseDefinition?.example ?? {};
+};
 
 export function useEndpointExecutor() {
     const requestBodies = reactive({});
@@ -96,23 +132,33 @@ export function useEndpointExecutor() {
 
             const result = response.data ?? {};
             const status = result.status ?? response.status;
+            const responseDefinition = getResponseDefinition(endpoint, status);
 
             executeResults[key] = {
                 ok: status >= 200 && status < 300,
                 status,
                 statusText:
-                    getResponseDescription(endpoint, status) ??
+                    responseDefinition?.description ??
                     result.statusText ??
                     response.statusText,
-                data: result.data,
+                data: dataOrExample(result.data, responseDefinition),
                 headers: result.headers ?? {},
             };
         } catch (error) {
+            const status = error.response?.status ?? "Error";
+            const responseDefinition = getResponseDefinition(endpoint, status);
+
             executeResults[key] = {
                 ok: false,
-                status: error.response?.status ?? "Error",
-                statusText: error.response?.statusText ?? error.message,
-                data: error.response?.data ?? { message: error.message },
+                status,
+                statusText:
+                    responseDefinition?.description ??
+                    error.response?.statusText ??
+                    error.message,
+                data: dataOrExample(
+                    error.response?.data ?? { message: error.message },
+                    responseDefinition,
+                ),
                 headers: error.response?.headers ?? {},
             };
         } finally {
