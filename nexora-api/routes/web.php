@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ApiDocsTryItOutController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -19,6 +20,8 @@ Route::middleware('auth')->group(function () {
         'page' => $page,
     ]);
 })->name('docs.page');
+
+    Route::post('/docs/try-it-out', ApiDocsTryItOutController::class)->name('docs.try-it-out');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

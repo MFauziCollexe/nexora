@@ -199,7 +199,13 @@ const toggleTryOut = () => {
                         <div :class="['font-bold', executeResults[endpointKey].ok ? 'text-emerald-700' : 'text-red-700']">
                             {{ executeResults[endpointKey].status }}
                         </div>
-                        <pre class="max-h-[220px] overflow-auto rounded bg-[#303030] p-3 font-mono text-[11px] font-bold leading-5 text-white">{{ formatJson(executeResults[endpointKey].data) }}</pre>
+                        <div>
+                            <div class="text-sm font-semibold text-slate-900 dark:text-white">{{ executeResults[endpointKey].statusText }}</div>
+                            <div v-if="!executeResults[endpointKey].ok && executeResults[endpointKey].data?.message" class="mt-1 text-sm text-slate-700 dark:text-slate-300">
+                                {{ executeResults[endpointKey].data.message }}
+                            </div>
+                            <pre class="mt-3 max-h-[220px] overflow-auto rounded bg-[#303030] p-3 font-mono text-[11px] font-bold leading-5 text-white">{{ formatJson(executeResults[endpointKey].data) }}</pre>
+                        </div>
                     </div>
                 </div>
             </section>

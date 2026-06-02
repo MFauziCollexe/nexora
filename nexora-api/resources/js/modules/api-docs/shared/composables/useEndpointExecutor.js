@@ -4,6 +4,10 @@ const formatJson = (value) => JSON.stringify(value ?? {}, null, 2);
 
 const getEndpointKey = (endpoint) => `${endpoint.method}:${endpoint.path}`;
 
+const getResponseDescription = (endpoint, status) =>
+    endpoint.responses?.find((response) => String(response.code) === String(status))
+        ?.description;
+
 export function useEndpointExecutor() {
     const requestBodies = reactive({});
     const requestParameters = reactive({});
@@ -74,21 +78,34 @@ export function useEndpointExecutor() {
             const data = endpoint.requestExample
                 ? JSON.parse(requestBodies[key] || "{}")
                 : undefined;
-            const response = await window.axios.request({
-                method: endpoint.method.toLowerCase(),
-                url,
-                data,
-                headers: {
-                    Accept: "application/json",
+
+            const response = await window.axios.post(
+                "/docs/try-it-out",
+                {
+                    method: endpoint.method.toUpperCase(),
+                    url,
+                    data,
                 },
-            });
+                {
+                    headers: {
+                        Accept: "application/json",
+                    },
+                    validateStatus: () => true,
+                },
+            );
+
+            const result = response.data ?? {};
+            const status = result.status ?? response.status;
 
             executeResults[key] = {
-                ok: true,
-                status: response.status,
-                statusText: response.statusText,
-                data: response.data,
-                headers: response.headers,
+                ok: status >= 200 && status < 300,
+                status,
+                statusText:
+                    getResponseDescription(endpoint, status) ??
+                    result.statusText ??
+                    response.statusText,
+                data: result.data,
+                headers: result.headers ?? {},
             };
         } catch (error) {
             executeResults[key] = {
