@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ApiDocsTryItOutController;
 use App\Http\Controllers\ApiActivityLogController;
+use App\Domains\Settings\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -20,8 +21,10 @@ Route::middleware('auth')->group(function () {
     return Inertia::render('Dashboard/Placeholder', [
         'page' => $page,
     ]);
+
 })->name('docs.page');
 
+    Route::get('/system/settings', [SettingsController::class, 'index'])->name('system.settings');
     Route::post('/docs/try-it-out', ApiDocsTryItOutController::class)->name('docs.try-it-out');
     Route::get('/system/api-activity-logs', [ApiActivityLogController::class, 'index'])->name('system.api-activity-logs.index');
     Route::get('/system/api-activity-logs/export', [ApiActivityLogController::class, 'export'])->name('system.api-activity-logs.export');

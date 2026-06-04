@@ -41,6 +41,10 @@ const toggleSection = (key) => {
          return '/dashboard'
      }
 
+     if (item.routeName === 'system.settings') {
+        return '/system/settings'
+    }
+
      if (item.routeName === 'docs.page' && item.page) {
          return `/docs/${encodeURIComponent(item.page)}`
      }
@@ -52,6 +56,10 @@ const isActiveItem = (item) => {
      if (!item.page) {
          return item.routeName === 'dashboard' && currentPath.value === '/dashboard'
      }
+
+     if (item.routeName === 'system.settings') {
+        return currentPath.value === '/system/settings'
+    }
 
      return currentPage.value === item.page
  }

@@ -17,9 +17,16 @@ export const dashboardNavigation = [
         key: "api",
         label: "API Endpoints",
         items: [
-            { label: authApiDocsModule.navigation.label, routeName: "docs.page", page: authApiDocsModule.navigation.page },
-            { label: usersApiDocsModule.navigation.label, routeName: "docs.page", page: usersApiDocsModule.navigation.page },
-            { label: "Settings", routeName: "docs.page", page: "settings" },
+            {
+                label: authApiDocsModule.navigation.label,
+                routeName: "docs.page",
+                page: authApiDocsModule.navigation.page,
+            },
+            {
+                label: usersApiDocsModule.navigation.label,
+                routeName: "docs.page",
+                page: usersApiDocsModule.navigation.page,
+            },
         ],
     },
     {
@@ -32,6 +39,10 @@ export const dashboardNavigation = [
                 page: "rate-limits",
             },
             { label: "Logs", routeName: "docs.page", page: "logs" },
+            {
+                label: "Settings",
+                routeName: "system.settings",
+            },
         ],
     },
 ];
