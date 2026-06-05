@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { router } from '@inertiajs/vue3'
-
+import VoiceAssistant from '@/modules/ai-chat/components/VoiceAssistant.vue'
 import Sidebar from '../components/Sidebar.vue'
 import Topbar from '../components/Topbar.vue'
 import GlobalLoading from '@/Components/GlobalLoading.vue'  // ← ini tetap, karena GlobalLoading adalah shared component
@@ -39,6 +39,7 @@ onMounted(() => {
 </script>
 
 <template>
+    <VoiceAssistant />
     <div
         class="min-h-screen bg-[#f5f7fb] transition-colors duration-200 dark:bg-slate-950 dark:text-slate-100"
     >
