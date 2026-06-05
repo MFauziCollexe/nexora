@@ -361,18 +361,61 @@ const statusLabel = {
 <template>
     <button
         v-if="!isOpen"
-        class="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-all hover:scale-105"
-        :class="status === 'standby'
-            ? 'bg-slate-700 hover:bg-slate-600'
-            : 'bg-violet-600 hover:bg-violet-700'"
+        class="fixed bottom-6 right-6 z-50 transition-all hover:scale-105 active:scale-95"
+        style="width: 72px; height: 72px; background: none; border: none; cursor: pointer;"
         :title="`Ucapkan '${WAKE_WORD}' atau klik untuk bicara`"
         @click="startListening"
     >
-        <span
-            v-if="status === 'standby'"
-            class="absolute inset-0 animate-ping rounded-full bg-slate-500 opacity-40"
-        />
-        <Mic class="relative h-6 w-6 text-white" />
+        <svg :data-status="status" width="72" height="72" viewBox="0 0 160 180" style="overflow: visible;">
+            <g class="r-float">
+                <line x1="80" y1="10" x2="80" y2="28" stroke="#534AB7" stroke-width="2.5" stroke-linecap="round"/>
+                <circle cx="80" cy="7" r="4" fill="#7F77DD" class="r-ant"/>
+                <rect x="32" y="28" width="96" height="72" rx="16" fill="#3C3489"/>
+                <rect x="40" y="34" width="80" height="20" rx="8" fill="#534AB7" opacity="0.5"/>
+                <rect class="r-ear-l" x="20" y="46" width="14" height="22" rx="5" fill="#534AB7" opacity="0.5"/>
+                <rect class="r-ear-r" x="126" y="46" width="14" height="22" rx="5" fill="#534AB7" opacity="0.5"/>
+                <rect x="44" y="46" width="28" height="22" rx="8" fill="#26215C"/>
+                <rect x="88" y="46" width="28" height="22" rx="8" fill="#26215C"/>
+                <g class="r-blink">
+                    <ellipse cx="58" cy="57" rx="9" ry="9" class="r-eye-fill"/>
+                    <ellipse cx="58" cy="57" rx="5" ry="5" fill="#EEEDFE"/>
+                    <circle cx="61" cy="54" r="2" fill="#fff"/>
+                </g>
+                <g class="r-blink-r">
+                    <ellipse cx="102" cy="57" rx="9" ry="9" class="r-eye-fill"/>
+                    <ellipse cx="102" cy="57" rx="5" ry="5" fill="#EEEDFE"/>
+                    <circle cx="105" cy="54" r="2" fill="#fff"/>
+                </g>
+                <rect x="52" y="80" width="56" height="12" rx="6" fill="#26215C"/>
+                <g class="r-m-idle">
+                    <path d="M 60 86 Q 80 94 100 86" stroke="#7F77DD" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                </g>
+                <g class="r-m-listen">
+                    <ellipse cx="80" cy="86" rx="8" ry="5" fill="#534AB7"/>
+                </g>
+                <g class="r-m-think">
+                    <circle class="r-td1" cx="68" cy="86" r="3" fill="#7F77DD"/>
+                    <circle class="r-td2" cx="80" cy="86" r="3" fill="#7F77DD"/>
+                    <circle class="r-td3" cx="92" cy="86" r="3" fill="#7F77DD"/>
+                </g>
+                <g class="r-m-speak">
+                    <rect class="r-b1" x="62" y="82" width="5" height="8" rx="2" fill="#7F77DD"/>
+                    <rect class="r-b2" x="69" y="82" width="5" height="8" rx="2" fill="#AFA9EC"/>
+                    <rect class="r-b3" x="76" y="82" width="5" height="8" rx="2" fill="#EEEDFE"/>
+                    <rect class="r-b4" x="83" y="82" width="5" height="8" rx="2" fill="#AFA9EC"/>
+                    <rect class="r-b5" x="90" y="82" width="5" height="8" rx="2" fill="#7F77DD"/>
+                </g>
+                <rect x="68" y="100" width="24" height="10" rx="4" fill="#3C3489"/>
+                <rect x="28" y="110" width="104" height="62" rx="14" fill="#3C3489"/>
+                <rect x="42" y="122" width="76" height="38" rx="8" fill="#26215C"/>
+                <circle cx="58"  cy="134" r="5" fill="#534AB7" opacity="0.8"/>
+                <circle cx="80"  cy="134" r="5" fill="#7F77DD" opacity="0.8" class="r-ant"/>
+                <circle cx="102" cy="134" r="5" fill="#534AB7" opacity="0.8"/>
+                <rect x="52" y="148" width="56" height="5" rx="2.5" fill="#534AB7" opacity="0.5"/>
+                <rect x="38" y="168" width="30" height="10" rx="5" fill="#3C3489"/>
+                <rect x="92" y="168" width="30" height="10" rx="5" fill="#3C3489"/>
+            </g>
+        </svg>
     </button>
 
     <div
@@ -472,3 +515,54 @@ const statusLabel = {
         </div>
     </div>
 </template>
+
+<style scoped>
+/* ── Robot animations ── */
+.r-float { animation: r-float 3s ease-in-out infinite; transform-origin: 80px 90px; }
+@keyframes r-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+
+.r-blink   { animation: r-blink 4s ease-in-out infinite; transform-origin: 58px 57px; }
+.r-blink-r { animation: r-blink 4s ease-in-out infinite 0.3s; transform-origin: 102px 57px; }
+@keyframes r-blink { 0%,90%,100%{transform:scaleY(1)} 95%{transform:scaleY(0.1)} }
+
+.r-ant { animation: r-ant 1.5s ease-in-out infinite; }
+@keyframes r-ant { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+@keyframes r-ear { 0%,100%{opacity:0.3} 50%{opacity:1} }
+[data-status="listening"] .r-ear-l { animation: r-ear 0.8s ease-in-out infinite; }
+[data-status="listening"] .r-ear-r { animation: r-ear 0.8s ease-in-out infinite 0.4s; }
+
+.r-m-idle   { display: block; }
+.r-m-listen { display: none; }
+.r-m-think  { display: none; }
+.r-m-speak  { display: none; }
+[data-status="listening"] .r-m-idle   { display: none; }
+[data-status="listening"] .r-m-listen { display: block; }
+[data-status="thinking"]  .r-m-idle   { display: none; }
+[data-status="thinking"]  .r-m-think  { display: block; }
+[data-status="speaking"]  .r-m-idle   { display: none; }
+[data-status="speaking"]  .r-m-speak  { display: block; }
+
+.r-td1, .r-td2, .r-td3 { opacity: 0.2; }
+[data-status="thinking"] .r-td1 { animation: r-dot 1s ease-in-out infinite; }
+[data-status="thinking"] .r-td2 { animation: r-dot 1s ease-in-out infinite 0.33s; }
+[data-status="thinking"] .r-td3 { animation: r-dot 1s ease-in-out infinite 0.66s; }
+@keyframes r-dot { 0%,100%{opacity:0.2} 50%{opacity:1} }
+
+.r-b1,.r-b2,.r-b3,.r-b4,.r-b5 { transform-origin: center bottom; }
+[data-status="speaking"] .r-b1 { animation: rb1 0.4s ease-in-out infinite; }
+[data-status="speaking"] .r-b2 { animation: rb2 0.4s ease-in-out infinite 0.08s; }
+[data-status="speaking"] .r-b3 { animation: rb3 0.4s ease-in-out infinite 0.16s; }
+[data-status="speaking"] .r-b4 { animation: rb4 0.4s ease-in-out infinite 0.24s; }
+[data-status="speaking"] .r-b5 { animation: rb5 0.4s ease-in-out infinite 0.32s; }
+@keyframes rb1 { 0%,100%{transform:scaleY(0.3)} 50%{transform:scaleY(1)}   }
+@keyframes rb2 { 0%,100%{transform:scaleY(0.6)} 50%{transform:scaleY(0.2)} }
+@keyframes rb3 { 0%,100%{transform:scaleY(1)}   50%{transform:scaleY(0.4)} }
+@keyframes rb4 { 0%,100%{transform:scaleY(0.4)} 50%{transform:scaleY(0.9)} }
+@keyframes rb5 { 0%,100%{transform:scaleY(0.7)} 50%{transform:scaleY(0.3)} }
+
+[data-status="standby"]   .r-eye-fill { fill: #7F77DD; }
+[data-status="listening"] .r-eye-fill { fill: #ef4444; }
+[data-status="thinking"]  .r-eye-fill { fill: #818cf8; }
+[data-status="speaking"]  .r-eye-fill { fill: #4ade80; }
+</style>
