@@ -1,9 +1,10 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import axios from 'axios'
 import { MicOff, X, RotateCcw } from 'lucide-vue-next'
 
 const WAKE_WORD = 'nexora'
+const WAKE_REPLY = 'Ya, saya mendengarkan.'
 const STOP_WORDS = [
     'terima kasih nexora',
     'bye',
@@ -16,12 +17,20 @@ const STOP_WORDS = [
     'selesai',
 ]
 const STOP_WORD_ALIASES = ['bai', 'bay']
+const SPEECH_REPLACEMENTS = [
+    [/\bactivity\s+locks?\b/gi, 'activity logs'],
+    [/\baktifitas\s+logs?\b/gi, 'activity logs'],
+    [/\baktivitas\s+logs?\b/gi, 'activity logs'],
+    [/\bactivity\s+log\b/gi, 'activity logs'],
+    [/\bapi\s+activity\s+locks?\b/gi, 'api activity logs'],
+]
 
 const isOpen = ref(false)
 const status = ref('standby')
 const transcript = ref('')
 const messages = ref([])
 const errorMsg = ref('')
+const robotPosition = ref('bottom-right')
 
 let isProcessing = false
 let isStartingMain = false
@@ -146,8 +155,8 @@ const speak = (text) => {
 
     const utterance = new SpeechSynthesisUtterance(text)
     utterance.lang = 'id-ID'
-    utterance.rate = 1.15
-    utterance.pitch = 0.85
+    utterance.rate = 1.20
+    utterance.pitch = 1
     utterance.onend = () => continueListening()
     utterance.onerror = () => continueListening()
 
@@ -172,6 +181,66 @@ const askAI = async (userText) => {
     }
 }
 
+const normalizeRecognizedCommand = (text) => SPEECH_REPLACEMENTS.reduce(
+    (normalizedText, [pattern, replacement]) => normalizedText.replace(pattern, replacement),
+    text,
+)
+
+const answerActivityLogsTotal = async () => {
+    try {
+        const { data } = await axios.get('/system/api-activity-logs?page=1')
+        const total = data.meta?.total ?? 0
+
+        speak(`Total data activity logs saat ini ${total} data.`)
+    } catch (error) {
+        errorMsg.value = 'Gagal mengambil total activity logs.'
+        continueListening(1000)
+    }
+}
+
+const robotPositionClasses = computed(() => {
+    const positions = {
+        'bottom-right': {
+            container: 'bottom-6 right-6',
+            align: 'items-end',
+        },
+        'bottom-left': {
+            container: 'bottom-6 left-[284px]',
+            align: 'items-start',
+        },
+        'top-right': {
+            container: 'top-6 right-6',
+            align: 'items-end',
+        },
+        'top-left': {
+            container: 'top-6 left-[284px]',
+            align: 'items-start',
+        },
+        left: {
+            container: 'left-[284px] top-1/2 -translate-y-1/2',
+            align: 'items-start',
+        },
+        right: {
+            container: 'right-6 top-1/2 -translate-y-1/2',
+            align: 'items-end',
+        },
+        top: {
+            container: 'left-1/2 top-6 -translate-x-1/2',
+            align: 'items-center',
+        },
+        bottom: {
+            container: 'bottom-6 left-1/2 -translate-x-1/2',
+            align: 'items-center',
+        },
+        center: {
+            container: 'left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2',
+            align: 'items-center',
+        },
+    }
+
+    return positions[robotPosition.value] ?? positions['bottom-right']
+})
+
 const normalizeSpeechText = (text) => text
     .toLowerCase()
     .replace(/[^\p{L}\p{N}\s]/gu, ' ')
@@ -186,12 +255,73 @@ const isStopCommand = (text) => {
         || STOP_WORD_ALIASES.some((word) => words.includes(word))
 }
 
+const isActivityLogsTotalCommand = (text) => {
+    const normalizedText = normalizeSpeechText(text)
+    const asksTotal = ['berapa', 'total', 'jumlah', 'count'].some((word) => normalizedText.includes(word))
+    const mentionsActivityLogs = normalizedText.includes('activity logs')
+        || normalizedText.includes('api activity logs')
+        || normalizedText.includes('log activity')
+
+    return asksTotal && mentionsActivityLogs
+}
+
+const detectMoveCommand = (text) => {
+    const normalizedText = normalizeSpeechText(text)
+    const hasMoveIntent = [
+        'pindah',
+        'geser',
+        'jalan',
+        'bergerak',
+        'move',
+        'ke ',
+        'pojok',
+        'sebelah',
+    ].some((word) => normalizedText.includes(word))
+
+    if (!hasMoveIntent) return null
+
+    const hasLeft = normalizedText.includes('kiri') || normalizedText.includes('left')
+    const hasRight = normalizedText.includes('kanan') || normalizedText.includes('right')
+    const hasTop = normalizedText.includes('atas') || normalizedText.includes('top')
+    const hasBottom = normalizedText.includes('bawah') || normalizedText.includes('bottom')
+    const hasCenter = normalizedText.includes('tengah') || normalizedText.includes('center')
+
+    if (hasCenter) return 'center'
+    if (hasLeft && hasTop) return 'top-left'
+    if (hasRight && hasTop) return 'top-right'
+    if (hasLeft && hasBottom) return 'bottom-left'
+    if (hasRight && hasBottom) return 'bottom-right'
+    if (hasLeft) return 'left'
+    if (hasRight) return 'right'
+    if (hasTop) return 'top'
+    if (hasBottom) return 'bottom'
+
+    return null
+}
+
+const moveRobot = (position) => {
+    robotPosition.value = position
+    speak('Baik, saya pindah.')
+}
+
 const handleRecognizedText = async (text) => {
-    const cleanText = text.trim()
+    const cleanText = normalizeRecognizedCommand(text.trim())
     if (!cleanText || isProcessing) return
 
     isProcessing = true
     transcript.value = cleanText
+
+    const movePosition = detectMoveCommand(cleanText)
+    if (movePosition) {
+        moveRobot(movePosition)
+        return
+    }
+
+    if (isActivityLogsTotalCommand(cleanText)) {
+        status.value = 'thinking'
+        await answerActivityLogsTotal()
+        return
+    }
 
     if (isStopCommand(cleanText)) {
         status.value = 'speaking'
@@ -228,12 +358,11 @@ if (wakeRecognition) {
 
         stopWake()
         isOpen.value = true
-        status.value = 'listening'
         transcript.value = ''
         errorMsg.value = ''
         isProcessing = false
 
-        continueListening(600)
+        speak(WAKE_REPLY)
     }
 
     wakeRecognition.onend = () => {
@@ -359,7 +488,13 @@ const statusLabel = {
 </script>
 
 <template>
-    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+    <div
+        :class="[
+            'fixed z-50 flex flex-col gap-2 transition-all duration-700 ease-in-out',
+            robotPositionClasses.container,
+            robotPositionClasses.align,
+        ]"
+    >
         <div
             v-if="isOpen || transcript || errorMsg"
             class="max-w-64 rounded-2xl border border-slate-200 bg-white/95 px-3 py-2 text-right shadow-lg backdrop-blur dark:border-slate-700 dark:bg-slate-900/95"

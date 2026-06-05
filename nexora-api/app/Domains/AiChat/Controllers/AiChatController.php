@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class AiChatController extends Controller
 {
@@ -18,6 +19,14 @@ class AiChatController extends Controller
             'messages.*.role'    => ['required', 'in:user,assistant'],
             'messages.*.content' => ['required', 'string'],
         ]);
+
+        $apiKey = config('services.groq.key');
+
+        if (blank($apiKey)) {
+            return response()->json([
+                'reply' => 'Maaf, API key AI belum dikonfigurasi.',
+            ]);
+        }
 
         // ── Ambil schema semua tabel ───────────────
         $schema = $this->getDatabaseSchema();
@@ -39,20 +48,44 @@ CARA KERJA:
 - Gunakan Bahasa Indonesia";
 
         // ── Kirim ke Groq ──────────────────────────
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . config('services.groq.key'),
-            'Content-Type'  => 'application/json',
-        ])->post('https://api.groq.com/openai/v1/chat/completions', [
-            'model'      => 'llama-3.3-70b-versatile',
-            'max_tokens' => 512,
-            'messages'   => array_merge(
-                [['role' => 'system', 'content' => $systemPrompt]],
-                $request->messages
-            ),
-        ]);
+        try {
+            $response = Http::timeout(30)
+                ->retry(1, 500)
+                ->withToken($apiKey)
+                ->acceptJson()
+                ->post('https://api.groq.com/openai/v1/chat/completions', [
+                    'model'      => 'llama-3.3-70b-versatile',
+                    'max_tokens' => 512,
+                    'messages'   => array_merge(
+                        [['role' => 'system', 'content' => $systemPrompt]],
+                        $request->messages
+                    ),
+                ]);
+        } catch (Throwable $e) {
+            Log::warning('AI chat request failed.', [
+                'message' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'reply' => 'Maaf, layanan AI sedang tidak bisa dihubungi.',
+            ]);
+        }
 
         if ($response->failed()) {
-            return response()->json(['error' => 'Gagal menghubungi AI.'], 500);
+            Log::warning('AI chat provider returned an error.', [
+                'status' => $response->status(),
+                'body' => $response->json() ?? $response->body(),
+            ]);
+
+            if ($response->status() === 429) {
+                return response()->json([
+                    'reply' => 'Maaf, limit penggunaan AI hari ini sedang penuh. Coba lagi beberapa menit lagi.',
+                ]);
+            }
+
+            return response()->json([
+                'reply' => 'Maaf, layanan AI sedang gagal memproses permintaan.',
+            ]);
         }
 
         $aiReply = $response->json('choices.0.message.content', '');
@@ -74,23 +107,41 @@ CARA KERJA:
                 $resultJson = json_encode($results, JSON_PRETTY_PRINT);
 
                 // Kirim hasil ke AI untuk dijadikan jawaban natural
-                $followUp = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . config('services.groq.key'),
-                    'Content-Type'  => 'application/json',
-                ])->post('https://api.groq.com/openai/v1/chat/completions', [
-                    'model'      => 'llama-3.3-70b-versatile',
-                    'max_tokens' => 256,
-                    'messages'   => [
-                        ['role' => 'system', 'content' => 'Ubah hasil query database berikut menjadi jawaban singkat dalam Bahasa Indonesia. Maksimal 2 kalimat. Langsung ke poin, tidak perlu basa-basi.'],
-                        ['role' => 'user',   'content' => "Pertanyaan: {$request->messages[count($request->messages)-1]['content']}\n\nHasil query:\n{$resultJson}"],
-                    ],
-                ]);
+                $followUp = Http::timeout(30)
+                    ->retry(1, 500)
+                    ->withToken($apiKey)
+                    ->acceptJson()
+                    ->post('https://api.groq.com/openai/v1/chat/completions', [
+                        'model'      => 'llama-3.3-70b-versatile',
+                        'max_tokens' => 256,
+                        'messages'   => [
+                            ['role' => 'system', 'content' => 'Ubah hasil query database berikut menjadi jawaban singkat dalam Bahasa Indonesia. Maksimal 2 kalimat. Langsung ke poin, tidak perlu basa-basi.'],
+                            ['role' => 'user',   'content' => "Pertanyaan: {$request->messages[count($request->messages)-1]['content']}\n\nHasil query:\n{$resultJson}"],
+                        ],
+                    ]);
+
+                if ($followUp->failed()) {
+                    Log::warning('AI chat follow-up returned an error.', [
+                        'status' => $followUp->status(),
+                        'body' => $followUp->json() ?? $followUp->body(),
+                    ]);
+
+                    if ($followUp->status() === 429) {
+                        return response()->json(['reply' => 'Data berhasil diambil, tetapi limit AI sedang penuh untuk merangkum hasilnya.']);
+                    }
+
+                    return response()->json(['reply' => 'Data berhasil diambil, tetapi AI belum bisa merangkum hasilnya.']);
+                }
 
                 $naturalReply = $followUp->json('choices.0.message.content', 'Maaf, tidak bisa memproses hasilnya.');
 
                 return response()->json(['reply' => $naturalReply]);
 
-            } catch (\Exception $e) {
+            } catch (Throwable $e) {
+                Log::warning('AI chat database query flow failed.', [
+                    'message' => $e->getMessage(),
+                ]);
+
                 return response()->json(['reply' => 'Maaf, terjadi kesalahan saat mengambil data dari database.']);
             }
         }
