@@ -14,18 +14,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->statefulApi();
-
-        $middleware->web(prepend: [
-            \App\Http\Middleware\CorsMiddleware::class,
-        ], append: [
+        $middleware->web(append: [
             \App\Http\Middleware\HandleInertiaRequests::class,
             // \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
 
-        $middleware->api(prepend: [
-            \App\Http\Middleware\CorsMiddleware::class,
-        ], append: [
+        $middleware->api(append: [
             \App\Http\Middleware\RecordApiActivity::class,
         ]);
 

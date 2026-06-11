@@ -293,8 +293,12 @@ export function LoginPage() {
 
       await login(form);
       window.location.href = "/dashboard";
-    } catch {
-      setError("Email atau password tidak sesuai.");
+    } catch (loginError) {
+      setError(
+        loginError instanceof Error
+          ? loginError.message
+          : "Email atau password tidak sesuai.",
+      );
     } finally {
       setLoading(false);
     }
