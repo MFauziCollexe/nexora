@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import { AuthProvider } from "@/lib/AuthContext";
 import "./globals.css";
 
@@ -27,12 +28,24 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(){
+                var t = localStorage.getItem("nexora-theme");
+                var d = t ? t === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+                document.documentElement.classList.toggle("dark", d);
+              })();
+            `,
+          }}
+        />
         <AuthProvider>
-          <div suppressHydrationWarning>  {/* ← tambahkan ini */}
-            {children}
-          </div>
+          {children}
         </AuthProvider>
       </body>
     </html>
