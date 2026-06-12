@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const statCards = [
   { label: "Total Roles",   value: 8,  sub: "All roles in system",        iconBg: "bg-blue-50 dark:bg-blue-950",   iconColor: "text-blue-500",   icon: "shield" },
@@ -118,6 +119,7 @@ const roles = [
 ];
 
 export default function RolesPage() {
+  const router = useRouter();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("All Types");
@@ -290,7 +292,7 @@ export default function RolesPage() {
                       <span className={`${r.typeColor} text-[11px] font-semibold px-2 py-0.5 rounded-full inline-flex w-max`}>{r.type}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-[12px] text-slate-600 dark:text-slate-400 break-words whitespace-normal">{r.description}</td>
+                  <td className="px-4 py-3 text-[12px] text-slate-600 dark:text-slate-400 whitespace-normal">{r.description}</td>
                   <td className="px-4 py-3 text-[12px] text-slate-500 dark:text-slate-400 whitespace-nowrap">{r.users}</td>
                   <td className="px-4 py-3 text-[12px] text-slate-500 dark:text-slate-400 whitespace-nowrap">{r.permissions}</td>
                   <td className="px-4 py-3 whitespace-nowrap">
@@ -299,7 +301,7 @@ export default function RolesPage() {
                   <td className="px-4 py-3 text-[12px] text-slate-500 dark:text-slate-400 whitespace-nowrap">{r.createdDate} by {r.createdBy}</td>
                   <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-1.5">
-                      <button className="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-blue-50 dark:hover:bg-blue-950 hover:border-blue-200 flex items-center justify-center text-slate-400 hover:text-blue-500 transition-colors">
+                      <button onClick={() => router.push(`/master-data/roles/${r.id}`)} className="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-blue-50 dark:hover:bg-blue-950 hover:border-blue-200 flex items-center justify-center text-slate-400 hover:text-blue-500 transition-colors">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5">
                           <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
                           <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
