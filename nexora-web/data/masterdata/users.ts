@@ -1,0 +1,20 @@
+export const statCards = [
+  { label: "Total Users",    value: 25, sub: "All registered users",  iconBg: "bg-blue-50 dark:bg-blue-950",     iconColor: "text-blue-500",   icon: "user"   },
+  { label: "Active Users",   value: 22, sub: "Currently active",      iconBg: "bg-green-50 dark:bg-green-950",   iconColor: "text-green-500",  icon: "check"  },
+  { label: "Inactive Users", value: 2,  sub: "Inactive accounts",     iconBg: "bg-yellow-50 dark:bg-yellow-950", iconColor: "text-yellow-500", icon: "pause"  },
+  { label: "Locked Users",   value: 1,  sub: "Locked accounts",       iconBg: "bg-red-50 dark:bg-red-950",       iconColor: "text-red-500",    icon: "lock"   },
+  { label: "Online Now",     value: 5,  sub: "Active sessions",       iconBg: "bg-purple-50 dark:bg-purple-950", iconColor: "text-purple-500", icon: "online" },
+];
+
+export const users = [
+  { id: 1,  avatar: "AD", username: "admin",       department: "IT",        fullName: "Admin User",     employee: "ADM001", role: "Super Admin", roleColor: "bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-400", email: "admin@nexora.com",  status: "Active",   statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400",   lastLogin: "11 Jun 2026\n08:30" },
+  { id: 2,  avatar: "BS", username: "finance01",   department: "Finance",   fullName: "Budi Santoso",   employee: "FIN001", role: "Staff",       roleColor: "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400",       email: "budi@nexora.com",   status: "Active",   statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400",   lastLogin: "10 Jun 2026\n17:00" },
+  { id: 3,  avatar: "SA", username: "purchase01",  department: "Purchase",  fullName: "Siti Aisyah",    employee: "PUR001", role: "Staff",       roleColor: "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400",       email: "siti@nexora.com",   status: "Active",   statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400",   lastLogin: "10 Jun 2026\n16:20" },
+  { id: 4,  avatar: "RP", username: "inventory01", department: "Inventory", fullName: "Rizky Pratama",  employee: "INV001", role: "Supervisor",  roleColor: "bg-cyan-100 text-cyan-700 dark:bg-cyan-950 dark:text-cyan-400",       email: "rizky@nexora.com",  status: "Active",   statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400",   lastLogin: "10 Jun 2026\n15:45" },
+  { id: 5,  avatar: "FA", username: "itmanager",   department: "IT",        fullName: "Fauzi Ahmad",    employee: "ITM001", role: "Manager",     roleColor: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-400",email: "fauzi@nexora.com",  status: "Active",   statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400",   lastLogin: "09 Jun 2026\n11:10" },
+  { id: 6,  avatar: "LW", username: "hrga01",      department: "HRGA",      fullName: "Linda Wati",     employee: "HRG001", role: "Staff",       roleColor: "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400",       email: "linda@nexora.com",  status: "Inactive", statusColor: "bg-yellow-100 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-400",lastLogin: "-" },
+  { id: 7,  avatar: "DK", username: "warehouse01", department: "Warehouse", fullName: "Dedi Kurniawan", employee: "WH001",  role: "Staff",       roleColor: "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400",       email: "dedi@nexora.com",   status: "Locked",   statusColor: "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400",           lastLogin: "-" },
+  { id: 8,  avatar: "MR", username: "sales01",     department: "Sales",     fullName: "Mira Rahma",     employee: "SAL001", role: "Staff",       roleColor: "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400",       email: "maya@nexora.com",   status: "Active",   statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400",   lastLogin: "11 Jun 2026\n07:45" },
+];
+
+export default users;

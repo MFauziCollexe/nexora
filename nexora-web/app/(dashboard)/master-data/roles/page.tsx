@@ -2,121 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
-const statCards = [
-  { label: "Total Roles",   value: 8,  sub: "All roles in system",        iconBg: "bg-blue-50 dark:bg-blue-950",   iconColor: "text-blue-500",   icon: "shield" },
-  { label: "Active Roles",  value: 7,  sub: "Currently active",          iconBg: "bg-green-50 dark:bg-green-950", iconColor: "text-green-500",  icon: "check"  },
-  { label: "System Roles",  value: 3,  sub: "Built-in roles",             iconBg: "bg-yellow-50 dark:bg-yellow-950", iconColor: "text-yellow-500", icon: "crown"  },
-  { label: "Custom Roles",  value: 5,  sub: "Custom created roles",       iconBg: "bg-purple-50 dark:bg-purple-950", iconColor: "text-purple-500", icon: "user"   },
-  { label: "Assigned Users", value: 52, sub: "Users with roles",          iconBg: "bg-slate-50 dark:bg-slate-950",  iconColor: "text-slate-500",  icon: "users"  },
-];
-
-const roles = [
-  {
-    id: 1,
-    name: "Super Admin",
-    type: "System Role",
-    typeColor: "bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-400",
-    description: "Full access to all modules and system settings",
-    users: 2,
-    permissions: 125,
-    status: "Active",
-    statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400",
-    createdDate: "10 Jun 2026",
-    createdBy: "admin",
-  },
-  {
-    id: 2,
-    name: "Manager",
-    type: "Custom Role",
-    typeColor: "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400",
-    description: "Management access for operational activities",
-    users: 8,
-    permissions: 80,
-    status: "Active",
-    statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400",
-    createdDate: "10 Jun 2026",
-    createdBy: "admin",
-  },
-  {
-    id: 3,
-    name: "Supervisor",
-    type: "Custom Role",
-    typeColor: "bg-cyan-100 text-cyan-700 dark:bg-cyan-950 dark:text-cyan-400",
-    description: "Monitoring and approval access",
-    users: 6,
-    permissions: 60,
-    status: "Active",
-    statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400",
-    createdDate: "10 Jun 2026",
-    createdBy: "admin",
-  },
-  {
-    id: 4,
-    name: "Staff",
-    type: "Custom Role",
-    typeColor: "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400",
-    description: "Daily operational access for staff",
-    users: 35,
-    permissions: 45,
-    status: "Active",
-    statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400",
-    createdDate: "11 Jun 2026",
-    createdBy: "admin",
-  },
-  {
-    id: 5,
-    name: "Accountant",
-    type: "Custom Role",
-    typeColor: "bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-400",
-    description: "Finance and accounting access",
-    users: 4,
-    permissions: 55,
-    status: "Active",
-    statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400",
-    createdDate: "11 Jun 2026",
-    createdBy: "admin",
-  },
-  {
-    id: 6,
-    name: "IT Support",
-    type: "System Role",
-    typeColor: "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400",
-    description: "System maintenance and technical support",
-    users: 1,
-    permissions: 30,
-    status: "Inactive",
-    statusColor: "bg-yellow-100 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-400",
-    createdDate: "12 Jun 2026",
-    createdBy: "admin",
-  },
-  {
-    id: 7,
-    name: "Warehouse Staff",
-    type: "Custom Role",
-    typeColor: "bg-yellow-100 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-400",
-    description: "Warehouse and inventory management",
-    users: 7,
-    permissions: 40,
-    status: "Active",
-    statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400",
-    createdDate: "12 Jun 2026",
-    createdBy: "admin",
-  },
-  {
-    id: 8,
-    name: "Purchasing Staff",
-    type: "Custom Role",
-    typeColor: "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400",
-    description: "Purchasing and vendor management",
-    users: 5,
-    permissions: 38,
-    status: "Active",
-    statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400",
-    createdDate: "12 Jun 2026",
-    createdBy: "admin",
-  },
-];
+import StatCards from "@/components/masterdata/StatCards";
+import DrawerForm from "@/components/masterdata/DrawerForm";
+import { statCards, roles as rolesData } from "@/data/masterdata/roles";
 
 export default function RolesPage() {
   const router = useRouter();
@@ -126,7 +14,7 @@ export default function RolesPage() {
   const [filterStatus, setFilterStatus] = useState("All Status");
   const [filterCreatedBy, setFilterCreatedBy] = useState("All Users");
 
-  const filtered = roles.filter((r) => {
+  const filtered = rolesData.filter((r) => {
     const matchSearch =
       r.name.toLowerCase().includes(search.toLowerCase()) ||
       r.description.toLowerCase().includes(search.toLowerCase());
@@ -150,24 +38,7 @@ export default function RolesPage() {
         <span className="text-slate-600 dark:text-slate-300 font-medium">Roles</span>
       </div>
 
-      <div className="grid grid-cols-5 gap-3">
-        {statCards.map((s) => (
-          <div key={s.label} className="bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm p-3 flex items-center gap-3">
-            <div className={`${s.iconBg} ${s.iconColor} w-10 h-10 rounded-full flex items-center justify-center shrink-0`}>
-              {s.icon === "shield" && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>}
-              {s.icon === "check" && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M20 6L9 17l-5-5"/></svg>}
-              {s.icon === "crown" && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M2 17l4-11 4 7 4-7 4 11H2z"/></svg>}
-              {s.icon === "user" && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>}
-              {s.icon === "users" && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/></svg>}
-            </div>
-            <div>
-              <p className="text-[10px] text-slate-400 dark:text-slate-500">{s.label}</p>
-              <p className="text-[20px] font-bold text-slate-800 dark:text-white leading-tight">{s.value}</p>
-              <p className="text-[10px] text-slate-400 dark:text-slate-500">{s.sub}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+      <StatCards cards={statCards} />
 
       <div className="flex items-end gap-2 overflow-x-auto pb-1">
 
@@ -338,72 +209,53 @@ export default function RolesPage() {
         )}
       </div>
 
-      {drawerOpen && (
-        <div className="fixed inset-0 bg-black/30 z-40" onClick={() => setDrawerOpen(false)} />
-      )}
+      <DrawerForm open={drawerOpen} title="Add New Role" onClose={() => setDrawerOpen(false)}>
+        <div>
+          <h3 className="text-[12px] font-bold text-slate-700 dark:text-slate-300 mb-3">Role Information</h3>
+          <div className="space-y-3">
+            {[
+              { label: "Role Name", type: "text", placeholder: "Enter role name", required: true },
+              { label: "Role Type", type: "select", placeholder: "Select role type", required: true, options: ["Select type", "System Role", "Custom Role"] },
+              { label: "Description", type: "textarea", placeholder: "Enter description", required: false },
+              { label: "Created By", type: "text", placeholder: "Admin name", required: true },
+            ].map((field) => (
+              <div key={field.label}>
+                <label className="text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1 block">
+                  {field.label} {field.required && <span className="text-red-500">*</span>}
+                </label>
+                {field.type === "select" ? (
+                  <select className="w-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg px-3 py-2 text-[12px] text-slate-500 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900">
+                    {field.options?.map((o) => <option key={o}>{o}</option>)}
+                  </select>
+                ) : field.type === "textarea" ? (
+                  <textarea
+                    rows={4}
+                    placeholder={field.placeholder}
+                    className="w-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg px-3 py-2 text-[12px] text-slate-700 dark:text-slate-300 placeholder:text-slate-300 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900"
+                  />
+                ) : (
+                  <input
+                    type={field.type}
+                    placeholder={field.placeholder}
+                    className="w-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg px-3 py-2 text-[12px] text-slate-700 dark:text-slate-300 placeholder:text-slate-300 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900"
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
 
-      <div className={`
-        fixed top-0 right-0 h-full w-80 bg-white dark:bg-slate-800 shadow-2xl z-50
-        transform transition-transform duration-300 ease-in-out overflow-y-auto
-        ${drawerOpen ? "translate-x-0" : "translate-x-full"}
-      `}>
-        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-700">
-          <h2 className="text-[14px] font-bold text-slate-800 dark:text-white">Add New Role</h2>
-          <button onClick={() => setDrawerOpen(false)} className="w-7 h-7 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center justify-center text-slate-400 transition-colors">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
-              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
+        <div className="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-700">
+          <button onClick={() => setDrawerOpen(false)}
+            className="flex-1 border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 text-[12px] font-medium py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+          >
+            Cancel
+          </button>
+          <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-[12px] font-semibold py-2 rounded-lg transition-colors">
+            Save Role
           </button>
         </div>
-
-        <div className="px-5 py-4 space-y-4">
-          <div>
-            <h3 className="text-[12px] font-bold text-slate-700 dark:text-slate-300 mb-3">Role Information</h3>
-            <div className="space-y-3">
-              {[
-                { label: "Role Name", type: "text", placeholder: "Enter role name", required: true },
-                { label: "Role Type", type: "select", placeholder: "Select role type", required: true, options: ["Select type", "System Role", "Custom Role"] },
-                { label: "Description", type: "textarea", placeholder: "Enter description", required: false },
-                { label: "Created By", type: "text", placeholder: "Admin name", required: true },
-              ].map((field) => (
-                <div key={field.label}>
-                  <label className="text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1 block">
-                    {field.label} {field.required && <span className="text-red-500">*</span>}
-                  </label>
-                  {field.type === "select" ? (
-                    <select className="w-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg px-3 py-2 text-[12px] text-slate-500 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900">
-                      {field.options?.map((o) => <option key={o}>{o}</option>)}
-                    </select>
-                  ) : field.type === "textarea" ? (
-                    <textarea
-                      rows={4}
-                      placeholder={field.placeholder}
-                      className="w-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg px-3 py-2 text-[12px] text-slate-700 dark:text-slate-300 placeholder:text-slate-300 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900"
-                    />
-                  ) : (
-                    <input
-                      type={field.type}
-                      placeholder={field.placeholder}
-                      className="w-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg px-3 py-2 text-[12px] text-slate-700 dark:text-slate-300 placeholder:text-slate-300 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900"
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-700">
-            <button onClick={() => setDrawerOpen(false)}
-              className="flex-1 border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 text-[12px] font-medium py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-            >
-              Cancel
-            </button>
-            <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-[12px] font-semibold py-2 rounded-lg transition-colors">
-              Save Role
-            </button>
-          </div>
-        </div>
-      </div>
+      </DrawerForm>
     </div>
   );
 }

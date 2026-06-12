@@ -80,7 +80,6 @@ export const menuItems: MenuItem[] = [
         children: [
           { label: "Users", href: "/dashboard/master-data/users", active: false, code: "C01" },
           { label: "Roles", href: "/dashboard/master-data/roles", active: false, code: "C02" },
-          { label: "Permissions", href: "/dashboard/master-data/permissions", active: false, code: "C03" },
         ],
       },
     ],

@@ -30,7 +30,14 @@ export function MenuProvider({ children }: { children: ReactNode }) {
 
     try {
       const data = await fetchUserMenus();
-      setMenus(data);
+      const filtered = data.map((m) => ({
+        ...m,
+        submenus: m.submenus?.map((s) => ({
+          ...s,
+          child_menus: s.child_menus?.filter((c) => c.name !== "Permissions"),
+        })).filter((s) => s.child_menus?.length || s.name !== "Permissions"),
+      })).filter((m) => m.submenus?.length || m.name !== "Permissions");
+      setMenus(filtered);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to load menus";
       setError(message);

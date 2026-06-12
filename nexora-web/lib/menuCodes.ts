@@ -62,7 +62,6 @@ export const MENU_CODES = {
   SYSTEM: "S06",
   USERS: "C01",
   ROLES: "C02",
-  PERMISSIONS: "C03",
 } as const;
 
 export type MenuCode = typeof MENU_CODES[keyof typeof MENU_CODES];
