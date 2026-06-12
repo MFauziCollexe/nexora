@@ -2,6 +2,7 @@
 
 use App\Domains\Auth\Controllers\AuthController;
 use App\Domains\User\Controllers\UserController;
+use App\Http\Controllers\MenuController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1/auth')->group(function () {
@@ -19,6 +20,9 @@ Route::prefix('v1/auth')->group(function () {
 });
 
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    // Menus for authenticated user (filtered by permission)
+    Route::get('menus', [MenuController::class, 'getMenusForUser'])->name('api.v1.menus');
+
     Route::get('users', [UserController::class, 'index'])->name('api.v1.users.index');
     Route::get('users/{id}', [UserController::class, 'show'])->name('api.v1.users.show');
     Route::put('users/{id}', [UserController::class, 'update'])->name('api.v1.users.update');

@@ -1,0 +1,65 @@
+export const menusModels = [
+    {
+        name: "MainMenu",
+        fields: [
+            { name: "id", type: "integer", open: true },
+            { name: "code", type: "string", open: true },
+            { name: "name", type: "string", open: true },
+            { name: "icon", type: "string | null", open: true },
+            { name: "href", type: "string | null", open: true },
+            { name: "description", type: "string | null", open: false },
+            { name: "order", type: "integer", open: true },
+            { name: "is_active", type: "boolean", open: true },
+            { name: "full_code", type: "string", open: true },
+            { name: "submenus", type: "Submenu[]", open: true },
+        ],
+    },
+    {
+        name: "Submenu",
+        fields: [
+            { name: "id", type: "integer", open: true },
+            { name: "main_menu_id", type: "integer", open: true },
+            { name: "code", type: "string", open: true },
+            { name: "name", type: "string", open: true },
+            { name: "icon", type: "string | null", open: false },
+            { name: "href", type: "string | null", open: true },
+            { name: "description", type: "string | null", open: false },
+            { name: "order", type: "integer", open: true },
+            { name: "is_active", type: "boolean", open: true },
+            { name: "full_code", type: "string", open: true },
+            { name: "child_menus", type: "ChildMenu[]", open: true },
+        ],
+    },
+    {
+        name: "ChildMenu",
+        fields: [
+            { name: "id", type: "integer", open: true },
+            { name: "submenu_id", type: "integer", open: true },
+            { name: "code", type: "string", open: true },
+            { name: "name", type: "string", open: true },
+            { name: "icon", type: "string | null", open: false },
+            { name: "href", type: "string | null", open: true },
+            { name: "description", type: "string | null", open: false },
+            { name: "order", type: "integer", open: true },
+            { name: "is_active", type: "boolean", open: true },
+            { name: "full_code", type: "string", open: true },
+            { name: "hierarchy", type: "MenuHierarchy", open: true },
+        ],
+    },
+    {
+        name: "MenuHierarchy",
+        fields: [
+            { name: "main", type: "string", open: true },
+            { name: "sub", type: "string", open: true },
+            { name: "child", type: "string", open: true },
+            { name: "fullCode", type: "string", open: true },
+        ],
+    },
+    {
+        name: "MenuCollection",
+        fields: [
+            { name: "success", type: "boolean", open: true },
+            { name: "data", type: "MainMenu[]", open: true },
+        ],
+    },
+];

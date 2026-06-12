@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Domains\User\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,11 +16,29 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            MenuSeeder::class,
+            PermissionSeeder::class,
         ]);
+
+        $user = User::firstOrCreate(
+            ['email' => 'test@example.com'],
+            ['name' => 'Test User', 'password' => 'password']
+        );
+
+        $roleId = DB::table('roles')->where('slug', 'super-admin')->value('id');
+
+        if ($roleId) {
+            DB::table('user_role')->updateOrInsert(
+                [
+                    'user_id' => $user->id,
+                    'role_id' => $roleId,
+                ],
+                [
+                    'updated_at' => now(),
+                    'created_at' => now(),
+                ]
+            );
+        }
     }
 }

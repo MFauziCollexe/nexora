@@ -1,4 +1,5 @@
 import { authApiDocsModule } from "../auth";
+import { menusApiDocsModule } from "../menus";
 import { usersApiDocsModule } from "../users";
 
 export const dashboardNavigation = [
@@ -26,6 +27,11 @@ export const dashboardNavigation = [
                 label: usersApiDocsModule.navigation.label,
                 routeName: "docs.page",
                 page: usersApiDocsModule.navigation.page,
+            },
+            {
+                label: menusApiDocsModule.navigation.label,
+                routeName: "docs.page",
+                page: menusApiDocsModule.navigation.page,
             },
         ],
     },

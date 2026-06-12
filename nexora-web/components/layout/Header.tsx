@@ -13,7 +13,7 @@ export function Header({ title, subtitle, onLogout }: HeaderProps) {
   const { user } = useAuth();
 
   return (
-    <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex items-center px-4 py-2.5 gap-3">
+    <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex items-center px-4 py-2 gap-3 h-13">
       <div>
         <h1 className="text-[15px] font-bold text-slate-800 dark:text-slate-100 leading-tight">{title}</h1>
         <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-tight">{subtitle}</p>
@@ -50,7 +50,7 @@ export function Header({ title, subtitle, onLogout }: HeaderProps) {
           onClick={onLogout}
           className="flex items-center gap-1.5 pl-2 pr-2.5 py-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
         >
-          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-[10px] font-bold">
+          <div className="w-6 h-6 rounded-full bg-linear-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-[10px] font-bold">
             {(user?.name || "A").charAt(0).toUpperCase()}
           </div>
           <div className="text-left">
