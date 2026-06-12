@@ -1,27 +1,26 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import StatCards from "@/components/masterdata/StatCards";
 import DrawerForm from "@/components/masterdata/DrawerForm";
-import { statCards, roles as rolesData } from "@/data/masterdata/roles";
+import { statCards, taxes } from "@/data/masterdata/tax";
 
-export default function RolesPage() {
-  const router = useRouter();
+export default function TaxPage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [filterType, setFilterType] = useState("All Types");
   const [filterStatus, setFilterStatus] = useState("All Status");
-  const [filterCreatedBy, setFilterCreatedBy] = useState("All Users");
+  const [filterType, setFilterType] = useState("All Type");
+  const [filterCategory, setFilterCategory] = useState("All Category");
 
-  const filtered = rolesData.filter((r) => {
+  const filtered = taxes.filter((tax) => {
     const matchSearch =
-      r.name.toLowerCase().includes(search.toLowerCase()) ||
-      r.description.toLowerCase().includes(search.toLowerCase());
-    const matchType = filterType === "All Types" || r.type === filterType;
-    const matchStatus = filterStatus === "All Status" || r.status === filterStatus;
-    const matchCreatedBy = filterCreatedBy === "All Users" || r.createdBy === filterCreatedBy;
-    return matchSearch && matchType && matchStatus && matchCreatedBy;
+      tax.code.toLowerCase().includes(search.toLowerCase()) ||
+      tax.name.toLowerCase().includes(search.toLowerCase()) ||
+      tax.category.toLowerCase().includes(search.toLowerCase());
+    const matchStatus = filterStatus === "All Status" || tax.status === filterStatus;
+    const matchType = filterType === "All Type" || tax.type === filterType;
+    const matchCategory = filterCategory === "All Category" || tax.category === filterCategory;
+    return matchSearch && matchStatus && matchType && matchCategory;
   });
 
   const inputClass = "border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg px-2.5 py-1.5 text-[12px] focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900 cursor-pointer";
@@ -33,40 +32,39 @@ export default function RolesPage() {
       <div className="flex items-center gap-1.5 text-[11px] text-slate-400 dark:text-slate-500">
         <span>Master Data</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3"><path d="M9 18l6-6-6-6"/></svg>
-        <span>System</span>
+        <span>Finance</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3"><path d="M9 18l6-6-6-6"/></svg>
-        <span className="text-slate-600 dark:text-slate-300 font-medium">Roles</span>
+        <span className="text-slate-600 dark:text-slate-300 font-medium">Tax</span>
       </div>
 
       <StatCards cards={statCards} />
 
       <div className="flex items-end gap-2 overflow-x-auto pb-1">
-
-        <div className="flex flex-col gap-0.5">
-          <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Role Type</label>
-          <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className={inputClass}>
-            {['All Types', 'System Role', 'Custom Role'].map((t) => <option key={t}>{t}</option>)}
-          </select>
-        </div>
-
         <div className="flex flex-col gap-0.5">
           <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Status</label>
           <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className={inputClass}>
-            {['All Status', 'Active', 'Inactive'].map((s) => <option key={s}>{s}</option>)}
+            {['All Status', 'Active', 'Inactive'].map((status) => <option key={status}>{status}</option>)}
           </select>
         </div>
 
         <div className="flex flex-col gap-0.5">
-          <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Created By</label>
-          <select value={filterCreatedBy} onChange={(e) => setFilterCreatedBy(e.target.value)} className={inputClass}>
-            {['All Users', 'admin'].map((c) => <option key={c}>{c}</option>)}
+          <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Type</label>
+          <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className={inputClass}>
+            {['All Type', 'Percentage', 'None'].map((type) => <option key={type}>{type}</option>)}
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-0.5">
+          <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Category</label>
+          <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)} className={inputClass}>
+            {['All Category', 'VAT', 'Excise', 'Withholding', 'Final', 'Other'].map((category) => <option key={category}>{category}</option>)}
           </select>
         </div>
 
         <div className="flex flex-col gap-0.5">
           <label className="text-[10px] text-transparent">x</label>
           <button
-            onClick={() => { setFilterType('All Types'); setFilterStatus('All Status'); setFilterCreatedBy('All Users'); setSearch(''); }}
+            onClick={() => { setFilterStatus('All Status'); setFilterType('All Type'); setFilterCategory('All Category'); setSearch(''); }}
             className={btnOutline}
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5">
@@ -82,9 +80,11 @@ export default function RolesPage() {
           <label className="text-[10px] text-transparent">x</label>
           <div className="relative">
             <input
-              type="text" placeholder="Search role..."
-              value={search} onChange={(e) => setSearch(e.target.value)}
-              className="w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-[12px] text-slate-700 dark:text-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900"
+              type="text"
+              placeholder="Search tax..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-40 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-[12px] text-slate-700 dark:text-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900"
             />
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2">
               <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
@@ -121,10 +121,9 @@ export default function RolesPage() {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-3.5 h-3.5">
               <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
             </svg>
-            Add Role
+            Add Tax
           </button>
         </div>
-
       </div>
 
       <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
@@ -132,19 +131,11 @@ export default function RolesPage() {
           <table className="w-full min-w-250">
             <thead>
               <tr className="border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
-                {[
-                  "Role Name",
-                  "Description",
-                  "Users",
-                  "Permissions",
-                  "Status",
-                  "Created Date",
-                  "Action",
-                ].map((h) => (
-                  <th key={h} className="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide whitespace-nowrap">
+                {['Code', 'Tax Name', 'Type', 'Category', 'Rate (%)', 'Calculation Basis', 'Status', 'Action'].map((header) => (
+                  <th key={header} className="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide whitespace-nowrap">
                     <div className="flex items-center gap-1">
-                      {h}
-                      {h !== "Action" && (
+                      {header}
+                      {header !== 'Action' && (
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3 text-slate-300 dark:text-slate-600 shrink-0">
                           <path d="M7 15l5 5 5-5M7 9l5-5 5 5"/>
                         </svg>
@@ -155,24 +146,20 @@ export default function RolesPage() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((r) => (
-                <tr key={r.id} className="border-b border-slate-50 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+              {filtered.map((tax) => (
+                <tr key={tax.id} className="border-b border-slate-50 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                  <td className="px-4 py-3 text-[12px] text-slate-700 dark:text-slate-300 whitespace-nowrap">{tax.code}</td>
+                  <td className="px-4 py-3 text-[12px] text-slate-600 dark:text-slate-400 whitespace-nowrap">{tax.name}</td>
+                  <td className="px-4 py-3 text-[12px] text-slate-500 dark:text-slate-400 whitespace-nowrap">{tax.type}</td>
+                  <td className="px-4 py-3 text-[12px] text-slate-500 dark:text-slate-400 whitespace-nowrap">{tax.category}</td>
+                  <td className="px-4 py-3 text-[12px] text-slate-500 dark:text-slate-400 whitespace-nowrap">{tax.rate}</td>
+                  <td className="px-4 py-3 text-[12px] text-slate-500 dark:text-slate-400 whitespace-nowrap">{tax.basis}</td>
                   <td className="px-4 py-3 whitespace-nowrap">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[12px] font-semibold text-slate-800 dark:text-slate-200">{r.name}</span>
-                      <span className={`${r.typeColor} text-[11px] font-semibold px-2 py-0.5 rounded-full inline-flex w-max`}>{r.type}</span>
-                    </div>
+                    <span className={`${tax.statusColor} text-[11px] font-semibold px-2 py-0.5 rounded-full`}>{tax.status}</span>
                   </td>
-                  <td className="px-4 py-3 text-[12px] text-slate-600 dark:text-slate-400 whitespace-normal">{r.description}</td>
-                  <td className="px-4 py-3 text-[12px] text-slate-500 dark:text-slate-400 whitespace-nowrap">{r.users}</td>
-                  <td className="px-4 py-3 text-[12px] text-slate-500 dark:text-slate-400 whitespace-nowrap">{r.permissions}</td>
-                  <td className="px-4 py-3 whitespace-nowrap">
-                    <span className={`${r.statusColor} text-[11px] font-semibold px-2 py-0.5 rounded-full`}>{r.status}</span>
-                  </td>
-                  <td className="px-4 py-3 text-[12px] text-slate-500 dark:text-slate-400 whitespace-nowrap">{r.createdDate} by {r.createdBy}</td>
                   <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-1.5">
-                      <button onClick={() => router.push(`/master-data/roles/${r.id}`)} className="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-blue-50 dark:hover:bg-blue-950 hover:border-blue-200 flex items-center justify-center text-slate-400 hover:text-blue-500 transition-colors">
+                      <button className="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-blue-50 dark:hover:bg-blue-950 hover:border-blue-200 flex items-center justify-center text-slate-400 hover:text-blue-500 transition-colors">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5">
                           <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
                           <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -204,40 +191,38 @@ export default function RolesPage() {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-10 h-10 text-slate-200 dark:text-slate-700 mx-auto mb-2">
               <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
             </svg>
-            <p className="text-[12px] text-slate-400 dark:text-slate-600">No roles found</p>
+            <p className="text-[12px] text-slate-400 dark:text-slate-600">No tax items found</p>
           </div>
         )}
       </div>
 
-      <DrawerForm open={drawerOpen} title="Add New Role" onClose={() => setDrawerOpen(false)}>
+      <DrawerForm open={drawerOpen} title="Add Tax" onClose={() => setDrawerOpen(false)}>
         <div>
-          <h3 className="text-[12px] font-bold text-slate-700 dark:text-slate-300 mb-3">Role Information</h3>
+          <h3 className="text-[12px] font-bold text-slate-700 dark:text-slate-300 mb-3">General Information</h3>
           <div className="space-y-3">
             {[
-              { label: "Role Name", type: "text", placeholder: "Enter role name", required: true },
-              { label: "Role Type", type: "select", placeholder: "Select role type", required: true, options: ["Select type", "System Role", "Custom Role"] },
-              { label: "Description", type: "textarea", placeholder: "Enter description", required: false },
-              { label: "Created By", type: "text", placeholder: "Admin name", required: true },
+              { label: "Tax Code", type: "text", placeholder: "e.g. TAX-PPN-11", required: true },
+              { label: "Tax Name", type: "text", placeholder: "e.g. PPN 11%", required: true },
+              { label: "Tax Type", type: "select", placeholder: "Select type", required: true, options: ['Percentage', 'None'] },
+              { label: "Tax Category", type: "select", placeholder: "Select category", required: true, options: ['VAT', 'Excise', 'Withholding', 'Final', 'Other'] },
+              { label: "Description", type: "text", placeholder: "Enter description (optional)", required: false },
+              { label: "Rate (%)", type: "number", placeholder: "e.g. 11", required: true },
+              { label: "Calculation Basis", type: "select", placeholder: "Select basis", required: true, options: ['DPP (Tax Base)', 'Gross Amount', 'Net Amount'] },
+              { label: "Status", type: "select", placeholder: "Select status", required: true, options: ['Active', 'Inactive'] },
             ].map((field) => (
               <div key={field.label}>
                 <label className="text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1 block">
                   {field.label} {field.required && <span className="text-red-500">*</span>}
                 </label>
-                {field.type === "select" ? (
+                {field.type === 'select' ? (
                   <select className="w-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg px-3 py-2 text-[12px] text-slate-500 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900">
-                    {field.options?.map((o) => <option key={o}>{o}</option>)}
+                    {field.options?.map((option) => <option key={option}>{option}</option>)}
                   </select>
-                ) : field.type === "textarea" ? (
-                  <textarea
-                    rows={4}
-                    placeholder={field.placeholder}
-                    className="w-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg px-3 py-2 text-[12px] text-slate-700 dark:text-slate-300 placeholder:text-slate-300 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900"
-                  />
                 ) : (
                   <input
                     type={field.type}
                     placeholder={field.placeholder}
-                    className="w-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg px-3 py-2 text-[12px] text-slate-700 dark:text-slate-300 placeholder:text-slate-300 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900"
+                    className="w-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg px-3 py-2 text-[12px] text-slate-700 dark:text-slate-300 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900"
                   />
                 )}
               </div>
@@ -247,12 +232,11 @@ export default function RolesPage() {
 
         <div className="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-700">
           <button onClick={() => setDrawerOpen(false)}
-            className="flex-1 border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 text-[12px] font-medium py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-          >
+            className="flex-1 border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 text-[12px] font-medium py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
             Cancel
           </button>
           <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-[12px] font-semibold py-2 rounded-lg transition-colors">
-            Save Role
+            Save Tax
           </button>
         </div>
       </DrawerForm>

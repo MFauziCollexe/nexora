@@ -18,14 +18,15 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     router.push("/login");
   };
 
-  const isUsersRoute = pathname?.includes("/dashboard/master-data/users");
-  const isRolesRoute = pathname?.includes("/dashboard/master-data/roles");
-  const title = isRolesRoute ? "Roles" : isUsersRoute ? "Users" : "Dashboard";
-  const subtitle = isRolesRoute
-    ? "Master Data › System › Roles"
-    : isUsersRoute
-    ? "Master Data › System › Users"
-    : "Master Data";
+  const breadcrumbRoutes = [
+    { path: "/dashboard/master-data/users", title: "Users", subtitle: "Master Data › System › Users" },
+    { path: "/dashboard/master-data/roles", title: "Roles", subtitle: "Master Data › System › Roles" },
+    { path: "/dashboard/master-data/position", title: "Position", subtitle: "Master Data › Human Resource › Position" },
+  ];
+
+  const currentRoute = breadcrumbRoutes.find((route) => pathname?.includes(route.path));
+  const title = currentRoute?.title ?? "Dashboard";
+  const subtitle = currentRoute?.subtitle ?? "Master Data";
 
   return (
     <ProtectedRoute>
