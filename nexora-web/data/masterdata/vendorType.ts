@@ -1,0 +1,72 @@
+export const statCards = [
+  { icon: "🏷️", label: "Total Vendor Types", value: "12", description: "All types" },
+  { icon: "✅", label: "Active Types", value: "10", description: "Currently active" },
+  { icon: "❌", label: "Inactive Types", value: "2", description: "Currently inactive" },
+];
+
+export const vendorTypes = [
+  {
+    id: 1,
+    code: "VT-001",
+    name: "Service Vendor",
+    description: "Vendor yang menyediakan layanan jasa",
+    status: "Active",
+    statusColor: "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400",
+  },
+  {
+    id: 2,
+    code: "VT-002",
+    name: "Contractor",
+    description: "Vendor kontraktor untuk proyek konstruksi",
+    status: "Active",
+    statusColor: "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400",
+  },
+  {
+    id: 3,
+    code: "VT-003",
+    name: "Consultant",
+    description: "Vendor konsultan profesional",
+    status: "Active",
+    statusColor: "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400",
+  },
+  {
+    id: 4,
+    code: "VT-004",
+    name: "Distributor",
+    description: "Vendor distributor produk",
+    status: "Active",
+    statusColor: "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400",
+  },
+  {
+    id: 5,
+    code: "VT-005",
+    name: "Manufacturer",
+    description: "Vendor produsen bahan baku",
+    status: "Active",
+    statusColor: "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400",
+  },
+  {
+    id: 6,
+    code: "VT-006",
+    name: "Supplier",
+    description: "Vendor supplier barang",
+    status: "Active",
+    statusColor: "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400",
+  },
+  {
+    id: 7,
+    code: "VT-007",
+    name: "Logistics Provider",
+    description: "Vendor penyedia layanan logistik",
+    status: "Active",
+    statusColor: "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400",
+  },
+  {
+    id: 8,
+    code: "VT-008",
+    name: "Maintenance Vendor",
+    description: "Vendor untuk pemeliharaan dan perbaikan",
+    status: "Inactive",
+    statusColor: "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400",
+  },
+];

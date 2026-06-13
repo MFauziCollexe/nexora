@@ -23,6 +23,9 @@ export const menuItems: MenuItem[] = [
           { label: "Customer", href: "/dashboard/master-data/customer", active: false, code: "C01" },
           { label: "Supplier", href: "/dashboard/master-data/supplier", active: false, code: "C02" },
           { label: "Vendor", href: "/dashboard/master-data/vendor", active: false, code: "C03" },
+              { label: "Vendor Type", href: "/dashboard/master-data/vendor-type", active: false, code: "C04" },
+              { label: "Supplier Type", href: "/dashboard/master-data/supplier-type", active: false, code: "C05" },
+              { label: "Supplier Category", href: "/dashboard/master-data/supplier-category", active: false, code: "C06" },
         ],
       },
       {
