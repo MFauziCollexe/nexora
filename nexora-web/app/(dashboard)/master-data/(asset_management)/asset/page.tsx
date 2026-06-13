@@ -3,6 +3,7 @@
 import { useState } from "react";
 import StatCards from "@/components/masterdata/StatCards";
 import DrawerForm from "@/components/masterdata/DrawerForm";
+import Pagination from "@/components/masterdata/Pagination";
 import { statCards, assets as assetData } from "@/data/masterdata/asset";
 
 export default function AssetPage() {
@@ -22,6 +23,11 @@ export default function AssetPage() {
     const matchLocation = filterLocation === "All Location" || a.location === filterLocation;
     return matchSearch && matchStatus && matchCategory && matchLocation;
   });
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const paginatedData = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const inputClass = "border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg px-2.5 py-1.5 text-[12px] focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900 cursor-pointer";
   const btnOutline = "flex items-center gap-1.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-[12px] font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap";
@@ -43,21 +49,21 @@ export default function AssetPage() {
 
         <div className="flex flex-col gap-0.5">
           <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Status</label>
-          <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className={inputClass}>
+          <select value={filterStatus} onChange={(e) => { setFilterStatus(e.target.value); setCurrentPage(1); }} className={inputClass}>
             {["All Status", "Active", "Maintenance", "Disposed"].map((s) => <option key={s}>{s}</option>)}
           </select>
         </div>
 
         <div className="flex flex-col gap-0.5">
           <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Category</label>
-          <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)} className={inputClass}>
+          <select value={filterCategory} onChange={(e) => { setFilterCategory(e.target.value); setCurrentPage(1); }} className={inputClass}>
             {["All Category", "Kendaraan Operasional", "Genset", "Peralatan Kantor", "Peralatan IT", "Panel Listrik", "Peralatan Gudang"].map((c) => <option key={c}>{c}</option>)}
           </select>
         </div>
 
         <div className="flex flex-col gap-0.5">
           <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Location</label>
-          <select value={filterLocation} onChange={(e) => setFilterLocation(e.target.value)} className={inputClass}>
+          <select value={filterLocation} onChange={(e) => { setFilterLocation(e.target.value); setCurrentPage(1); }} className={inputClass}>
             {["All Location", "Gudang Cold Storage A", "Gudang Cold Storage B", "Area Genset", "Ruang Meeting", "Kantor HR", "Ruang Panel", "Docking Area"].map((l) => <option key={l}>{l}</option>)}
           </select>
         </div>
@@ -65,7 +71,7 @@ export default function AssetPage() {
         <div className="flex flex-col gap-0.5">
           <label className="text-[10px] text-transparent">x</label>
           <button
-            onClick={() => { setFilterStatus("All Status"); setFilterCategory("All Category"); setFilterLocation("All Location"); setSearch(""); }}
+            onClick={() => { setFilterStatus("All Status"); setFilterCategory("All Category"); setFilterLocation("All Location"); setSearch(""); setCurrentPage(1); setCurrentPage(1); }}
             className={btnOutline}
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5">
@@ -82,7 +88,7 @@ export default function AssetPage() {
           <div className="relative">
             <input
               type="text" placeholder="Search asset..."
-              value={search} onChange={(e) => setSearch(e.target.value)}
+              value={search} onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
               className="w-44 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-[12px] text-slate-700 dark:text-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900"
             />
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2">
@@ -126,7 +132,7 @@ export default function AssetPage() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((a) => (
+              {paginatedData.map((a) => (
                 <tr key={a.id} className="border-b border-slate-50 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
                   <td className="px-4 py-3 text-[12px] font-medium text-slate-600 dark:text-slate-300 whitespace-nowrap">{a.assetCode}</td>
                   <td className="px-4 py-3 text-[12px] text-slate-800 dark:text-slate-200 whitespace-nowrap font-medium">{a.assetName}</td>
@@ -162,6 +168,9 @@ export default function AssetPage() {
               ))}
             </tbody>
           </table>
+        <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} filteredLength={filtered.length} itemsPerPage={itemsPerPage} />
+
+        
         </div>
 
         {filtered.length === 0 && (

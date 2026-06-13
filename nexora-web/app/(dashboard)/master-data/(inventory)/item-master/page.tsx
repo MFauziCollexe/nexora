@@ -3,6 +3,7 @@
 import { useState } from "react";
 import StatCards from "@/components/masterdata/StatCards";
 import DrawerForm from "@/components/masterdata/DrawerForm";
+import Pagination from "@/components/masterdata/Pagination";
 import { statCards, items as itemData, categories, brands, uoms, warehouses } from "@/data/masterdata/itemMaster";
 
 export default function ItemMasterPage() {
@@ -31,6 +32,11 @@ export default function ItemMasterPage() {
     return matchSearch && matchCategory && matchBrand && matchUom && matchWarehouse && matchStatus;
   });
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const paginatedData = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
   const inputClass = "border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg px-2.5 py-1.5 text-[12px] focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900 cursor-pointer";
   const btnOutline = "flex items-center gap-1.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-[12px] font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap";
 
@@ -51,42 +57,42 @@ export default function ItemMasterPage() {
 
         <div className="flex flex-col gap-0.5">
           <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Category</label>
-          <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)} className={inputClass}>
+          <select value={filterCategory} onChange={(e) => { setFilterCategory(e.target.value); setCurrentPage(1); }} className={inputClass}>
             {categories.map((category) => <option key={category}>{category}</option>)}
           </select>
         </div>
 
         <div className="flex flex-col gap-0.5">
           <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Brand</label>
-          <select value={filterBrand} onChange={(e) => setFilterBrand(e.target.value)} className={inputClass}>
+          <select value={filterBrand} onChange={(e) => { setFilterBrand(e.target.value); setCurrentPage(1); }} className={inputClass}>
             {brands.map((brand) => <option key={brand}>{brand}</option>)}
           </select>
         </div>
 
         <div className="flex flex-col gap-0.5">
           <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">UOM</label>
-          <select value={filterUom} onChange={(e) => setFilterUom(e.target.value)} className={inputClass}>
+          <select value={filterUom} onChange={(e) => { setFilterUom(e.target.value); setCurrentPage(1); }} className={inputClass}>
             {uoms.map((uom) => <option key={uom}>{uom}</option>)}
           </select>
         </div>
 
         <div className="flex flex-col gap-0.5">
           <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Warehouse</label>
-          <select value={filterWarehouse} onChange={(e) => setFilterWarehouse(e.target.value)} className={inputClass}>
+          <select value={filterWarehouse} onChange={(e) => { setFilterWarehouse(e.target.value); setCurrentPage(1); }} className={inputClass}>
             {warehouses.map((warehouse) => <option key={warehouse}>{warehouse}</option>)}
           </select>
         </div>
 
         <div className="flex flex-col gap-0.5">
           <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Status</label>
-          <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className={inputClass}>
+          <select value={filterStatus} onChange={(e) => { setFilterStatus(e.target.value); setCurrentPage(1); }} className={inputClass}>
             {['All Status', 'Active', 'Inactive'].map((status) => <option key={status}>{status}</option>)}
           </select>
         </div>
 
         <div className="flex flex-col gap-0.5">
           <label className="text-[10px] text-transparent">x</label>
-          <button onClick={() => { setFilterCategory("All Category"); setFilterBrand("All Brand"); setFilterUom("All UOM"); setFilterWarehouse("All Warehouse"); setFilterStatus("All Status"); setSearch(""); }} className={btnOutline}>
+          <button onClick={() => { setFilterCategory("All Category"); setFilterBrand("All Brand"); setFilterUom("All UOM"); setFilterWarehouse("All Warehouse"); setFilterStatus("All Status"); setSearch(""); setCurrentPage(1); setCurrentPage(1); }} className={btnOutline}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5">
               <polyline points="1 4 1 10 7 10" />
               <path d="M3.51 15a9 9 0 102.13-9.36L1 10" />
@@ -104,7 +110,7 @@ export default function ItemMasterPage() {
               type="text"
               placeholder="Search item..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
               className="w-40 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-[12px] text-slate-700 dark:text-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900"
             />
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2">
@@ -150,7 +156,7 @@ export default function ItemMasterPage() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((item) => (
+              {paginatedData.map((item) => (
                 <tr key={item.id} className="border-b border-slate-50 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
                   <td className="px-4 py-3 whitespace-nowrap text-[12px] text-slate-600 dark:text-slate-300">{item.code}</td>
                   <td className="px-4 py-3 whitespace-nowrap text-[12px] text-slate-800 dark:text-slate-200">
@@ -196,6 +202,9 @@ export default function ItemMasterPage() {
               ))}
             </tbody>
           </table>
+        <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} filteredLength={filtered.length} itemsPerPage={itemsPerPage} />
+
+        
         </div>
 
         {filtered.length === 0 && (

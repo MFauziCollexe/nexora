@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import StatCards from "@/components/masterdata/StatCards";
 import DrawerForm from "@/components/masterdata/DrawerForm";
+import Pagination from "@/components/masterdata/Pagination";
 import { statCards, roles as rolesData } from "@/data/masterdata/roles";
 
 export default function RolesPage() {
@@ -23,6 +24,11 @@ export default function RolesPage() {
     const matchCreatedBy = filterCreatedBy === "All Users" || r.createdBy === filterCreatedBy;
     return matchSearch && matchType && matchStatus && matchCreatedBy;
   });
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const paginatedData = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const inputClass = "border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg px-2.5 py-1.5 text-[12px] focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900 cursor-pointer";
   const btnOutline = "flex items-center gap-1.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-[12px] font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap";
@@ -44,21 +50,21 @@ export default function RolesPage() {
 
         <div className="flex flex-col gap-0.5">
           <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Role Type</label>
-          <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className={inputClass}>
+          <select value={filterType} onChange={(e) => { setFilterType(e.target.value); setCurrentPage(1); }} className={inputClass}>
             {['All Types', 'System Role', 'Custom Role'].map((t) => <option key={t}>{t}</option>)}
           </select>
         </div>
 
         <div className="flex flex-col gap-0.5">
           <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Status</label>
-          <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className={inputClass}>
+          <select value={filterStatus} onChange={(e) => { setFilterStatus(e.target.value); setCurrentPage(1); }} className={inputClass}>
             {['All Status', 'Active', 'Inactive'].map((s) => <option key={s}>{s}</option>)}
           </select>
         </div>
 
         <div className="flex flex-col gap-0.5">
           <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Created By</label>
-          <select value={filterCreatedBy} onChange={(e) => setFilterCreatedBy(e.target.value)} className={inputClass}>
+          <select value={filterCreatedBy} onChange={(e) => { setFilterCreatedBy(e.target.value); setCurrentPage(1); }} className={inputClass}>
             {['All Users', 'admin'].map((c) => <option key={c}>{c}</option>)}
           </select>
         </div>
@@ -66,7 +72,7 @@ export default function RolesPage() {
         <div className="flex flex-col gap-0.5">
           <label className="text-[10px] text-transparent">x</label>
           <button
-            onClick={() => { setFilterType('All Types'); setFilterStatus('All Status'); setFilterCreatedBy('All Users'); setSearch(''); }}
+            onClick={() => { setFilterType('All Types'); setFilterStatus('All Status'); setFilterCreatedBy('All Users'); setSearch(''); setCurrentPage(1); setCurrentPage(1); }}
             className={btnOutline}
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5">
@@ -83,7 +89,7 @@ export default function RolesPage() {
           <div className="relative">
             <input
               type="text" placeholder="Search role..."
-              value={search} onChange={(e) => setSearch(e.target.value)}
+              value={search} onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
               className="w-40 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-[12px] text-slate-700 dark:text-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900"
             />
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2">
@@ -155,7 +161,7 @@ export default function RolesPage() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((r) => (
+              {paginatedData.map((r) => (
                 <tr key={r.id} className="border-b border-slate-50 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
                   <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-2">
@@ -197,6 +203,9 @@ export default function RolesPage() {
               ))}
             </tbody>
           </table>
+        <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} filteredLength={filtered.length} itemsPerPage={itemsPerPage} />
+
+        
         </div>
 
         {filtered.length === 0 && (

@@ -1,7 +1,31 @@
 export const statCards = [
-  { icon: "🏷️", label: "Total Supplier Types", value: "8", description: "All types" },
-  { icon: "✅", label: "Active Types", value: "6", description: "Currently active" },
-  { icon: "❌", label: "Inactive Types", value: "2", description: "Currently inactive" },
+  {
+    icon: "crown",
+    label: "Total Supplier Types",
+    value: "8",
+    sub: "All types",
+    iconBg: "bg-blue-100 dark:bg-blue-900/30",
+    iconColor: "text-blue-700 dark:text-blue-400",
+    description: "All types",
+  },
+  {
+    icon: "check",
+    label: "Active Types",
+    value: "6",
+    sub: "Currently active",
+    iconBg: "bg-green-100 dark:bg-green-900/30",
+    iconColor: "text-green-700 dark:text-green-400",
+    description: "Currently active",
+  },
+  {
+    icon: "pause",
+    label: "Inactive Types",
+    value: "2",
+    sub: "Currently inactive",
+    iconBg: "bg-red-100 dark:bg-red-900/30",
+    iconColor: "text-red-700 dark:text-red-400",
+    description: "Currently inactive",
+  },
 ];
 
 export const supplierTypes = [
