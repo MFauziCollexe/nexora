@@ -17,7 +17,7 @@ export default function UsersPage() {
       u.username.toLowerCase().includes(search.toLowerCase()) ||
       u.fullName.toLowerCase().includes(search.toLowerCase()) ||
       u.email.toLowerCase().includes(search.toLowerCase());
-    const matchRole   = filterRole   === "All Roles"  || u.role   === filterRole;
+    const matchRole = filterRole === "All Roles" || u.role === filterRole;
     const matchStatus = filterStatus === "All Status" || u.status === filterStatus;
     return matchSearch && matchRole && matchStatus;
   });
@@ -35,9 +35,9 @@ export default function UsersPage() {
 
       {/* BREADCRUMB */}
       <div className="flex items-center gap-1.5 text-[11px] text-slate-400 dark:text-slate-500">
-        <span>Master Data</span>
+        <span>Settings</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3"><path d="M9 18l6-6-6-6"/></svg>
-        <span>System</span>
+        <span>User & Security</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3"><path d="M9 18l6-6-6-6"/></svg>
         <span className="text-slate-600 dark:text-slate-300 font-medium">Users</span>
       </div>
@@ -59,13 +59,6 @@ export default function UsersPage() {
           <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Status</label>
           <select value={filterStatus} onChange={(e) => { setFilterStatus(e.target.value); setCurrentPage(1); }} className={inputClass}>
             {["All Status", "Active", "Inactive", "Locked"].map((s) => <option key={s}>{s}</option>)}
-          </select>
-        </div>
-
-        <div className="flex flex-col gap-0.5">
-          <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Department</label>
-          <select className={inputClass}>
-            {["All Departments", "Finance", "IT", "HR", "Warehouse", "Sales"].map((d) => <option key={d}>{d}</option>)}
           </select>
         </div>
 
@@ -140,15 +133,10 @@ export default function UsersPage() {
           <table className="w-full min-w-[1000px]">
             <thead>
               <tr className="border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
-                {["Username", "Full Name", "Employee", "Department", "Role", "Email", "Status", "Last Login", "Action"].map((h) => (
+                {['Username', 'Full Name', 'Employee', 'Department', 'Role', 'Email', 'Status', 'Last Login', 'Action'].map((h) => (
                   <th key={h} className="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide whitespace-nowrap">
                     <div className="flex items-center gap-1">
                       {h}
-                      {h !== "Action" && (
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3 text-slate-300 dark:text-slate-600 flex-shrink-0">
-                          <path d="M7 15l5 5 5-5M7 9l5-5 5 5"/>
-                        </svg>
-                      )}
                     </div>
                   </th>
                 ))}
@@ -214,6 +202,7 @@ export default function UsersPage() {
         <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} filteredLength={filtered.length} itemsPerPage={itemsPerPage} />
 
         
+
         </div>
 
         {filtered.length === 0 && (
@@ -228,6 +217,7 @@ export default function UsersPage() {
 
       {/* OVERLAY */}
       <DrawerForm open={drawerOpen} title="Add New User" onClose={() => setDrawerOpen(false)}>
+        {/* form sections copied from original */}
         {[
           { title: "Account Information", fields: [
             { label: "Employee", type: "select", placeholder: "Select employee", required: true, options: ["Select employee", "Budi Santoso", "Siti Aisyah", "Rizky Pratama"] },

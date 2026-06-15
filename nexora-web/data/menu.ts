@@ -54,6 +54,18 @@ export const menuItems: MenuItem[] = [
         ],
       },
       {
+        label: "General",
+        href: "#",
+        active: false,
+        code: "S00",
+        children: [
+          { label: "City", href: "/dashboard/master-data/city", active: false, code: "C01" },
+          { label: "Province", href: "/dashboard/master-data/province", active: false, code: "C02" },
+          { label: "Country", href: "/dashboard/master-data/country", active: false, code: "C03" },
+          { label: "Currency", href: "/dashboard/master-data/currency", active: false, code: "C04" },
+        ],
+      },
+      {
         label: "Human Resource",
         href: "#",
         active: false,
@@ -75,16 +87,6 @@ export const menuItems: MenuItem[] = [
           { label: "Payment Terms", href: "/dashboard/master-data/payment-terms", active: false, code: "C03" },
         ],
       },
-      {
-        label: "System",
-        href: "#",
-        active: false,
-        code: "S06",
-        children: [
-          { label: "Users", href: "/dashboard/master-data/users", active: false, code: "C01" },
-          { label: "Roles", href: "/dashboard/master-data/roles", active: false, code: "C02" },
-        ],
-      },
     ],
   },
   { label: "Sales", href: "#", active: false, code: "M02" },
@@ -97,5 +99,22 @@ export const menuItems: MenuItem[] = [
   { label: "Project", href: "#", active: false, code: "M09" },
   { label: "CRM", href: "#", active: false, code: "M10" },
   { label: "Reports & Analytics", href: "#", active: false, code: "M11" },
-  { label: "Settings", href: "#", active: false, code: "M12" },
+  {
+    label: "Settings",
+    href: "#",
+    active: false,
+    code: "M12",
+    children: [
+      {
+        label: "User & Security",
+        href: "#",
+        active: false,
+        code: "S01",
+        children: [
+              { label: "Users", href: "/settings/users", active: false, code: "C01" },
+              { label: "Roles", href: "/settings/roles", active: false, code: "C02" },
+        ],
+      },
+    ],
+  },
 ];

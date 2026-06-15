@@ -34,7 +34,8 @@ class PermissionSeeder extends Seeder
             ['code' => 'M01.S03', 'name' => 'Asset Management', 'type' => 'menu'],
             ['code' => 'M01.S04', 'name' => 'Human Resource', 'type' => 'menu'],
             ['code' => 'M01.S05', 'name' => 'Finance', 'type' => 'menu'],
-            ['code' => 'M01.S06', 'name' => 'System', 'type' => 'menu'],
+            ['code' => 'M01.S00', 'name' => 'General', 'type' => 'menu'],
+            ['code' => 'M12.S01', 'name' => 'User & Security', 'type' => 'menu'],
 
             // Business Partner Child Menus
             ['code' => 'M01.S01.C01', 'name' => 'Customer', 'type' => 'menu'],
@@ -59,15 +60,20 @@ class PermissionSeeder extends Seeder
             ['code' => 'M01.S04.C02', 'name' => 'Department', 'type' => 'menu'],
             ['code' => 'M01.S04.C03', 'name' => 'Position', 'type' => 'menu'],
 
+            // General Child Menus
+            ['code' => 'M01.S00.C01', 'name' => 'City', 'type' => 'menu'],
+            ['code' => 'M01.S00.C02', 'name' => 'Province', 'type' => 'menu'],
+            ['code' => 'M01.S00.C03', 'name' => 'Country', 'type' => 'menu'],
+            ['code' => 'M01.S00.C04', 'name' => 'Currency', 'type' => 'menu'],
+
             // Finance Child Menus
             ['code' => 'M01.S05.C01', 'name' => 'COA', 'type' => 'menu'],
             ['code' => 'M01.S05.C02', 'name' => 'Tax', 'type' => 'menu'],
             ['code' => 'M01.S05.C03', 'name' => 'Payment Terms', 'type' => 'menu'],
 
-            // System Child Menus
-            ['code' => 'M01.S06.C01', 'name' => 'Users', 'type' => 'menu'],
-            ['code' => 'M01.S06.C02', 'name' => 'Roles', 'type' => 'menu'],
-            ['code' => 'M01.S06.C03', 'name' => 'Permissions', 'type' => 'menu'],
+            // Settings User & Security Child Menus
+            ['code' => 'M12.S01.C01', 'name' => 'Users', 'type' => 'menu'],
+            ['code' => 'M12.S01.C02', 'name' => 'Roles', 'type' => 'menu'],
         ];
 
         foreach ($permissions as $permission) {

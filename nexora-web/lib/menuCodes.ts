@@ -58,8 +58,8 @@ export const MENU_CODES = {
   TAX: "C02",
   PAYMENT_TERMS: "C03",
 
-  // Master Data > System (S06)
-  SYSTEM: "S06",
+  // Settings > User & Security (M12.S01)
+  USER_SECURITY: "S01",
   USERS: "C01",
   ROLES: "C02",
 } as const;

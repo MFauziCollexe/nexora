@@ -91,9 +91,17 @@ M01            = Master Data
 
 ```
 └─ S06         = System
-   ├─ C01      = Users           (Full: M01.S06.C01)
-   ├─ C02      = Roles           (Full: M01.S06.C02)
-   └─ C03      = Permissions     (Full: M01.S06.C03)
+  └─ C03      = Permissions     (Full: M01.S06.C03)
+```
+
+---
+
+#### User & Security (M12.S01)
+
+```
+└─ S01         = User & Security
+  ├─ C01      = Users           (Full: M12.S01.C01)
+  └─ C02      = Roles           (Full: M12.S01.C02)
 ```
 
 ---
@@ -277,7 +285,7 @@ M01.S02.C01, M01.S02.C02, M01.S02.C03, M01.S02.C04, M01.S02.C05,
 M01.S03.C01, M01.S03.C02, M01.S03.C03, M01.S03.C04,
 M01.S04.C01, M01.S04.C02, M01.S04.C03,
 M01.S05.C01, M01.S05.C02, M01.S05.C03,
-M01.S06.C01, M01.S06.C02, M01.S06.C03
+M01.S06.C03, M12.S01.C01, M12.S01.C02
 ```
 
 ### 3. Inventory Manager
@@ -402,9 +410,15 @@ M01.S05        = Finance (Submenu Header)
 
 ```
 M01.S06        = System (Submenu Header)
-├── M01.S06.C01 = Users
-├── M01.S06.C02 = Roles
 └── M01.S06.C03 = Permissions
+```
+
+#### User & Security (M12.S01)
+
+```
+M12.S01        = User & Security (Submenu Header)
+├── M12.S01.C01 = Users
+└── M12.S01.C02 = Roles
 ```
 
 ---

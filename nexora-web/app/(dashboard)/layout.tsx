@@ -19,8 +19,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   };
 
   const breadcrumbRoutes = [
-    { path: "/dashboard/master-data/users", title: "Users", subtitle: "Master Data › System › Users" },
-    { path: "/dashboard/master-data/roles", title: "Roles", subtitle: "Master Data › System › Roles" },
+    { path: "/settings/users", title: "Users", subtitle: "Settings › User & Security › Users" },
+    { path: "/settings/roles", title: "Roles", subtitle: "Settings › User & Security › Roles" },
     { path: "/dashboard/master-data/employee", title: "Employee", subtitle: "Master Data › Human Resource › Employee" },
     { path: "/dashboard/master-data/position", title: "Position", subtitle: "Master Data › Human Resource › Position" },
     { path: "/dashboard/master-data/department", title: "Department", subtitle: "Master Data › Human Resource › Department" },
@@ -35,6 +35,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     { path: "/dashboard/master-data/supplier-category", title: "Supplier Category", subtitle: "Master Data › Business Partner › Supplier Category" },
     { path: "/dashboard/master-data/supplier", title: "Supplier", subtitle: "Master Data › Business Partner › Supplier" },
     { path: "/dashboard/master-data/customer", title: "Customer", subtitle: "Master Data › Business Partner › Customer" },
+    { path: "/dashboard/master-data/asset", title: "Asset", subtitle: "Master Data › Asset Management › Asset" },
+    { path: "/dashboard/master-data/asset-category", title: "Asset Category", subtitle: "Master Data › Asset Management › Asset Category" },
+    { path: "/dashboard/master-data/city", title: "City", subtitle: "Master Data › General › City" },
+    { path: "/dashboard/master-data/province", title: "Province", subtitle: "Master Data › General › Province" },
+    { path: "/dashboard/master-data/country", title: "Country", subtitle: "Master Data › General › Country" },
+    { path: "/dashboard/master-data/currency", title: "Currency", subtitle: "Master Data › General › Currency" },
     { path: "/dashboard/master-data/asset", title: "Asset", subtitle: "Master Data › Asset Management › Asset" },
     { path: "/dashboard/master-data/asset-category", title: "Asset Category", subtitle: "Master Data › Asset Management › Asset Category" },
     { path: "/dashboard/master-data/asset-location", title: "Asset Location", subtitle: "Master Data › Asset Management › Asset Location" },

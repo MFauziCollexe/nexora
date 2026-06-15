@@ -52,8 +52,30 @@ class MenuSeeder extends Seeder
             ['main_menu_id' => $masterDataId, 'code' => 'S03', 'name' => 'Asset Management', 'order' => 3],
             ['main_menu_id' => $masterDataId, 'code' => 'S04', 'name' => 'Human Resource', 'order' => 4],
             ['main_menu_id' => $masterDataId, 'code' => 'S05', 'name' => 'Finance', 'order' => 5],
-            ['main_menu_id' => $masterDataId, 'code' => 'S06', 'name' => 'System', 'order' => 6],
+            ['main_menu_id' => $masterDataId, 'code' => 'S00', 'name' => 'General', 'order' => 6],
+            // ['main_menu_id' => $masterDataId, 'code' => 'S06', 'name' => 'System', 'order' => 7],
         ];
+
+        $settingsId = DB::table('main_menus')->where('code', 'M12')->first()->id;
+
+        $settingsSubmenus = [
+            ['main_menu_id' => $settingsId, 'code' => 'S01', 'name' => 'User & Security', 'order' => 1],
+        ];
+
+        foreach ($settingsSubmenus as $submenu) {
+            DB::table('submenus')->updateOrInsert(
+                [
+                    'main_menu_id' => $submenu['main_menu_id'],
+                    'code' => $submenu['code'],
+                ],
+                [
+                    'name' => $submenu['name'],
+                    'order' => $submenu['order'],
+                    'updated_at' => now(),
+                    'created_at' => now(),
+                ]
+            );
+        }
 
         foreach ($submenus as $submenu) {
             DB::table('submenus')->updateOrInsert(
@@ -105,6 +127,15 @@ class MenuSeeder extends Seeder
             ['submenu_id' => $hrId, 'code' => 'C03', 'name' => 'Position', 'href' => '/master-data/position', 'order' => 3],
         ];
 
+        // Child Menus for General (S00)
+        $generalId = DB::table('submenus')->where('main_menu_id', $masterDataId)->where('code', 'S00')->first()->id;
+        $childMenusS00 = [
+            ['submenu_id' => $generalId, 'code' => 'C01', 'name' => 'City', 'href' => '/dashboard/master-data/city', 'order' => 1],
+            ['submenu_id' => $generalId, 'code' => 'C02', 'name' => 'Province', 'href' => '/dashboard/master-data/province', 'order' => 2],
+            ['submenu_id' => $generalId, 'code' => 'C03', 'name' => 'Country', 'href' => '/dashboard/master-data/country', 'order' => 3],
+            ['submenu_id' => $generalId, 'code' => 'C04', 'name' => 'Currency', 'href' => '/dashboard/master-data/currency', 'order' => 4],
+        ];
+
         // Child Menus for Finance (S05)
         $financeId = DB::table('submenus')->where('main_menu_id', $masterDataId)->where('code', 'S05')->first()->id;
         $childMenusS05 = [
@@ -113,16 +144,14 @@ class MenuSeeder extends Seeder
             ['submenu_id' => $financeId, 'code' => 'C03', 'name' => 'Payment Terms', 'href' => '/master-data/payment-terms', 'order' => 3],
         ];
 
-        // Child Menus for System (S06)
-        $systemId = DB::table('submenus')->where('main_menu_id', $masterDataId)->where('code', 'S06')->first()->id;
-        $childMenusS06 = [
-            ['submenu_id' => $systemId, 'code' => 'C01', 'name' => 'Users', 'href' => '/master-data/users', 'order' => 1],
-            ['submenu_id' => $systemId, 'code' => 'C02', 'name' => 'Roles', 'href' => '/master-data/roles', 'order' => 2],
-            ['submenu_id' => $systemId, 'code' => 'C03', 'name' => 'Permissions', 'href' => '/master-data/permissions', 'order' => 3],
+        $settingsSubmenuId = DB::table('submenus')->where('main_menu_id', $settingsId)->where('code', 'S01')->first()->id;
+        $childMenusS12 = [
+            ['submenu_id' => $settingsSubmenuId, 'code' => 'C01', 'name' => 'Users', 'href' => '/Settings/users', 'order' => 1],
+            ['submenu_id' => $settingsSubmenuId, 'code' => 'C02', 'name' => 'Roles', 'href' => '/Settings/roles', 'order' => 2],
         ];
 
         // Merge all child menus
-        $childMenus = array_merge($childMenusS01, $childMenusS02, $childMenusS03, $childMenusS04, $childMenusS05, $childMenusS06);
+        $childMenus = array_merge($childMenusS01, $childMenusS02, $childMenusS03, $childMenusS04, $childMenusS00, $childMenusS05, $childMenusS12);
 
         foreach ($childMenus as $childMenu) {
             DB::table('child_menus')->updateOrInsert(
