@@ -45,6 +45,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     { path: "/dashboard/master-data/asset-category", title: "Asset Category", subtitle: "Master Data › Asset Management › Asset Category" },
     { path: "/dashboard/master-data/asset-location", title: "Asset Location", subtitle: "Master Data › Asset Management › Asset Location" },
     { path: "/dashboard/master-data/asset-status", title: "Asset Status", subtitle: "Master Data › Asset Management › Asset Status" },
+    { path: "/sales/quotation", title: "Quotations", subtitle: "Sales › Sales Management › Quotations" },
+    { path: "/sales/sales-management/quotations", title: "Quotations", subtitle: "Sales › Sales Management › Quotations" },
+    { path: "/sales/sales-management/sales-orders", title: "Sales Order", subtitle: "Sales › Sales Management › Sales Order" },
+    { path: "/sales/sales-management/invoices", title: "Invoices", subtitle: "Sales › Sales Management › Invoices" },
+    { path: "/sales/sales-management/delivery-orders", title: "Delivery Orders", subtitle: "Sales › Sales Management › Delivery Orders" },
   ];
 
   const currentRoute = breadcrumbRoutes.find((route) => pathname?.includes(route.path));
