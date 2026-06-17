@@ -4,57 +4,64 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import StatCards from "@/components/masterdata/StatCards";
 import Pagination from "@/components/masterdata/Pagination";
-import { statCards, deliveryOrders as deliveryOrdersData } from "@/data/sales/deliveryOrders";
+import { statCards, salesReturns as salesReturnsData } from "@/data/sales/salesReturns";
 
-export default function DeliveryOrdersPage() {
+export default function SalesReturnsPage() {
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("All Status");
   const [filterCustomer, setFilterCustomer] = useState("All Customer");
-  const [filterWarehouse, setFilterWarehouse] = useState("All Warehouse");
+  const [filterReturnType, setFilterReturnType] = useState("All Type");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  const customers = useMemo(() => Array.from(new Set(deliveryOrdersData.map((order) => order.customer))), []);
-  const warehouses = useMemo(() => Array.from(new Set(deliveryOrdersData.map((order) => order.warehouse))), []);
+  const customers = useMemo(() => Array.from(new Set(salesReturnsData.map((item) => item.customer))), []);
+  const returnTypes = useMemo(() => Array.from(new Set(salesReturnsData.map((item) => item.returnType))), []);
 
   const filtered = useMemo(() => {
-    return deliveryOrdersData.filter((order) => {
+    return salesReturnsData.filter((item) => {
       const matchSearch =
-        order.doNo.toLowerCase().includes(search.toLowerCase()) ||
-        order.soNo.toLowerCase().includes(search.toLowerCase()) ||
-        order.customer.toLowerCase().includes(search.toLowerCase());
-      const matchStatus = filterStatus === "All Status" || order.status === filterStatus;
-      const matchCustomer = filterCustomer === "All Customer" || order.customer === filterCustomer;
-      const matchWarehouse = filterWarehouse === "All Warehouse" || order.warehouse === filterWarehouse;
-      return matchSearch && matchStatus && matchCustomer && matchWarehouse;
+        item.returnNo.toLowerCase().includes(search.toLowerCase()) ||
+        item.invoiceNo.toLowerCase().includes(search.toLowerCase()) ||
+        item.customer.toLowerCase().includes(search.toLowerCase()) ||
+        item.reason.toLowerCase().includes(search.toLowerCase());
+      const matchStatus = filterStatus === "All Status" || item.status === filterStatus;
+      const matchCustomer = filterCustomer === "All Customer" || item.customer === filterCustomer;
+      const matchReturnType = filterReturnType === "All Type" || item.returnType === filterReturnType;
+      return matchSearch && matchStatus && matchCustomer && matchReturnType;
     });
-  }, [search, filterStatus, filterCustomer, filterWarehouse]);
+  }, [search, filterStatus, filterCustomer, filterReturnType]);
 
   const paginated = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const selectCls =
+    "border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg px-2.5 py-1.5 text-[12px] focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900 cursor-pointer";
 
   function resetFilters() {
     setFilterStatus("All Status");
     setFilterCustomer("All Customer");
-    setFilterWarehouse("All Warehouse");
+    setFilterReturnType("All Type");
     setSearch("");
     setCurrentPage(1);
   }
 
   function statusClasses(status: string) {
     const map: Record<string, string> = {
-      Completed: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-400",
-      "In Delivery": "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-400",
+      Approved: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-400",
       Pending: "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-400",
-      Cancelled: "bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-400",
+      Rejected: "bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-400",
     };
     return map[status] ?? map.Pending;
   }
 
-  const selectCls =
-    "border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg px-2.5 py-1.5 text-[12px] focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900 cursor-pointer";
-
   return (
     <div className="p-4 space-y-3">
+      <div className="flex items-center gap-1.5 text-[11px] text-slate-400 dark:text-slate-500">
+        <span>Sales</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3"><path d="M9 18l6-6-6-6"/></svg>
+        <span>Sales Management</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3"><path d="M9 18l6-6-6-6"/></svg>
+        <span className="text-slate-600 dark:text-slate-300 font-medium">Sales Returns</span>
+      </div>
 
       <StatCards cards={statCards} />
 
@@ -62,7 +69,7 @@ export default function DeliveryOrdersPage() {
         <div className="flex flex-col gap-0.5">
           <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Status</label>
           <select value={filterStatus} onChange={(e) => { setFilterStatus(e.target.value); setCurrentPage(1); }} className={selectCls}>
-            {['All Status', 'Completed', 'In Delivery', 'Pending', 'Cancelled'].map((s) => <option key={s}>{s}</option>)}
+            {['All Status', 'Approved', 'Pending', 'Rejected'].map((s) => <option key={s}>{s}</option>)}
           </select>
         </div>
 
@@ -75,10 +82,10 @@ export default function DeliveryOrdersPage() {
         </div>
 
         <div className="flex flex-col gap-0.5">
-          <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Warehouse</label>
-          <select value={filterWarehouse} onChange={(e) => { setFilterWarehouse(e.target.value); setCurrentPage(1); }} className={selectCls}>
-            <option>All Warehouse</option>
-            {warehouses.map((warehouse) => <option key={warehouse}>{warehouse}</option>)}
+          <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Return Type</label>
+          <select value={filterReturnType} onChange={(e) => { setFilterReturnType(e.target.value); setCurrentPage(1); }} className={selectCls}>
+            <option>All Type</option>
+            {returnTypes.map((type) => <option key={type}>{type}</option>)}
           </select>
         </div>
 
@@ -96,7 +103,7 @@ export default function DeliveryOrdersPage() {
           <div className="relative">
             <input
               type="text"
-              placeholder="Search delivery order..."
+              placeholder="Search sales return..."
               value={search}
               onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
               className="w-52 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg pl-9 pr-3 py-1.5 text-[12px] text-slate-700 dark:text-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900"
@@ -107,16 +114,6 @@ export default function DeliveryOrdersPage() {
           </div>
         </div>
 
-        <button
-          type="button"
-          className="inline-flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-[12px] font-medium px-3 py-1.5 rounded-lg transition-colors"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5">
-            <path d="M4 7h16M4 12h16M4 17h10" />
-          </svg>
-          Export Excel
-        </button>
-
         <Link
           href="#"
           className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-[12px] font-semibold px-3 py-1.5 rounded-lg transition-colors shadow-sm"
@@ -124,16 +121,16 @@ export default function DeliveryOrdersPage() {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-3.5 h-3.5">
             <path d="M12 5v14M5 12h14"/>
           </svg>
-          Create DO
+          Create Sales Return
         </Link>
       </div>
 
       <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-275">
+          <table className="w-full min-w-250">
             <thead>
               <tr className="border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
-                {['DO No.', 'DO Date', 'SO No.', 'Customer', 'Warehouse', 'Delivery Date', 'Status', 'Delivery Type', 'Amount', 'Action'].map((heading) => (
+                {['Return No.', 'Return Date', 'Invoice No.', 'Customer', 'Return Type', 'Reason', 'Amount', 'Status', 'Action'].map((heading) => (
                   <th key={heading} className="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide whitespace-nowrap">
                     {heading}
                   </th>
@@ -141,21 +138,20 @@ export default function DeliveryOrdersPage() {
               </tr>
             </thead>
             <tbody>
-              {paginated.map((order) => (
-                <tr key={order.id} className="border-b border-slate-50 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                  <td className="px-4 py-3 text-[12px] text-slate-700 dark:text-slate-300 font-medium whitespace-nowrap">{order.doNo}</td>
-                  <td className="px-4 py-3 text-[12px] text-slate-500 dark:text-slate-400 whitespace-nowrap">{order.doDate}</td>
-                  <td className="px-4 py-3 text-[12px] text-slate-500 dark:text-slate-400 whitespace-nowrap">{order.soNo}</td>
-                  <td className="px-4 py-3 text-[12px] text-slate-600 dark:text-slate-400">{order.customer}</td>
-                  <td className="px-4 py-3 text-[12px] text-slate-500 dark:text-slate-400 whitespace-nowrap">{order.warehouse}</td>
-                  <td className="px-4 py-3 text-[12px] text-slate-500 dark:text-slate-400 whitespace-nowrap">{order.deliveryDate}</td>
+              {paginated.map((item) => (
+                <tr key={item.id} className="border-b border-slate-50 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                  <td className="px-4 py-3 text-[12px] text-slate-700 dark:text-slate-300 font-medium whitespace-nowrap">{item.returnNo}</td>
+                  <td className="px-4 py-3 text-[12px] text-slate-500 dark:text-slate-400 whitespace-nowrap">{item.returnDate}</td>
+                  <td className="px-4 py-3 text-[12px] text-slate-500 dark:text-slate-400 whitespace-nowrap">{item.invoiceNo}</td>
+                  <td className="px-4 py-3 text-[12px] text-slate-600 dark:text-slate-400">{item.customer}</td>
+                  <td className="px-4 py-3 text-[12px] text-slate-500 dark:text-slate-400 whitespace-nowrap">{item.returnType}</td>
+                  <td className="px-4 py-3 text-[12px] text-slate-500 dark:text-slate-400">{item.reason}</td>
+                  <td className="px-4 py-3 text-[12px] text-slate-600 dark:text-slate-400 whitespace-nowrap">{item.amount}</td>
                   <td className="px-4 py-3 whitespace-nowrap">
-                    <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusClasses(order.status)}`}>
-                      {order.status}
+                    <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusClasses(item.status)}`}>
+                      {item.status}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-[12px] text-slate-600 dark:text-slate-400 whitespace-nowrap">{order.deliveryType}</td>
-                  <td className="px-4 py-3 text-[12px] text-slate-600 dark:text-slate-400 whitespace-nowrap">{order.amount}</td>
                   <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-1.5">
                       <button title="View" type="button" className="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors">
@@ -166,9 +162,6 @@ export default function DeliveryOrdersPage() {
                       </button>
                       <button title="Print" type="button" className="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3"><path d="M6 9V2h12v7"/><path d="M6 22h12a2 2 0 002-2v-9H4v9a2 2 0 002 2z"/></svg>
-                      </button>
-                      <button title="More" type="button" className="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
                       </button>
                     </div>
                   </td>
@@ -184,7 +177,7 @@ export default function DeliveryOrdersPage() {
               <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
               <polyline points="14 2 14 8 20 8"/>
             </svg>
-            <p className="text-[12px] text-slate-400 dark:text-slate-600">No delivery orders found</p>
+            <p className="text-[12px] text-slate-400 dark:text-slate-600">No sales returns found</p>
           </div>
         )}
 

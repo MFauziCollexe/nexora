@@ -50,6 +50,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     { path: "/sales/sales-management/sales-orders", title: "Sales Order", subtitle: "Sales › Sales Management › Sales Order" },
     { path: "/sales/sales-management/invoices", title: "Invoices", subtitle: "Sales › Sales Management › Invoices" },
     { path: "/sales/sales-management/delivery-orders", title: "Delivery Orders", subtitle: "Sales › Sales Management › Delivery Orders" },
+    { path: "/sales/sales-management/delivery-notes", title: "Delivery Notes", subtitle: "Sales › Sales Management › Delivery Notes" },
+    { path: "/sales/sales-management/sales-returns", title: "Sales Returns", subtitle: "Sales › Sales Management › Sales Returns" },
+    { path: "/sales/sales-management/credit-notes", title: "Credit Notes", subtitle: "Sales › Sales Management › Credit Notes" },
   ];
 
   const currentRoute = breadcrumbRoutes.find((route) => pathname?.includes(route.path));
