@@ -107,19 +107,6 @@ export default function SalesOrdersPage() {
           </div>
         </div>
 
-        {/* Add Sales Order Button */}
-        <div className="flex flex-col gap-0.5">
-          <label className="text-[10px] text-transparent">x</label>
-          <Link
-            href="/sales/sales-management/sales-orders/new"
-            className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-[12px] font-semibold px-3 py-1.5 rounded-lg transition-colors shadow-sm"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-3.5 h-3.5">
-              <path d="M12 5v14M5 12h14"/>
-            </svg>
-            Add Sales Order
-          </Link>
-        </div>
       </div>
 
       {/* Table */}
