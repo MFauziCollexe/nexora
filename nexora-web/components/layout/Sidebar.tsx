@@ -14,30 +14,75 @@ interface MenuItemProps {
   children?: (SubmenuType | { name: string; href: string; code: string })[];
 }
 
+// ─── Helper: cek apakah sebuah item (atau salah satu turunannya) cocok dengan pathname ──
+function isItemActive(item: MenuItemProps, pathname: string): boolean {
+  // Cek diri sendiri
+  if (item.href && item.href !== "#" && item.href !== "null") {
+    if (pathname === item.href) return true;
+  }
+
+  // Cek semua children secara rekursif
+  if (item.children) {
+    for (const child of item.children) {
+      const childItem: MenuItemProps = {
+        name: child.name,
+        href: "href" in child ? (child.href as string) : "#",
+        children:
+          "child_menus" in child
+            ? (child as SubmenuType).child_menus?.map((c) => ({
+                name: c.name,
+                href: c.href,
+                code: c.code,
+              }))
+            : undefined,
+      };
+      if (isItemActive(childItem, pathname)) return true;
+    }
+  }
+
+  return false;
+}
+
+// ─── Menu Item Component ───────────────────────────────────────────────────────
 function MenuItemComponent({ item, level = 0 }: { item: MenuItemProps; level?: number }) {
   const pathname = usePathname();
   const hasChildren = item.children && item.children.length > 0;
   const isParent = hasChildren && (!item.href || item.href === "#" || item.href === "null");
 
-  // Cek apakah halaman ini aktif
-  const isActive = item.href && item.href !== "#" && item.href !== "null" && pathname === item.href;
+  // Exact active (untuk leaf / link)
+  const isActive =
+    item.href &&
+    item.href !== "#" &&
+    item.href !== "null" &&
+    pathname === item.href;
 
-  // Cek apakah salah satu child aktif (untuk auto-expand parent)
-  const hasActiveChild = item.children?.some((child) => {
-    if ("href" in child && child.href === pathname) return true;
-    if ("child_menus" in child) {
-      return (child as SubmenuType).child_menus?.some((c) => c.href === pathname);
-    }
-    return false;
-  });
+  // Apakah salah satu turunan aktif (rekursif)
+  const hasActiveDescendant = item.children
+    ? item.children.some((child) => {
+        const childItem: MenuItemProps = {
+          name: child.name,
+          href: "href" in child ? (child.href as string) : "#",
+          children:
+            "child_menus" in child
+              ? (child as SubmenuType).child_menus?.map((c) => ({
+                  name: c.name,
+                  href: c.href,
+                  code: c.code,
+                }))
+              : undefined,
+        };
+        return isItemActive(childItem, pathname);
+      })
+    : false;
 
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Auto expand kalau ada child yang aktif
+  // Auto-expand jika ada turunan yang aktif
   useEffect(() => {
-    if (hasActiveChild) setIsExpanded(true);
-  }, [hasActiveChild]);
+    if (hasActiveDescendant) setIsExpanded(true);
+  }, [hasActiveDescendant]);
 
+  // ── Parent (punya children, tidak punya href sendiri) ───────────────────
   if (isParent) {
     return (
       <div>
@@ -47,14 +92,16 @@ function MenuItemComponent({ item, level = 0 }: { item: MenuItemProps; level?: n
             w-full flex items-center justify-between
             px-3 py-1.5 mx-1.5 mb-0.5
             rounded-md text-[12px] font-medium transition-colors
-            ${hasActiveChild
-              ? "text-blue-600 bg-blue-50"
-              : "text-slate-600 hover:bg-slate-100"
+            ${hasActiveDescendant
+              ? "text-blue-600 bg-blue-50 dark:bg-blue-950 dark:text-blue-400"
+              : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
             }
           `}
         >
           <span>{item.name}</span>
-          <ChevronRightIcon className={`w-2.5 h-2.5 opacity-40 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
+          <ChevronRightIcon
+            className={`w-2.5 h-2.5 opacity-40 transition-transform ${isExpanded ? "rotate-90" : ""}`}
+          />
         </button>
 
         {isExpanded && (
@@ -62,16 +109,19 @@ function MenuItemComponent({ item, level = 0 }: { item: MenuItemProps; level?: n
             {item.children?.map((child) => {
               const childItem: MenuItemProps = {
                 name: child.name,
-                href: "href" in child ? child.href : "#",
-                children: "child_menus" in child
-                  ? (child as SubmenuType).child_menus?.map((c) => ({
-                      name: c.name,
-                      href: c.href,
-                      code: c.code,
-                    }))
-                  : undefined,
+                href: "href" in child ? (child.href as string) : "#",
+                children:
+                  "child_menus" in child
+                    ? (child as SubmenuType).child_menus?.map((c) => ({
+                        name: c.name,
+                        href: c.href,
+                        code: c.code,
+                      }))
+                    : undefined,
               };
-              return <MenuItemComponent key={child.name} item={childItem} level={level + 1} />;
+              return (
+                <MenuItemComponent key={child.name} item={childItem} level={level + 1} />
+              );
             })}
           </div>
         )}
@@ -79,6 +129,7 @@ function MenuItemComponent({ item, level = 0 }: { item: MenuItemProps; level?: n
     );
   }
 
+  // ── Leaf / Link ─────────────────────────────────────────────────────────
   return (
     <Link
       href={item.href || "#"}
@@ -88,7 +139,7 @@ function MenuItemComponent({ item, level = 0 }: { item: MenuItemProps; level?: n
         rounded-md text-[12px] font-medium transition-colors
         ${isActive
           ? "bg-blue-600 text-white"
-          : "text-slate-600 hover:bg-slate-100"
+          : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
         }
         ${level > 0 ? "ml-3" : ""}
       `}
@@ -99,6 +150,7 @@ function MenuItemComponent({ item, level = 0 }: { item: MenuItemProps; level?: n
   );
 }
 
+// ─── Sidebar ──────────────────────────────────────────────────────────────────
 export function Sidebar() {
   const { menus, isLoading, error } = useMenus();
 
@@ -117,41 +169,44 @@ export function Sidebar() {
       </div>
 
       {/* Menu */}
-      <nav 
-          className="flex-1 py-2 overflow-y-auto"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        >
+      <nav
+        className="flex-1 py-2 overflow-y-auto"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      >
         {isLoading && (
           <p className="px-3 py-2 text-[11px] text-slate-400">Loading menus...</p>
         )}
         {error && (
           <p className="px-3 py-2 text-[11px] text-red-400">Error: {error}</p>
         )}
-        {!isLoading && menus.map((mainMenu) => {
-          const item: MenuItemProps = {
-            name: mainMenu.name,
-            href: mainMenu.href || "#",
-            children: mainMenu.submenus,
-          };
-          return <MenuItemComponent key={mainMenu.code} item={item} level={0} />;
-        })}
+        {!isLoading &&
+          menus.map((mainMenu: MainMenuType) => {
+            const item: MenuItemProps = {
+              name: mainMenu.name,
+              href: mainMenu.href || "#",
+              children: mainMenu.submenus,
+            };
+            return <MenuItemComponent key={mainMenu.code} item={item} level={0} />;
+          })}
       </nav>
 
       {/* System Info */}
-      <div className="border-t border-slate-100 px-3 py-2.5">
-        <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wide mb-1">System Information</p>
+      <div className="border-t border-slate-100 dark:border-slate-700 px-3 py-2.5">
+        <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wide mb-1">
+          System Information
+        </p>
         <div className="space-y-1">
           <div className="flex items-center justify-between">
             <p className="text-[9px] text-slate-400">Company</p>
-            <p className="text-[11px] text-slate-600 font-medium">Nexora Solusi Indonesia</p>
+            <p className="text-[11px] text-slate-600 dark:text-slate-300 font-medium">Nexora Solusi Indonesia</p>
           </div>
           <div className="flex items-center justify-between">
             <p className="text-[9px] text-slate-400">Database</p>
-            <p className="text-[11px] text-slate-600 font-medium">nexora_erp</p>
+            <p className="text-[11px] text-slate-600 dark:text-slate-300 font-medium">nexora_erp</p>
           </div>
           <div className="flex items-center justify-between">
             <p className="text-[9px] text-slate-400">Version</p>
-            <p className="text-[11px] text-slate-600 font-medium">v1.0.0</p>
+            <p className="text-[11px] text-slate-600 dark:text-slate-300 font-medium">v1.0.0</p>
           </div>
         </div>
         <p className="text-[9px] text-slate-300 mt-2">© 2026 Nexora ERP. All rights reserved.</p>

@@ -76,7 +76,7 @@ Dashboard harus:
 
 ## Border Radius
 
-- rounded-2xl
+- rounded-sm
 - rounded-3xl
 
 ## Shadow

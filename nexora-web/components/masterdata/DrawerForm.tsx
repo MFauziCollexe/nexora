@@ -1,14 +1,15 @@
 "use client";
 
-export function DrawerForm({ open, title, onClose, children }: { open: boolean; title: string; onClose: () => void; children: React.ReactNode }) {
+export function DrawerForm({ open, title, onClose, className = "", children }: { open: boolean; title: string; onClose: () => void; className?: string; children: React.ReactNode }) {
   return (
     <>
       {open && <div className="fixed inset-0 bg-black/30 z-40" onClick={onClose} />}
 
       <div className={`
-        fixed top-0 right-0 h-full w-80 bg-white dark:bg-slate-800 shadow-2xl z-50
+        fixed top-0 right-0 h-full bg-white dark:bg-slate-800 shadow-2xl z-50
         transform transition-transform duration-300 ease-in-out overflow-y-auto
         ${open ? "translate-x-0" : "translate-x-full"}
+        ${className}
       `}>
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-700">
           <h2 className="text-[14px] font-bold text-slate-800 dark:text-white">{title}</h2>

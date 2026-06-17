@@ -56,14 +56,20 @@ class MenuSeeder extends Seeder
         $crmMainId = DB::table('main_menus')->where('code', 'M10')->first()->id;
         $reportsMainId = DB::table('main_menus')->where('code', 'M11')->first()->id;
 
+        // Get Sales main menu ID
+        $salesMainId = DB::table('main_menus')->where('code', 'M02')->first()->id;
+
         $submenus = [
+            // Sales submenus
+            ['main_menu_id' => $salesMainId, 'code' => 'S01', 'name' => 'Sales Management', 'order' => 1],
+            
             // Master Data submenus
             ['main_menu_id' => $masterDataId, 'code' => 'S01', 'name' => 'Business Partner', 'order' => 1],
             ['main_menu_id' => $masterDataId, 'code' => 'S02', 'name' => 'Inventory', 'order' => 2],
             ['main_menu_id' => $masterDataId, 'code' => 'S03', 'name' => 'Asset Management', 'order' => 3],
             ['main_menu_id' => $masterDataId, 'code' => 'S04', 'name' => 'Human Resource', 'order' => 4],
             ['main_menu_id' => $masterDataId, 'code' => 'S05', 'name' => 'Finance', 'order' => 5],
-            ['main_menu_id' => $masterDataId, 'code' => 'S00', 'name' => 'General', 'order' => 6],
+            ['main_menu_id' => $masterDataId, 'code' => 'S07', 'name' => 'General', 'order' => 6],
             
             // Inventory submenus
             ['main_menu_id' => $inventoryMainId, 'code' => 'S01', 'name' => 'Transactions', 'order' => 1],
@@ -185,15 +191,7 @@ class MenuSeeder extends Seeder
             ['submenu_id' => $hrMdId, 'code' => 'C03', 'name' => 'Position', 'href' => '/master-data/position', 'order' => 3],
         ];
 
-        // Child Menus for General (S00)
-        $generalMdId = DB::table('submenus')->where('main_menu_id', $masterDataId)->where('code', 'S00')->first()->id;
-        $childMenusMD00 = [
-            ['submenu_id' => $generalMdId, 'code' => 'C01', 'name' => 'City', 'href' => '/dashboard/master-data/city', 'order' => 1],
-            ['submenu_id' => $generalMdId, 'code' => 'C02', 'name' => 'Province', 'href' => '/dashboard/master-data/province', 'order' => 2],
-            ['submenu_id' => $generalMdId, 'code' => 'C03', 'name' => 'Country', 'href' => '/dashboard/master-data/country', 'order' => 3],
-            ['submenu_id' => $generalMdId, 'code' => 'C04', 'name' => 'Currency', 'href' => '/dashboard/master-data/currency', 'order' => 4],
-        ];
-
+        
         // Child Menus for Finance Master Data (S05)
         $financeMdId = DB::table('submenus')->where('main_menu_id', $masterDataId)->where('code', 'S05')->first()->id;
         $childMenusMD05 = [
@@ -438,6 +436,17 @@ class MenuSeeder extends Seeder
             ['submenu_id' => $crmRepId, 'code' => 'C03', 'name' => 'Conversion Report', 'href' => '/crm/conversion-report', 'order' => 3],
         ];
 
+        // ============ SALES CHILD MENUS ============
+        
+        // Child Menus for Sales Management (S01)
+        $salesMgmtId = DB::table('submenus')->where('main_menu_id', $salesMainId)->where('code', 'S01')->first()->id;
+        $childMenusSAL01 = [
+            ['submenu_id' => $salesMgmtId, 'code' => 'C01', 'name' => 'Quotations', 'href' => '/sales/sales-management/quotations', 'order' => 1],
+            ['submenu_id' => $salesMgmtId, 'code' => 'C02', 'name' => 'Sales Orders', 'href' => '/sales/sales-management/sales-orders', 'order' => 2],
+            ['submenu_id' => $salesMgmtId, 'code' => 'C03', 'name' => 'Invoices', 'href' => '/sales/sales-management/invoices', 'order' => 3],
+            ['submenu_id' => $salesMgmtId, 'code' => 'C04', 'name' => 'Delivery Notes', 'href' => '/sales/sales-management/delivery-notes', 'order' => 4],
+        ];
+
         // ============ REPORTS & ANALYTICS CHILD MENUS ============
         
         // Child Menus for Operational Reports (S01)
@@ -486,7 +495,7 @@ class MenuSeeder extends Seeder
         
         // Merge all child menus
         $childMenus = array_merge(
-            $childMenusMD01, $childMenusMD02, $childMenusMD03, $childMenusMD04, $childMenusMD00, $childMenusMD05,
+            $childMenusMD01, $childMenusMD02, $childMenusMD03, $childMenusMD04, $childMenusMD05,
             $childMenusINV01, $childMenusINV02, $childMenusINV03, $childMenusINV04,
             $childMenusPRD01, $childMenusPRD02, $childMenusPRD03,
             $childMenusFIN01, $childMenusFIN02, $childMenusFIN03, $childMenusFIN04, $childMenusFIN05,
@@ -494,6 +503,7 @@ class MenuSeeder extends Seeder
             $childMenusASS01, $childMenusASS02, $childMenusASS03, $childMenusASS04,
             $childMenusPRJ01, $childMenusPRJ02, $childMenusPRJ03,
             $childMenusCRM01, $childMenusCRM02, $childMenusCRM03,
+            $childMenusSAL01,
             $childMenusREP01, $childMenusREP02, $childMenusREP03, $childMenusREP04,
             $childMenusS12
         );

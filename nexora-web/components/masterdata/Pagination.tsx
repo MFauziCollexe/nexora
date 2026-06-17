@@ -7,6 +7,7 @@ type PaginationProps = {
   setCurrentPage: Dispatch<SetStateAction<number>>;
   filteredLength: number;
   itemsPerPage?: number;
+  setItemsPerPage?: Dispatch<SetStateAction<number>>;
 };
 
 export default function Pagination({
@@ -14,6 +15,7 @@ export default function Pagination({
   setCurrentPage,
   filteredLength,
   itemsPerPage = 6,
+  setItemsPerPage,
 }: PaginationProps) {
   const totalPages = Math.ceil(filteredLength / itemsPerPage);
   if (totalPages <= 1) return null;
@@ -27,7 +29,7 @@ export default function Pagination({
   }).filter(Boolean) as number[];
 
   return (
-    <div className="px-4 py-3 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 flex items-center justify-between text-[11px]">
+    <div className="px-4 py-3 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 flex items-center justify-between text-[11px] gap-3">
       <span className="text-slate-600 dark:text-slate-400">
         Showing {startEntry} to {endEntry} of {filteredLength} entries
       </span>
@@ -74,6 +76,14 @@ export default function Pagination({
             <polyline points="9 18 15 12 9 6" />
           </svg>
         </button>
+      </div>
+
+      <div className="flex items-center gap-2">
+        {setItemsPerPage && (
+          <select value={itemsPerPage} onChange={(e) => setItemsPerPage(Number(e.target.value))} className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded px-2 py-1 text-[12px]">
+            {[10,25,50,100].map(n => <option key={n} value={n}>{n}/page</option>)}
+          </select>
+        )}
       </div>
     </div>
   );
