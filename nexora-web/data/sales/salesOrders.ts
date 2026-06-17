@@ -3,6 +3,7 @@ export const statCards = [
   { label: 'Confirmed', value: 42, sub: 'Ready to process', icon: 'check-circle', iconBg: 'bg-slate-50 dark:bg-slate-950', iconColor: 'text-emerald-500' },
   { label: 'Released', value: 18, sub: 'In warehouse', icon: 'truck', iconBg: 'bg-slate-50 dark:bg-slate-950', iconColor: 'text-blue-500' },
   { label: 'Pending', value: 27, sub: 'Awaiting confirmation', icon: 'clock', iconBg: 'bg-slate-50 dark:bg-slate-950', iconColor: 'text-amber-500' },
+  { label: 'Last Updated', value: 'Today', sub: 'Data synchronized', icon: 'clock', iconBg: 'bg-slate-50 dark:bg-slate-950', iconColor: 'text-emerald-500' },
 ];
 
 export type OrderItem = {
