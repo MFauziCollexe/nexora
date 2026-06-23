@@ -18,6 +18,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Nexora",
   description: "Nexora API Management Platform",
+  icons: {
+    icon: "/images/logo_nexora.png",
+    apple: "/images/logo_nexora.png",
+  },
 };
 
 export default function RootLayout({

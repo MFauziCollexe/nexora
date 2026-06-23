@@ -6,77 +6,84 @@ import { useAuth } from "@/lib/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Header } from "@/components/layout/Header";
-import { MenuProvider } from "@/lib/MenuContext";
+import { MenuProvider, useMenus } from "@/lib/MenuContext";
+import { MainMenuType } from "@/lib/menuApi";
 
-export default function DashboardLayout({ children }: { children: ReactNode }) {
-  const router = useRouter();
-  const pathname = usePathname();
+function findMenuBreadcrumb(
+  menus: MainMenuType[],
+  pathname: string
+): { title: string; subtitle: string } | null {
+  const matches: Array<{ title: string; subtitle: string; href: string }> = [];
+
+  function pathMatches(href: string): boolean {
+    return pathname === href || pathname.startsWith(href + "/");
+  }
+
+  for (const main of menus) {
+    for (const sub of main.submenus || []) {
+      for (const child of sub.child_menus || []) {
+        if (pathMatches(child.href)) {
+          matches.push({ title: child.name, subtitle: main.name, href: child.href });
+        }
+      }
+      if (sub.href && sub.href !== "#" && sub.href !== "null" && pathMatches(sub.href)) {
+        matches.push({ title: sub.name, subtitle: main.name, href: sub.href });
+      }
+    }
+    if (main.href && main.href !== "#" && main.href !== "null" && pathMatches(main.href)) {
+      matches.push({ title: main.name, subtitle: "", href: main.href });
+    }
+  }
+
+  matches.sort((a, b) => b.href.length - a.href.length);
+
+  return matches.length > 0
+    ? { title: matches[0].title, subtitle: matches[0].subtitle }
+    : null;
+}
+
+function DashboardContent({ children, pathname }: { children: ReactNode; pathname: string }) {
+  const { menus } = useMenus();
   const { logout } = useAuth();
+  const router = useRouter();
 
   const handleLogout = () => {
     logout();
     router.push("/login");
   };
 
-  const breadcrumbRoutes = [
-    { path: "/settings/users", title: "Users", subtitle: "Settings › User & Security › Users" },
-    { path: "/settings/roles", title: "Roles", subtitle: "Settings › User & Security › Roles" },
-    { path: "/dashboard/master-data/employee", title: "Employee", subtitle: "Master Data › Human Resource › Employee" },
-    { path: "/dashboard/master-data/position", title: "Position", subtitle: "Master Data › Human Resource › Position" },
-    { path: "/dashboard/master-data/department", title: "Department", subtitle: "Master Data › Human Resource › Department" },
-    { path: "/dashboard/master-data/uom", title: "UOM", subtitle: "Master Data › Inventory › UOM" },
-    { path: "/dashboard/master-data/category", title: "Category", subtitle: "Master Data › Inventory › Category" },
-    { path: "/dashboard/master-data/brand", title: "Brand", subtitle: "Master Data › Inventory › Brand" },
-    { path: "/dashboard/master-data/warehouse", title: "Warehouse", subtitle: "Master Data › Inventory › Warehouse" },
-    { path: "/dashboard/master-data/item-master", title: "Item Master", subtitle: "Master Data › Inventory › Item Master" },
-    { path: "/dashboard/master-data/vendor", title: "Vendor", subtitle: "Master Data › Business Partner › Vendor" },
-    { path: "/dashboard/master-data/vendor-type", title: "Vendor Type", subtitle: "Master Data › Business Partner › Vendor Type" },
-    { path: "/dashboard/master-data/supplier-type", title: "Supplier Type", subtitle: "Master Data › Business Partner › Supplier Type" },
-    { path: "/dashboard/master-data/supplier-category", title: "Supplier Category", subtitle: "Master Data › Business Partner › Supplier Category" },
-    { path: "/dashboard/master-data/supplier", title: "Supplier", subtitle: "Master Data › Business Partner › Supplier" },
-    { path: "/dashboard/master-data/customer", title: "Customer", subtitle: "Master Data › Business Partner › Customer" },
-    { path: "/dashboard/master-data/asset", title: "Asset", subtitle: "Master Data › Asset Management › Asset" },
-    { path: "/dashboard/master-data/asset-category", title: "Asset Category", subtitle: "Master Data › Asset Management › Asset Category" },
-    { path: "/dashboard/master-data/city", title: "City", subtitle: "Master Data › General › City" },
-    { path: "/dashboard/master-data/province", title: "Province", subtitle: "Master Data › General › Province" },
-    { path: "/dashboard/master-data/country", title: "Country", subtitle: "Master Data › General › Country" },
-    { path: "/dashboard/master-data/currency", title: "Currency", subtitle: "Master Data › General › Currency" },
-    { path: "/dashboard/master-data/asset", title: "Asset", subtitle: "Master Data › Asset Management › Asset" },
-    { path: "/dashboard/master-data/asset-category", title: "Asset Category", subtitle: "Master Data › Asset Management › Asset Category" },
-    { path: "/dashboard/master-data/asset-location", title: "Asset Location", subtitle: "Master Data › Asset Management › Asset Location" },
-    { path: "/dashboard/master-data/asset-status", title: "Asset Status", subtitle: "Master Data › Asset Management › Asset Status" },
-    { path: "/sales/quotation", title: "Quotations", subtitle: "Sales › Sales Management › Quotations" },
-    { path: "/sales/sales-management/quotations", title: "Quotations", subtitle: "Sales › Sales Management › Quotations" },
-    { path: "/sales/sales-management/sales-orders", title: "Sales Order", subtitle: "Sales › Sales Management › Sales Order" },
-    { path: "/sales/sales-management/invoices", title: "Invoices", subtitle: "Sales › Sales Management › Invoices" },
-    { path: "/sales/sales-management/delivery-orders", title: "Delivery Orders", subtitle: "Sales › Sales Management › Delivery Orders" },
-    { path: "/sales/sales-management/delivery-notes", title: "Delivery Notes", subtitle: "Sales › Sales Management › Delivery Notes" },
-    { path: "/sales/sales-management/sales-returns", title: "Sales Returns", subtitle: "Sales › Sales Management › Sales Returns" },
-    { path: "/sales/sales-management/credit-notes", title: "Credit Notes", subtitle: "Sales › Sales Management › Credit Notes" },
-  ];
+  const breadcrumb = findMenuBreadcrumb(menus, pathname);
+  const title = breadcrumb?.title ?? "Dashboard";
+  const subtitle = breadcrumb?.subtitle ?? "";
 
-  const currentRoute = breadcrumbRoutes.find((route) => pathname?.includes(route.path));
-  const title = currentRoute?.title ?? "Dashboard";
-  const subtitle = currentRoute?.subtitle ?? "Master Data";
+  return (
+    <div className="flex h-screen bg-slate-50 dark:bg-slate-950">
+      <Sidebar />
+
+      <div className="flex-1 flex flex-col min-w-0">
+        <Header
+          title={title}
+          subtitle={subtitle}
+          onLogout={handleLogout}
+        />
+
+        <main className="flex-1 overflow-y-auto">
+          {children}
+        </main>
+      </div>
+    </div>
+  );
+}
+
+export default function DashboardLayout({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
 
   return (
     <ProtectedRoute>
       <MenuProvider>
-        <div className="flex h-screen bg-slate-50 dark:bg-slate-950">
-          <Sidebar />
-
-          <div className="flex-1 flex flex-col min-w-0">
-            <Header
-              title={title}
-              subtitle={subtitle}
-              onLogout={handleLogout}
-            />
-
-            <main className="flex-1 overflow-y-auto">
-              {children}
-            </main>
-          </div>
-        </div>
+        <DashboardContent pathname={pathname}>
+          {children}
+        </DashboardContent>
       </MenuProvider>
     </ProtectedRoute>
   );

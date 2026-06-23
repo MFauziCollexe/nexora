@@ -247,6 +247,14 @@ class PermissionSeeder extends Seeder
             ['code' => 'M10.S03.C02', 'name' => 'Opportunity Report', 'type' => 'menu'],
             ['code' => 'M10.S03.C03', 'name' => 'Conversion Report', 'type' => 'menu'],
 
+            // ============ SALES CHILD MENUS ============
+            // Sales Management
+            ['code' => 'M02.S01.C01', 'name' => 'Quotations', 'type' => 'menu'],
+            ['code' => 'M02.S01.C02', 'name' => 'Sales Orders', 'type' => 'menu'],
+            ['code' => 'M02.S01.C03', 'name' => 'Invoices', 'type' => 'menu'],
+            ['code' => 'M02.S01.C04', 'name' => 'Delivery Notes', 'type' => 'menu'],
+            ['code' => 'M02.S01.C05', 'name' => 'Credit Notes', 'type' => 'menu'],
+
             // ============ REPORTS & ANALYTICS CHILD MENUS ============
             // Operational Reports
             ['code' => 'M11.S01.C01', 'name' => 'Sales Report', 'type' => 'menu'],
