@@ -51,7 +51,7 @@ class MenuSeeder extends Seeder
             ['main_menu_id' => $mainM01, 'code' => 'S03', 'name' => 'Asset Management', 'href' => null, 'order' => 3],
             ['main_menu_id' => $mainM01, 'code' => 'S04', 'name' => 'Human Resource', 'href' => null, 'order' => 4],
             ['main_menu_id' => $mainM01, 'code' => 'S05', 'name' => 'Finance', 'href' => null, 'order' => 5],
-            ['main_menu_id' => $mainM01, 'code' => 'S07', 'name' => 'General', 'href' => null, 'order' => 6],
+            ['main_menu_id' => $mainM01, 'code' => 'S07', 'name' => 'Company Profile', 'href' => null, 'order' => 6],
         ];
 
         foreach ($subM01 as $submenu) {
@@ -108,12 +108,11 @@ class MenuSeeder extends Seeder
         ];
 
         $subM01S07Id = DB::table('submenus')->where('main_menu_id', $mainM01)->where('code', 'S07')->first()->id;
-        // Child Menus for General (S07)
+        // Child Menus for Company Profile (S07)
         $childM01S07 = [
-            ['submenu_id' => $subM01S07Id, 'code' => 'C03', 'name' => 'Country', 'href' => '/master-data/country', 'order' => 1],
-            ['submenu_id' => $subM01S07Id, 'code' => 'C02', 'name' => 'Province', 'href' => '/master-data/province', 'order' => 2],
-            ['submenu_id' => $subM01S07Id, 'code' => 'C01', 'name' => 'City', 'href' => '/master-data/city', 'order' => 3],
-            ['submenu_id' => $subM01S07Id, 'code' => 'C04', 'name' => 'Currency', 'href' => '/master-data/currency', 'order' => 4],
+            ['submenu_id' => $subM01S07Id, 'code' => 'C01', 'name' => 'Branch', 'href' => '/master-data/branch', 'order' => 1],
+            ['submenu_id' => $subM01S07Id, 'code' => 'C02', 'name' => 'Currency', 'href' => '/master-data/currency', 'order' => 2],
+            ['submenu_id' => $subM01S07Id, 'code' => 'C03', 'name' => 'Fiscal Year', 'href' => '/master-data/fiscal-year', 'order' => 3],
         ];
 
         $mainM02 = DB::table('main_menus')->where('code', 'M02')->first()->id;
@@ -121,8 +120,7 @@ class MenuSeeder extends Seeder
         // Submenus for Sales (M02)
         $subM02 = [
             ['main_menu_id' => $mainM02, 'code' => 'S01', 'name' => 'Sales Management', 'href' => null, 'order' => 1],
-            ['main_menu_id' => $mainM02, 'code' => 'S02', 'name' => 'Customer Payment', 'href' => null, 'order' => 2],
-            ['main_menu_id' => $mainM02, 'code' => 'S03', 'name' => 'Reports', 'href' => null, 'order' => 3],
+            ['main_menu_id' => $mainM02, 'code' => 'S03', 'name' => 'Reports', 'href' => null, 'order' => 2],
         ];
 
         foreach ($subM02 as $submenu) {
@@ -142,14 +140,6 @@ class MenuSeeder extends Seeder
             ['submenu_id' => $subM02S01Id, 'code' => 'C04', 'name' => 'Delivery Notes', 'href' => '/sales/sales-management/delivery-notes', 'order' => 5],
             ['submenu_id' => $subM02S01Id, 'code' => 'C05', 'name' => 'Sales Return', 'href' => '/sales/sales-management/sales-returns', 'order' => 6],
             ['submenu_id' => $subM02S01Id, 'code' => 'C06', 'name' => 'Credit Note', 'href' => '/sales/sales-management/credit-notes', 'order' => 7],
-        ];
-
-        $subM02S02Id = DB::table('submenus')->where('main_menu_id', $mainM02)->where('code', 'S02')->first()->id;
-        // Child Menus for Customer Payment (S02)
-        $childM02S02 = [
-            ['submenu_id' => $subM02S02Id, 'code' => 'C01', 'name' => 'Incoming Payment', 'href' => '/sales/incoming-payment', 'order' => 1],
-            ['submenu_id' => $subM02S02Id, 'code' => 'C02', 'name' => 'Payment Allocation', 'href' => '/sales/payment-allocation', 'order' => 2],
-            ['submenu_id' => $subM02S02Id, 'code' => 'C03', 'name' => 'Payment History', 'href' => '/sales/payment-history', 'order' => 3],
         ];
 
         $subM02S03Id = DB::table('submenus')->where('main_menu_id', $mainM02)->where('code', 'S03')->first()->id;
@@ -343,17 +333,19 @@ class MenuSeeder extends Seeder
         $subM06S03Id = DB::table('submenus')->where('main_menu_id', $mainM06)->where('code', 'S03')->first()->id;
         // Child Menus for Accounts Receivable (S03)
         $childM06S03 = [
-            ['submenu_id' => $subM06S03Id, 'code' => 'C01', 'name' => 'Customer Invoice', 'href' => '/finance/customer-invoice', 'order' => 1],
-            ['submenu_id' => $subM06S03Id, 'code' => 'C02', 'name' => 'Customer Payment', 'href' => '/finance/customer-payment', 'order' => 2],
-            ['submenu_id' => $subM06S03Id, 'code' => 'C03', 'name' => 'Outstanding Receivable', 'href' => '/finance/outstanding-receivable', 'order' => 3],
+            ['submenu_id' => $subM06S03Id, 'code' => 'C01', 'name' => 'Incoming Payment', 'href' => '/finance/incoming-payment', 'order' => 1],
+            ['submenu_id' => $subM06S03Id, 'code' => 'C02', 'name' => 'Payment Allocation', 'href' => '/finance/payment-allocation', 'order' => 2],
+            ['submenu_id' => $subM06S03Id, 'code' => 'C03', 'name' => 'Payment History', 'href' => '/finance/payment-history', 'order' => 3],
+            ['submenu_id' => $subM06S03Id, 'code' => 'C04', 'name' => 'Outstanding Receivable', 'href' => '/finance/outstanding-receivable', 'order' => 4],
         ];
 
         $subM06S04Id = DB::table('submenus')->where('main_menu_id', $mainM06)->where('code', 'S04')->first()->id;
         // Child Menus for Accounts Payable (S04)
         $childM06S04 = [
-            ['submenu_id' => $subM06S04Id, 'code' => 'C01', 'name' => 'Supplier Invoice', 'href' => '/finance/supplier-invoice', 'order' => 1],
-            ['submenu_id' => $subM06S04Id, 'code' => 'C02', 'name' => 'Supplier Payment', 'href' => '/finance/supplier-payment', 'order' => 2],
-            ['submenu_id' => $subM06S04Id, 'code' => 'C03', 'name' => 'Outstanding Payable', 'href' => '/finance/outstanding-payable', 'order' => 3],
+            ['submenu_id' => $subM06S04Id, 'code' => 'C01', 'name' => 'Outgoing Payment', 'href' => '/finance/outgoing-payment', 'order' => 1],
+            ['submenu_id' => $subM06S04Id, 'code' => 'C02', 'name' => 'Payment Allocation', 'href' => '/finance/payment-allocation', 'order' => 2],
+            ['submenu_id' => $subM06S04Id, 'code' => 'C03', 'name' => 'Payment History', 'href' => '/finance/payment-history', 'order' => 3],
+            ['submenu_id' => $subM06S04Id, 'code' => 'C04', 'name' => 'Outstanding Payable', 'href' => '/finance/outstanding-payable', 'order' => 4],
         ];
 
         $subM06S05Id = DB::table('submenus')->where('main_menu_id', $mainM06)->where('code', 'S05')->first()->id;
@@ -605,6 +597,7 @@ class MenuSeeder extends Seeder
         // Submenus for Settings (M12)
         $subM12 = [
             ['main_menu_id' => $mainM12, 'code' => 'S01', 'name' => 'User & Security', 'href' => null, 'order' => 1],
+            ['main_menu_id' => $mainM12, 'code' => 'S08', 'name' => 'Audit', 'href' => null, 'order' => 2],
         ];
 
         foreach ($subM12 as $submenu) {
@@ -619,6 +612,17 @@ class MenuSeeder extends Seeder
         $childM12S01 = [
             ['submenu_id' => $subM12S01Id, 'code' => 'C01', 'name' => 'Users', 'href' => '/Settings/users', 'order' => 1],
             ['submenu_id' => $subM12S01Id, 'code' => 'C02', 'name' => 'Roles', 'href' => '/Settings/roles', 'order' => 2],
+            ['submenu_id' => $subM12S01Id, 'code' => 'C03', 'name' => 'Approval Matrix', 'href' => '/settings/approval-matrix', 'order' => 3],
+            ['submenu_id' => $subM12S01Id, 'code' => 'C04', 'name' => 'Approval Workflow', 'href' => '/settings/approval-workflow', 'order' => 4],
+            ['submenu_id' => $subM12S01Id, 'code' => 'C05', 'name' => 'Approval History', 'href' => '/settings/approval-history', 'order' => 5],
+        ];
+
+        $subM12S08Id = DB::table('submenus')->where('main_menu_id', $mainM12)->where('code', 'S08')->first()->id;
+        // Child Menus for Audit (S08)
+        $childM12S08 = [
+            ['submenu_id' => $subM12S08Id, 'code' => 'C01', 'name' => 'Activity Log', 'href' => '/settings/activity-log', 'order' => 1],
+            ['submenu_id' => $subM12S08Id, 'code' => 'C02', 'name' => 'Audit Trail', 'href' => '/settings/audit-trail', 'order' => 2],
+            ['submenu_id' => $subM12S08Id, 'code' => 'C03', 'name' => 'Login History', 'href' => '/settings/login-history', 'order' => 3],
         ];
 
         // ============ MERGE ALL CHILD MENUS ============
@@ -630,8 +634,8 @@ class MenuSeeder extends Seeder
             $childM01S04,
             $childM01S05,
             $childM01S07,
+            $childM12S08,
             $childM02S01,
-            $childM02S02,
             $childM02S03,
             $childM03S01,
             $childM03S02,

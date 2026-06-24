@@ -37,12 +37,11 @@ NEXORA ERP
 │   │   ├─ C02  Tax                           /master-data/tax                    ✅
 │   │   └─ C03  Payment Terms                 /master-data/payment-terms          ✅
 │   │
-│   └─ S07  🌐 General
-│       ├─ C01  City                          /master-data/city                   ✅
-│       ├─ C02  Province                      /master-data/province               ✅
-│       ├─ C03  Country                       /master-data/country                ✅
-│       └─ C04  Currency                      /master-data/currency               ✅
-│
+│   ├─ S07  🏢 Company Profile
+│   │   ├─ C01  Branch                        /master-data/branch                 ❌
+│   │   ├─ C02  Currency                      /master-data/currency               ✅
+│   │   └─ C03  Fiscal Year                   /master-data/fiscal-year            ❌
+│   │
 ├─ M02  🛒 Sales
 │   ├─ S01  📋 Sales Management
 │   │   ├─ C01  Quotations                    /sales/sales-management/quotations  ✅
@@ -52,11 +51,6 @@ NEXORA ERP
 │   │   ├─ C04  Delivery Notes                /sales/sales-management/delivery-notes✅
 │   │   ├─ C05  Sales Return                  /sales/sales-management/sales-returns✅
 │   │   └─ C06  Credit Note                   /sales/sales-management/credit-notes✅
-│   │
-│   ├─ S02  💳 Customer Payment               ❌ semua page
-│   │   ├─ C01  Incoming Payment              /sales/incoming-payment             ❌
-│   │   ├─ C02  Payment Allocation            /sales/payment-allocation           ❌
-│   │   └─ C03  Payment History               /sales/payment-history              ❌
 │   │
 │   └─ S03  📊 Reports                        ❌ semua page
 │       ├─ C01  Sales Report                  /sales/sales-report                 ❌
@@ -141,14 +135,16 @@ NEXORA ERP
 │   │   └─ C04  Bank Reconciliation           /finance/bank-reconciliation        ❌
 │   │
 │   ├─ S03  💳 Accounts Receivable
-│   │   ├─ C01  Customer Invoice              /finance/customer-invoice           ❌
-│   │   ├─ C02  Customer Payment              /finance/customer-payment           ❌
-│   │   └─ C03  Outstanding Receivable        /finance/outstanding-receivable     ❌
+│   │   ├─ C01  Incoming Payment              /finance/incoming-payment           ❌
+│   │   ├─ C02  Payment Allocation            /finance/payment-allocation         ❌
+│   │   ├─ C03  Payment History               /finance/payment-history            ❌
+│   │   └─ C04  Outstanding Receivable        /finance/outstanding-receivable     ❌
 │   │
 │   ├─ S04  💸 Accounts Payable
-│   │   ├─ C01  Supplier Invoice              /finance/supplier-invoice           ❌
-│   │   ├─ C02  Supplier Payment              /finance/supplier-payment           ❌
-│   │   └─ C03  Outstanding Payable           /finance/outstanding-payable        ❌
+│   │   ├─ C01  Outgoing Payment              /finance/outgoing-payment           ❌
+│   │   ├─ C02  Payment Allocation            /finance/payment-allocation         ❌
+│   │   ├─ C03  Payment History               /finance/payment-history            ❌
+│   │   └─ C04  Outstanding Payable           /finance/outstanding-payable        ❌
 │   │
 │   └─ S05  📊 Financial Reports
 │       ├─ C01  Trial Balance                 /finance/trial-balance              ❌
@@ -260,29 +256,39 @@ NEXORA ERP
 │       └─ C03  Operational Dashboard         /report-analytics/operational-dashboard ❌
 │
 └─ M12  ⚙️ Settings
-    └─ S01  🔐 User & Security
-        ├─ C01  Users                         /settings/users                      ✅
-        └─ C02  Roles                         /settings/roles                      ✅
+    ├─ S01  🔐 User & Security
+    │   ├─ C01  Users                         /settings/users                      ✅
+    │   ├─ C02  Roles                         /settings/roles                      ✅
+    │   ├─ C03  Approval Matrix               /settings/approval-matrix            ❌
+    │   ├─ C04  Approval Workflow             /settings/approval-workflow          ❌
+    │   └─ C05  Approval History              /settings/approval-history           ❌
+    │
+    └─ S08  📋 Audit
+        ├─ C01  Activity Log                  /settings/activity-log               ❌
+        ├─ C02  Audit Trail                   /settings/audit-trail                ❌
+        └─ C03  Login History                 /settings/login-history              ❌
 ```
 
 ---
 
 ## Legend
 
-| Symbol | Meaning |
-|--------|---------|
-| ✅ | Page sudah dibuat (`page.tsx` exists) |
-| ❌ | Page belum dibuat |
-| M## | Main Menu (level 1) |
-| S## | Sub Menu (level 2) |
-| C## | Child Menu (level 3 / leaf) |
+| Symbol | Meaning                               |
+| ------ | ------------------------------------- |
+| ✅     | Page sudah dibuat (`page.tsx` exists) |
+| ❌     | Page belum dibuat                     |
+| M##    | Main Menu (level 1)                   |
+| S##    | Sub Menu (level 2)                    |
+| C##    | Child Menu (level 3 / leaf)           |
 
 ## Summary
 
-| Level | Total | ✅ Done | ❌ Missing |
-|-------|-------|---------|-----------|
-| Main Menu | 13 | 1 (Dashboard) | 12 (no standalone page) |
-| Sub Menu | 26 | — | — |
-| Child Menu | 107 | 37 | 70 |
+| Level      | Total | ✅ Done       | ❌ Missing              |
+| ---------- | ----- | ------------- | ----------------------- |
+| Main Menu  | 13    | 1 (Dashboard) | 12 (no standalone page) |
+| Sub Menu   | 26    | —             | —                       |
+| Child Menu | 109   | 37            | 72                      |
 
-> **Note:** Data diambil langsung dari database MySQL `nexora` via MenuSeeder. Halaman yang sudah ada tercatat ✅ berdasarkan file `page.tsx` yang ditemukan di frontend. 70 child menu masih perlu dibuatkan halaman.
+> **Note:** Data diambil langsung dari database MySQL `nexora` via MenuSeeder. Halaman yang sudah ada tercatat ✅ berdasarkan file `page.tsx` yang ditemukan di frontend.
+>
+> **Changes:** General (S07) diubah menjadi Company Profile dengan child Branch, Currency, Fiscal Year. Audit (S08) dipindahkan dari Master Data ke Settings. Ditambahkan Approval Matrix, Approval Workflow, Approval History ke Settings > User & Security.

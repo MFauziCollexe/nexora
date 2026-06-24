@@ -105,11 +105,15 @@ class PermissionSeeder extends Seeder
             ['code' => 'M01.S04.C01', 'name' => 'Employee', 'type' => 'menu'],
             ['code' => 'M01.S04.C02', 'name' => 'Department', 'type' => 'menu'],
             ['code' => 'M01.S04.C03', 'name' => 'Position', 'type' => 'menu'],
-            // General
-            ['code' => 'M01.S00.C01', 'name' => 'City', 'type' => 'menu'],
-            ['code' => 'M01.S00.C02', 'name' => 'Province', 'type' => 'menu'],
-            ['code' => 'M01.S00.C03', 'name' => 'Country', 'type' => 'menu'],
-            ['code' => 'M01.S00.C04', 'name' => 'Currency', 'type' => 'menu'],
+            // Company Profile
+            ['code' => 'M01.S07.C01', 'name' => 'Branch', 'type' => 'menu'],
+            ['code' => 'M01.S07.C02', 'name' => 'Currency', 'type' => 'menu'],
+            ['code' => 'M01.S07.C03', 'name' => 'Fiscal Year', 'type' => 'menu'],
+            // Audit
+            ['code' => 'M12.S08', 'name' => 'Audit', 'type' => 'menu'],
+            ['code' => 'M12.S08.C01', 'name' => 'Activity Log', 'type' => 'menu'],
+            ['code' => 'M12.S08.C02', 'name' => 'Audit Trail', 'type' => 'menu'],
+            ['code' => 'M12.S08.C03', 'name' => 'Login History', 'type' => 'menu'],
             // Finance Master Data
             ['code' => 'M01.S05.C01', 'name' => 'COA', 'type' => 'menu'],
             ['code' => 'M01.S05.C02', 'name' => 'Tax', 'type' => 'menu'],
@@ -164,13 +168,15 @@ class PermissionSeeder extends Seeder
             ['code' => 'M06.S02.C03', 'name' => 'Bank Transfer', 'type' => 'menu'],
             ['code' => 'M06.S02.C04', 'name' => 'Bank Reconciliation', 'type' => 'menu'],
             // Accounts Receivable
-            ['code' => 'M06.S03.C01', 'name' => 'Customer Invoice', 'type' => 'menu'],
-            ['code' => 'M06.S03.C02', 'name' => 'Customer Payment', 'type' => 'menu'],
-            ['code' => 'M06.S03.C03', 'name' => 'Outstanding Receivable', 'type' => 'menu'],
+            ['code' => 'M06.S03.C01', 'name' => 'Incoming Payment', 'type' => 'menu'],
+            ['code' => 'M06.S03.C02', 'name' => 'Payment Allocation', 'type' => 'menu'],
+            ['code' => 'M06.S03.C03', 'name' => 'Payment History', 'type' => 'menu'],
+            ['code' => 'M06.S03.C04', 'name' => 'Outstanding Receivable', 'type' => 'menu'],
             // Accounts Payable
-            ['code' => 'M06.S04.C01', 'name' => 'Supplier Invoice', 'type' => 'menu'],
-            ['code' => 'M06.S04.C02', 'name' => 'Supplier Payment', 'type' => 'menu'],
-            ['code' => 'M06.S04.C03', 'name' => 'Outstanding Payable', 'type' => 'menu'],
+            ['code' => 'M06.S04.C01', 'name' => 'Outgoing Payment', 'type' => 'menu'],
+            ['code' => 'M06.S04.C02', 'name' => 'Payment Allocation', 'type' => 'menu'],
+            ['code' => 'M06.S04.C03', 'name' => 'Payment History', 'type' => 'menu'],
+            ['code' => 'M06.S04.C04', 'name' => 'Outstanding Payable', 'type' => 'menu'],
             // Financial Reports
             ['code' => 'M06.S05.C01', 'name' => 'Trial Balance', 'type' => 'menu'],
             ['code' => 'M06.S05.C02', 'name' => 'Profit & Loss', 'type' => 'menu'],
@@ -278,6 +284,9 @@ class PermissionSeeder extends Seeder
             // ============ SETTINGS CHILD MENUS ============
             ['code' => 'M12.S01.C01', 'name' => 'Users', 'type' => 'menu'],
             ['code' => 'M12.S01.C02', 'name' => 'Roles', 'type' => 'menu'],
+            ['code' => 'M12.S01.C03', 'name' => 'Approval Matrix', 'type' => 'menu'],
+            ['code' => 'M12.S01.C04', 'name' => 'Approval Workflow', 'type' => 'menu'],
+            ['code' => 'M12.S01.C05', 'name' => 'Approval History', 'type' => 'menu'],
         ];
 
         foreach ($permissions as $permission) {

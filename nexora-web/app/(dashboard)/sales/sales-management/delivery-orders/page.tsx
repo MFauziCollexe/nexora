@@ -55,7 +55,13 @@ export default function DeliveryOrdersPage() {
 
   return (
     <div className="p-4 space-y-3">
-
+      <div className="flex items-center gap-1.5 text-[11px] text-slate-400 dark:text-slate-500">
+        <span>Sales</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3"><path d="M9 18l6-6-6-6"/></svg>
+        <span>Sales Management</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3"><path d="M9 18l6-6-6-6"/></svg>
+        <span className="text-slate-600 dark:text-slate-300 font-medium">Delivery Orders</span>
+      </div>
       <StatCards cards={statCards} />
 
       <div className="flex items-end gap-2 flex-wrap pb-1">
