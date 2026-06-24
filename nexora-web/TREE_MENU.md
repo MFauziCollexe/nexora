@@ -9,7 +9,7 @@ NEXORA ERP
 │   ├─ S01  🤝 Business Partner
 │   │   ├─ C01  Customer                      /master-data/customer               ✅
 │   │   ├─ C02  Supplier                      /master-data/supplier               ✅
-│   │   ├─ C03  Vendor                        /master-data/vendor                 ❌
+│   │   ├─ C03  Vendor                        /master-data/vendor                 ✅
 │   │   ├─ C04  Vendor Type                   /master-data/vendor-type            ✅
 │   │   ├─ C05  Supplier Type                 /master-data/supplier-type          ✅
 │   │   └─ C06  Supplier Category             /master-data/supplier-category      ✅
@@ -27,31 +27,63 @@ NEXORA ERP
 │   │   ├─ C03  Asset Location                /master-data/asset-location         ✅
 │   │   └─ C04  Asset Status                  /master-data/asset-status           ✅
 │   │
-│   ├─ S00  🌐 General
-│   │   ├─ C01  City                          /master-data/city                   ✅
-│   │   ├─ C02  Province                      /master-data/province               ✅
-│   │   ├─ C03  Country                       /master-data/country                ✅
-│   │   └─ C04  Currency                      /master-data/currency               ✅
-│   │
 │   ├─ S04  👥 Human Resource
 │   │   ├─ C01  Employee                      /master-data/employee               ✅
 │   │   ├─ C02  Department                    /master-data/department             ✅
 │   │   └─ C03  Position                      /master-data/position               ✅
 │   │
-│   └─ S05  💰 Finance
-│       ├─ C01  COA                           /master-data/coa                    ✅
-│       ├─ C02  Tax                           /master-data/tax                    ✅
-│       └─ C03  Payment Terms                 /master-data/payment-terms          ✅
+│   ├─ S05  💰 Finance
+│   │   ├─ C01  COA                           /master-data/coa                    ✅
+│   │   ├─ C02  Tax                           /master-data/tax                    ✅
+│   │   └─ C03  Payment Terms                 /master-data/payment-terms          ✅
+│   │
+│   └─ S07  🌐 General
+│       ├─ C01  City                          /master-data/city                   ✅
+│       ├─ C02  Province                      /master-data/province               ✅
+│       ├─ C03  Country                       /master-data/country                ✅
+│       └─ C04  Currency                      /master-data/currency               ✅
 │
 ├─ M02  🛒 Sales
-│   └─ S01  📋 Sales Management
-│       ├─ C01  Quotations                    /sales/sales-management/quotations  ✅
-│       ├─ C02  Sales Orders                  /sales/sales-management/sales-orders✅
-│       ├─ C03  Invoices                      /sales/sales-management/invoices    ✅
-│       ├─ C04  Delivery Notes                /sales/sales-management/delivery-notes✅
-│       └─ C05  Credit Notes                  /sales/sales-management/credit-notes✅
+│   ├─ S01  📋 Sales Management
+│   │   ├─ C01  Quotations                    /sales/sales-management/quotations  ✅
+│   │   ├─ C02  Sales Orders                  /sales/sales-management/sales-orders✅
+│   │   ├─ C07  Deliver Orders                /sales/sales-management/delivery-orders✅
+│   │   ├─ C03  Invoices                      /sales/sales-management/invoices    ✅
+│   │   ├─ C04  Delivery Notes                /sales/sales-management/delivery-notes✅
+│   │   ├─ C05  Sales Return                  /sales/sales-management/sales-returns✅
+│   │   └─ C06  Credit Note                   /sales/sales-management/credit-notes✅
+│   │
+│   ├─ S02  💳 Customer Payment               ❌ semua page
+│   │   ├─ C01  Incoming Payment              /sales/incoming-payment             ❌
+│   │   ├─ C02  Payment Allocation            /sales/payment-allocation           ❌
+│   │   └─ C03  Payment History               /sales/payment-history              ❌
+│   │
+│   └─ S03  📊 Reports                        ❌ semua page
+│       ├─ C01  Sales Report                  /sales/sales-report                 ❌
+│       ├─ C02  Customer Sales Report         /sales/customer-sales-report        ❌
+│       └─ C03  Outstanding Invoice           /sales/outstanding-invoice          ❌
 │
-├─ M03  🛍️ Purchase                           ❌ tidak ada page
+├─ M03  🛍️ Purchase
+│   ├─ S01  📋 Procurement
+│   │   ├─ C01  Purchase Request              /purchase/purchase-request          ❌
+│   │   ├─ C02  RFQ                            /purchase/rfq                      ❌
+│   │   ├─ C03  Purchase Order                /purchase/purchase-order            ❌
+│   │   └─ C04  Purchase Contract             /purchase/purchase-contract         ❌
+│   │
+│   ├─ S02  📦 Receiving
+│   │   ├─ C01  Goods Receipt                 /purchase/goods-receipt             ❌
+│   │   ├─ C02  Supplier Return               /purchase/supplier-return           ❌
+│   │   └─ C03  Receiving History             /purchase/receiving-history         ❌
+│   │
+│   ├─ S03  💰 Payables
+│   │   ├─ C01  Supplier Invoice              /purchase/supplier-invoice          ❌
+│   │   ├─ C02  Supplier Payment              /purchase/supplier-payment          ❌
+│   │   └─ C03  Outstanding Payable           /purchase/outstanding-payable       ❌
+│   │
+│   └─ S04  📊 Reports
+│       ├─ C01  Purchase Report               /purchase/purchase-report           ❌
+│       ├─ C02  Supplier Purchase Report      /purchase/supplier-purchase-report  ❌
+│       └─ C03  PO Report                     /purchase/po-report                 ❌
 │
 ├─ M04  📦 Inventory
 │   ├─ S01  🔄 Transactions
@@ -251,6 +283,6 @@ NEXORA ERP
 |-------|-------|---------|-----------|
 | Main Menu | 13 | 1 (Dashboard) | 12 (no standalone page) |
 | Sub Menu | 26 | — | — |
-| Child Menu | 107 | 27 | 80 |
+| Child Menu | 107 | 37 | 70 |
 
-> **Note:** Path di tree ini menggunakan href dari **MenuSeeder** (backend), bukan dari `data/menu.ts` (frontend), karena seeder yang dipakai oleh API. Path halaman yang sudah ada di `app/(dashboard)/` juga sudah tanpa prefix `/dashboard/`, sesuai route group.
+> **Note:** Data diambil langsung dari database MySQL `nexora` via MenuSeeder. Halaman yang sudah ada tercatat ✅ berdasarkan file `page.tsx` yang ditemukan di frontend. 70 child menu masih perlu dibuatkan halaman.
