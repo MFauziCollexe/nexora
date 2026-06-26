@@ -1,0 +1,214 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import { api } from "@/lib/apiClient";
+import { useRouter } from "next/navigation";
+
+type Customer = {
+  id: number;
+  name: string;
+};
+
+type InvoiceLine = {
+  id: number;
+  item_name: string;
+  quantity: number;
+  unit_price: number;
+};
+
+const customerOptions: Customer[] = [
+  { id: 1, name: "PT Maju Sejahtera" },
+  { id: 2, name: "CV Karya Mandiri" },
+  { id: 3, name: "UD Berkah Abadi" },
+];
+
+const today = new Date().toISOString().split("T")[0];
+
+const inputCls = "w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-[12px] text-slate-700 dark:text-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 transition";
+const labelCls = "text-[11px] font-medium text-slate-500 dark:text-slate-400";
+
+function formatRupiah(value: number) {
+  return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(value);
+}
+
+export default function InvoiceCreateForm({ onCancel }: { onCancel?: () => void }) {
+  const router = useRouter();
+  const [submitting, setSubmitting] = useState(false);
+  const [invDate, setInvDate] = useState(today);
+  const [dueDate, setDueDate] = useState(today);
+  const [soNo, setSoNo] = useState("");
+  const [paidAmount, setPaidAmount] = useState(0);
+  const [notes, setNotes] = useState("");
+  const [status, setStatus] = useState("Unpaid");
+
+  const [selectedCustomer, setSelectedCustomer] = useState(String(customerOptions[0].id));
+  const customer = useMemo(
+    () => customerOptions.find((c) => c.id === Number(selectedCustomer)) ?? customerOptions[0],
+    [selectedCustomer]
+  );
+
+  const [items, setItems] = useState<InvoiceLine[]>([
+    { id: 1, item_name: "Frozen Storage", quantity: 1, unit_price: 150000 },
+  ]);
+
+  const grandTotal = useMemo(() => items.reduce((s, i) => s + i.quantity * i.unit_price, 0), [items]);
+
+  function removeItem(id: number) {
+    setItems((prev) => prev.filter((i) => i.id !== id));
+  }
+
+  function addItem() {
+    const newId = Math.max(0, ...items.map((i) => i.id)) + 1;
+    setItems((prev) => [...prev, { id: newId, item_name: "New Item", quantity: 1, unit_price: 0 }]);
+  }
+
+  async function submitInvoice() {
+    setSubmitting(true);
+    try {
+      const body = {
+        invoice_no: "INV-" + new Date().getFullYear() + "-" + String(Date.now()).slice(-6),
+        date: invDate,
+        due_date: dueDate,
+        customer_id: customer.id,
+        customer_name: customer.name,
+        so_no: soNo || null,
+        total_amount: grandTotal,
+        paid_amount: paidAmount,
+        status,
+        notes: notes || null,
+        items: items.map((i) => ({
+          item_name: i.item_name,
+          quantity: i.quantity,
+          unit_price: i.unit_price,
+          subtotal: i.quantity * i.unit_price,
+        })),
+      };
+
+      await api.post("/api/v1/sales/invoices", body);
+      router.push("/sales/sales-management/invoices");
+    } catch (err) {
+      alert("Failed to save Invoice: " + (err instanceof Error ? err.message : "Unknown error"));
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="space-y-5 max-w-[1440px] mx-auto">
+      <div className="grid gap-4 lg:grid-cols-[1fr_1fr]">
+        <div className="rounded-sm border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-5">
+          <h3 className="text-[13px] font-semibold text-blue-600 dark:text-blue-400 mb-4">1. Invoice Information</h3>
+          <div className="grid gap-4">
+            <div className="grid gap-1.5">
+              <label className={labelCls}>Invoice No.</label>
+              <input type="text" readOnly value="Auto-generated" className={inputCls + " bg-slate-50 dark:bg-slate-800 text-slate-400"} />
+            </div>
+            <div className="grid gap-1.5">
+              <label className={labelCls}>Date <span className="text-rose-500">*</span></label>
+              <input type="date" value={invDate} onChange={(e) => setInvDate(e.target.value)} className={inputCls} />
+            </div>
+            <div className="grid gap-1.5">
+              <label className={labelCls}>Due Date <span className="text-rose-500">*</span></label>
+              <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} className={inputCls} />
+            </div>
+            <div className="grid gap-1.5">
+              <label className={labelCls}>SO No.</label>
+              <input type="text" value={soNo} onChange={(e) => setSoNo(e.target.value)} placeholder="e.g. SO-2026-000001" className={inputCls} />
+            </div>
+            <div className="grid gap-1.5">
+              <label className={labelCls}>Status <span className="text-rose-500">*</span></label>
+              <select value={status} onChange={(e) => setStatus(e.target.value)} className={inputCls}>
+                {["Unpaid", "Partial", "Paid", "Overdue"].map((s) => <option key={s}>{s}</option>)}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-sm border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-5">
+          <h3 className="text-[13px] font-semibold text-blue-600 dark:text-blue-400 mb-4">2. Customer Information</h3>
+          <div className="grid gap-4">
+            <div className="grid gap-1.5">
+              <label className={labelCls}>Customer <span className="text-rose-500">*</span></label>
+              <select value={selectedCustomer} onChange={(e) => setSelectedCustomer(e.target.value)} className={inputCls}>
+                {customerOptions.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-sm border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-5">
+        <h3 className="text-[13px] font-semibold text-blue-600 dark:text-blue-400 mb-4">3. Item Details</h3>
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          <button onClick={addItem} className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-[12px] font-semibold px-3 py-2 transition-colors">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-3.5 h-3.5"><path d="M12 5v14M5 12h14"/></svg>
+            Add Item
+          </button>
+        </div>
+        <div className="overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-700">
+          <table className="w-full min-w-[800px] border-separate border-spacing-0 text-[12px]">
+            <thead>
+              <tr className="bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400">
+                {["No.", "Item Name", "Qty", "Unit Price", "Amount", "Action"].map((h) => (
+                  <th key={h} className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-wide whitespace-nowrap first:rounded-tl-xl last:rounded-tr-xl">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((item, index) => {
+                const amount = item.quantity * item.unit_price;
+                return (
+                  <tr key={item.id} className="border-t border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                    <td className="px-3 py-3 whitespace-nowrap text-slate-500 font-medium">{index + 1}</td>
+                    <td className="px-3 py-3 whitespace-nowrap text-slate-700 dark:text-slate-300 font-medium">{item.item_name}</td>
+                    <td className="px-3 py-3 whitespace-nowrap text-slate-700 dark:text-slate-300">{item.quantity.toLocaleString("id-ID")}</td>
+                    <td className="px-3 py-3 whitespace-nowrap text-slate-700 dark:text-slate-300">{item.unit_price.toLocaleString("id-ID")}</td>
+                    <td className="px-3 py-3 whitespace-nowrap text-slate-700 dark:text-slate-300 font-semibold">{amount.toLocaleString("id-ID")}</td>
+                    <td className="px-3 py-3 whitespace-nowrap">
+                      <button title="Remove" onClick={() => removeItem(item.id)} className="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-rose-300 hover:text-rose-500 text-slate-400 flex items-center justify-center transition-colors">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+              {items.length === 0 && (
+                <tr><td colSpan={6} className="py-10 text-center text-[12px] text-slate-400 dark:text-slate-600">No items added yet.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-2 text-[11px] text-slate-400 dark:text-slate-500">Showing {items.length} item{items.length !== 1 ? "s" : ""}</p>
+      </div>
+
+      <div className="rounded-sm border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-5">
+        <h3 className="text-[13px] font-semibold text-blue-600 dark:text-blue-400 mb-4">4. Payment & Notes</h3>
+        <div className="grid gap-4 max-w-md">
+          <div className="grid gap-1.5">
+            <label className={labelCls}>Paid Amount</label>
+            <input type="number" value={paidAmount} onChange={(e) => setPaidAmount(Number(e.target.value))} min={0} className={inputCls} />
+          </div>
+          <div className="grid gap-1.5">
+            <label className={labelCls}>Notes</label>
+            <textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Optional notes" rows={3} className={inputCls + " resize-none"} />
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 p-4 max-w-xs ml-auto">
+        <h4 className="text-[13px] font-semibold text-slate-700 dark:text-slate-200 mb-2">Invoice Summary</h4>
+        <div className="flex justify-between text-[13px]">
+          <span className="text-slate-500">Grand Total</span>
+          <span className="text-blue-600 font-bold">{formatRupiah(grandTotal)}</span>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3 justify-end pt-1 pb-4">
+        <button onClick={onCancel} disabled={submitting} className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 text-[12px] font-medium px-5 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">Cancel</button>
+        <button onClick={submitInvoice} disabled={submitting} className="inline-flex items-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-[12px] font-semibold px-5 py-2.5 transition-colors shadow-sm">
+          {submitting ? "Saving..." : "Save as Draft"}
+        </button>
+      </div>
+    </div>
+  );
+}

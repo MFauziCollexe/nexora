@@ -20,7 +20,7 @@ class PermissionSeeder extends Seeder
         'checklist' => ['checklist', 'checklist-entry', 'checklist-template'],
         'ticket' => ['ticket', 'assignment', 'escalation', 'resolution'],
         'finance' => ['coa-item', 'tax', 'payment-term', 'cost-center', 'profit-center', 'bank-account', 'exchange-rate'],
-        'inventory' => ['item', 'category', 'brand', 'uom', 'warehouse', 'bin-location', 'item-group', 'item-type'],
+        'inventory' => ['item', 'category', 'brand', 'uom', 'warehouse', 'bin-location', 'item-group', 'item-type', 'serial-number'],
         'purchase' => ['purchase-requisition', 'purchase-order', 'goods-receipt', 'vendor', 'vendor-evaluation'],
     ];
 
@@ -80,7 +80,7 @@ class PermissionSeeder extends Seeder
             ['code' => 'M07.S03', 'name' => 'Payroll', 'type' => 'menu'],
             ['code' => 'M07.S04', 'name' => 'Reports', 'type' => 'menu'],
             ['code' => 'M08.S01', 'name' => 'Asset Operations', 'type' => 'menu'],
-            ['code' => 'M08.S02', 'name' => 'Asset Transactions', 'type' => 'menu'],
+
             ['code' => 'M08.S03', 'name' => 'Reports', 'type' => 'menu'],
             ['code' => 'M09.S01', 'name' => 'Project Management', 'type' => 'menu'],
             ['code' => 'M09.S02', 'name' => 'Budgeting', 'type' => 'menu'],
@@ -92,9 +92,6 @@ class PermissionSeeder extends Seeder
             ['code' => 'M10.S01', 'name' => 'Lead Management', 'type' => 'menu'],
             ['code' => 'M10.S02', 'name' => 'Customer Activities', 'type' => 'menu'],
             ['code' => 'M10.S03', 'name' => 'Reports', 'type' => 'menu'],
-            ['code' => 'M11.S01', 'name' => 'Operational Reports', 'type' => 'menu'],
-            ['code' => 'M11.S02', 'name' => 'Financial Reports', 'type' => 'menu'],
-            ['code' => 'M11.S03', 'name' => 'HR Reports', 'type' => 'menu'],
             ['code' => 'M11.S04', 'name' => 'Dashboard Analytics', 'type' => 'menu'],
             ['code' => 'M12.S01', 'name' => 'User & Security', 'type' => 'menu'],
             ['code' => 'M12.S08', 'name' => 'Audit', 'type' => 'menu'],
@@ -151,10 +148,9 @@ class PermissionSeeder extends Seeder
             ['code' => 'M04.S01.C03', 'name' => 'Stock Transfer', 'type' => 'menu'],
             ['code' => 'M04.S01.C04', 'name' => 'Stock Adjustment', 'type' => 'menu'],
             ['code' => 'M04.S01.C05', 'name' => 'Stock Opname', 'type' => 'menu'],
-            ['code' => 'M04.S02.C01', 'name' => 'Bin Location', 'type' => 'menu'],
-            ['code' => 'M04.S02.C02', 'name' => 'Put Away', 'type' => 'menu'],
-            ['code' => 'M04.S02.C03', 'name' => 'Picking', 'type' => 'menu'],
-            ['code' => 'M04.S02.C04', 'name' => 'Packing', 'type' => 'menu'],
+            ['code' => 'M04.S02.C01', 'name' => 'Put Away', 'type' => 'menu'],
+            ['code' => 'M04.S02.C02', 'name' => 'Picking', 'type' => 'menu'],
+            ['code' => 'M04.S02.C03', 'name' => 'Packing', 'type' => 'menu'],
             ['code' => 'M04.S03.C01', 'name' => 'Cold Room', 'type' => 'menu'],
             ['code' => 'M04.S03.C02', 'name' => 'Temperature Monitoring', 'type' => 'menu'],
             ['code' => 'M04.S03.C03', 'name' => 'Pallet Tracking', 'type' => 'menu'],
@@ -246,10 +242,8 @@ class PermissionSeeder extends Seeder
             ['code' => 'M08.S01.C02', 'name' => 'Asset Assignment', 'type' => 'menu'],
             ['code' => 'M08.S01.C03', 'name' => 'Asset Transfer', 'type' => 'menu'],
             ['code' => 'M08.S01.C04', 'name' => 'Asset Return', 'type' => 'menu'],
-            ['code' => 'M08.S02.C01', 'name' => 'Asset Depreciation', 'type' => 'menu'],
-            ['code' => 'M08.S02.C02', 'name' => 'Asset Revaluation', 'type' => 'menu'],
-            ['code' => 'M08.S02.C03', 'name' => 'Asset Disposal', 'type' => 'menu'],
-            ['code' => 'M08.S02.C04', 'name' => 'Asset Write Off', 'type' => 'menu'],
+            ['code' => 'M08.S01.C05', 'name' => 'Asset Write Off', 'type' => 'menu'],
+
             ['code' => 'M08.S03.C01', 'name' => 'Asset Reporting', 'type' => 'menu'],
             ['code' => 'M09.S01.C01', 'name' => 'Project Master', 'type' => 'menu'],
             ['code' => 'M09.S01.C02', 'name' => 'Project Task', 'type' => 'menu'],
@@ -283,17 +277,6 @@ class PermissionSeeder extends Seeder
             ['code' => 'M02.S01.C03', 'name' => 'Invoices', 'type' => 'menu'],
             ['code' => 'M02.S01.C04', 'name' => 'Delivery Notes', 'type' => 'menu'],
             ['code' => 'M02.S01.C05', 'name' => 'Credit Notes', 'type' => 'menu'],
-            ['code' => 'M11.S01.C01', 'name' => 'Sales Report', 'type' => 'menu'],
-            ['code' => 'M11.S01.C02', 'name' => 'Purchase Report', 'type' => 'menu'],
-            ['code' => 'M11.S01.C03', 'name' => 'Inventory Report', 'type' => 'menu'],
-            ['code' => 'M11.S01.C04', 'name' => 'Asset Report', 'type' => 'menu'],
-            ['code' => 'M11.S02.C01', 'name' => 'Profit & Loss', 'type' => 'menu'],
-            ['code' => 'M11.S02.C02', 'name' => 'Balance Sheet', 'type' => 'menu'],
-            ['code' => 'M11.S02.C03', 'name' => 'Cash Flow', 'type' => 'menu'],
-            ['code' => 'M11.S02.C04', 'name' => 'Trial Balance', 'type' => 'menu'],
-            ['code' => 'M11.S03.C01', 'name' => 'Attendance Report', 'type' => 'menu'],
-            ['code' => 'M11.S03.C02', 'name' => 'Leave Report', 'type' => 'menu'],
-            ['code' => 'M11.S03.C03', 'name' => 'Payroll Report', 'type' => 'menu'],
             ['code' => 'M11.S04.C01', 'name' => 'KPI Dashboard', 'type' => 'menu'],
             ['code' => 'M11.S04.C02', 'name' => 'Executive Dashboard', 'type' => 'menu'],
             ['code' => 'M11.S04.C03', 'name' => 'Operational Dashboard', 'type' => 'menu'],
@@ -413,18 +396,17 @@ class PermissionSeeder extends Seeder
     private function seedSuperAdminRole(): void
     {
         DB::table('roles')->updateOrInsert(
-            ['slug' => 'super-admin'],
+            ['code' => 'super-admin'],
             [
                 'name' => 'Super Admin',
-                'slug' => 'super-admin',
+                'code' => 'super-admin',
                 'description' => 'Full access to every menu and action.',
-                'guard_name' => 'web',
                 'updated_at' => now(),
                 'created_at' => now(),
             ]
         );
 
-        $roleId = DB::table('roles')->where('slug', 'super-admin')->value('id');
+        $roleId = DB::table('roles')->where('code', 'super-admin')->value('id');
         $permissionIds = DB::table('permissions')->pluck('id');
 
         foreach ($permissionIds as $permissionId) {

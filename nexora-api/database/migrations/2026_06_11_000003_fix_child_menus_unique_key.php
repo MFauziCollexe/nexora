@@ -8,27 +8,14 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('submenus', function (Blueprint $table) {
-            $table->dropUnique('submenus_code_unique');
-            $table->unique(['main_menu_id', 'code']);
-        });
-
-        Schema::table('child_menus', function (Blueprint $table) {
-            $table->dropUnique('child_menus_code_unique');
-            $table->unique(['submenu_id', 'code']);
-        });
+        // Composite unique keys [main_menu_id, code] and [submenu_id, code]
+        // already exist from 2026_06_11_000001_create_menus_table.
+        // This migration previously tried to drop non-existent single-column
+        // unique keys — those were never created, so this is now a no-op.
     }
 
     public function down(): void
     {
-        Schema::table('submenus', function (Blueprint $table) {
-            $table->dropUnique(['main_menu_id', 'code']);
-            $table->unique('code');
-        });
-
-        Schema::table('child_menus', function (Blueprint $table) {
-            $table->dropUnique(['submenu_id', 'code']);
-            $table->unique('code');
-        });
+        // No-op
     }
 };

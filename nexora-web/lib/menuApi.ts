@@ -57,6 +57,7 @@ export async function fetchUserMenus(): Promise<MainMenuType[]> {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      Accept: "application/json",
       Authorization: `Bearer ${token}`,
     },
   });

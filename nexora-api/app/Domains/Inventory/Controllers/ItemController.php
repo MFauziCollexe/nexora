@@ -19,7 +19,8 @@ class ItemController extends ApiController
     public function index(Request $request): JsonResponse
     {
         $filters = $request->only(['search', 'is_active']);
-        $data = $this->service->paginate($request->input('per_page', 15), $filters);
+        $data = $this->service->paginate($request->input('per_page', 100), $filters);
+        $data->load(['type', 'uom', 'category', 'brand']);
         return $this->success(ItemResource::collection($data), 'List retrieved successfully', 200, [
             'pagination' => [
                 'total' => $data->total(),
@@ -33,6 +34,7 @@ class ItemController extends ApiController
     public function show(int $id): JsonResponse
     {
         $model = $this->service->findOrFail($id);
+        $model->load(['type', 'uom', 'category', 'brand']);
         return $this->success(new ItemResource($model), 'Detail retrieved successfully');
     }
 

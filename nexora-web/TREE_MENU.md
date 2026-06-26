@@ -62,13 +62,13 @@ NEXORA ERP
 │   │   └─ C06  Credit Note                   /sales/sales-management/credit-notes✅
 │   │
 │   └─ S03  📊 Reports                        ❌ semua page
-│       ├─ C01  Sales Report                  /sales/sales-report                 ❌
-│       ├─ C02  Customer Sales Report         /sales/customer-sales-report        ❌
-│       └─ C03  Outstanding Invoice           /sales/outstanding-invoice          ❌
+│       ├─ C01  Sales Report                  /sales/reports/sales-report                 ❌
+│       ├─ C02  Customer Sales Report         /sales/reports/customer-sales-report        ❌
+│       └─ C03  Outstanding Invoice           /sales/reports/outstanding-invoice          ❌
 │
 ├─ M03  🛍️ Purchase
 │   ├─ S01  📋 Procurement
-│   │   ├─ C01  Purchase Request              /purchase/purchase-request          ❌
+│   │   ├─ C01  Purchase Request              /purchase/procurement/purchase-request          ❌
 │   │   ├─ C02  RFQ                            /purchase/rfq                      ❌
 │   │   ├─ C03  Purchase Order                /purchase/purchase-order            ❌
 │   │   └─ C04  Purchase Contract             /purchase/purchase-contract         ❌

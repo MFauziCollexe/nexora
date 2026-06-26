@@ -21,24 +21,42 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
         ]);
 
-        $user = User::firstOrCreate(
-            ['email' => 'test@example.com'],
-            ['name' => 'Test User', 'password' => 'password']
-        );
+        $users = [
+            ['email' => 'test@example.com', 'name' => 'Test User', 'password' => bcrypt('password')],
+            ['email' => 'fauzi.mukhammad@gmail.com', 'name' => 'Fauzi Mukhammad', 'password' => bcrypt('Mukhammadfauzi23')],
+        ];
 
-        $roleId = DB::table('roles')->where('slug', 'super-admin')->value('id');
+        $roleId = DB::table('roles')->where('code', 'super-admin')->value('id');
 
-        if ($roleId) {
-            DB::table('user_role')->updateOrInsert(
-                [
-                    'user_id' => $user->id,
-                    'role_id' => $roleId,
-                ],
-                [
-                    'updated_at' => now(),
-                    'created_at' => now(),
-                ]
+        foreach ($users as $userData) {
+            $user = User::updateOrCreate(
+                ['email' => $userData['email']],
+                ['name' => $userData['name'], 'password' => $userData['password']]
             );
+
+            if ($roleId) {
+                DB::table('user_role')->updateOrInsert(
+                    [
+                        'user_id' => $user->id,
+                        'role_id' => $roleId,
+                    ],
+                    [
+                        'updated_at' => now(),
+                        'created_at' => now(),
+                    ]
+                );
+            }
         }
+
+        $this->call([
+            PurchaseRequestSeeder::class,
+            SalesSeeder::class,
+            ItemSeeder::class,
+            SalesOrderSeeder::class,
+            DeliveryOrderSeeder::class,
+            DeliveryNoteSeeder::class,
+            SalesReturnSeeder::class,
+            CreditNoteSeeder::class,
+        ]);
     }
 }

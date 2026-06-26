@@ -4,7 +4,7 @@ import { useState } from "react";
 import StatCards from "@/components/masterdata/StatCards";
 import DrawerForm from "@/components/masterdata/DrawerForm";
 import Pagination from "@/components/masterdata/Pagination";
-import { statCards, items as itemData, categories, brands, uoms, warehouses } from "@/data/masterdata/itemMaster";
+import { statCards, items as itemData, categories, brands, itemGroups, itemTypes, uoms } from "@/data/masterdata/itemMaster";
 
 export default function ItemMasterPage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -12,24 +12,22 @@ export default function ItemMasterPage() {
   const [filterCategory, setFilterCategory] = useState("All Category");
   const [filterBrand, setFilterBrand] = useState("All Brand");
   const [filterUom, setFilterUom] = useState("All UOM");
-  const [filterWarehouse, setFilterWarehouse] = useState("All Warehouse");
   const [filterStatus, setFilterStatus] = useState("All Status");
 
   const filtered = itemData.filter((item) => {
     const query = search.toLowerCase();
     const matchSearch =
       item.code.toLowerCase().includes(query) ||
+      (item.barcode && item.barcode.toLowerCase().includes(query)) ||
       item.name.toLowerCase().includes(query) ||
+      item.description.toLowerCase().includes(query) ||
       item.category.toLowerCase().includes(query) ||
-      item.brand.toLowerCase().includes(query) ||
-      item.uom.toLowerCase().includes(query) ||
-      item.warehouse.toLowerCase().includes(query);
+      item.brand.toLowerCase().includes(query);
     const matchCategory = filterCategory === "All Category" || item.category === filterCategory;
     const matchBrand = filterBrand === "All Brand" || item.brand === filterBrand;
     const matchUom = filterUom === "All UOM" || item.uom === filterUom;
-    const matchWarehouse = filterWarehouse === "All Warehouse" || item.warehouse === filterWarehouse;
     const matchStatus = filterStatus === "All Status" || item.status === filterStatus;
-    return matchSearch && matchCategory && matchBrand && matchUom && matchWarehouse && matchStatus;
+    return matchSearch && matchCategory && matchBrand && matchUom && matchStatus;
   });
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -77,22 +75,15 @@ export default function ItemMasterPage() {
         </div>
 
         <div className="flex flex-col gap-0.5">
-          <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Warehouse</label>
-          <select value={filterWarehouse} onChange={(e) => { setFilterWarehouse(e.target.value); setCurrentPage(1); }} className={inputClass}>
-            {warehouses.map((warehouse) => <option key={warehouse}>{warehouse}</option>)}
-          </select>
-        </div>
-
-        <div className="flex flex-col gap-0.5">
           <label className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Status</label>
           <select value={filterStatus} onChange={(e) => { setFilterStatus(e.target.value); setCurrentPage(1); }} className={inputClass}>
-            {['All Status', 'Active', 'Inactive'].map((status) => <option key={status}>{status}</option>)}
+            {["All Status", "Active", "Inactive"].map((status) => <option key={status}>{status}</option>)}
           </select>
         </div>
 
         <div className="flex flex-col gap-0.5">
           <label className="text-[10px] text-transparent">x</label>
-          <button onClick={() => { setFilterCategory("All Category"); setFilterBrand("All Brand"); setFilterUom("All UOM"); setFilterWarehouse("All Warehouse"); setFilterStatus("All Status"); setSearch(""); setCurrentPage(1); setCurrentPage(1); }} className={btnOutline}>
+          <button onClick={() => { setFilterCategory("All Category"); setFilterBrand("All Brand"); setFilterUom("All UOM"); setFilterStatus("All Status"); setSearch(""); setCurrentPage(1); }} className={btnOutline}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5">
               <polyline points="1 4 1 10 7 10" />
               <path d="M3.51 15a9 9 0 102.13-9.36L1 10" />
@@ -141,11 +132,11 @@ export default function ItemMasterPage() {
           <table className="w-full min-w-250">
             <thead>
               <tr className="border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
-                {['Item Code', 'Item Name', 'Category', 'UOM', 'Warehouse', 'Current Stock', 'Min Stock', 'Last Purchase Price', 'Avg. Cost', 'Status', 'Actions'].map((h) => (
+                {["Item Code", "Barcode", "Item Name", "Category", "Brand", "UOM", "Unit Price", "Cost Price", "Min Stock", "Status", "Actions"].map((h) => (
                   <th key={h} className="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide whitespace-nowrap">
                     <div className="flex items-center gap-1">
                       {h}
-                      {h !== 'Actions' && (
+                      {h !== "Actions" && (
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3 text-slate-300 dark:text-slate-600 shrink-0">
                           <path d="M7 15l5 5 5-5M7 9l5-5 5 5" />
                         </svg>
@@ -158,38 +149,35 @@ export default function ItemMasterPage() {
             <tbody>
               {paginatedData.map((item) => (
                 <tr key={item.id} className="border-b border-slate-50 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                  <td className="px-4 py-3 whitespace-nowrap text-[12px] text-slate-600 dark:text-slate-300">{item.code}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-[12px] font-medium text-slate-700 dark:text-slate-300">{item.code}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-[12px] text-slate-500 dark:text-slate-400">{item.barcode ?? "-"}</td>
                   <td className="px-4 py-3 whitespace-nowrap text-[12px] text-slate-800 dark:text-slate-200">
                     <div className="flex items-center gap-2.5">
                       <div className="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-200 text-[10px] font-semibold">{item.image}</div>
-                      <span>{item.name}</span>
+                      <div>
+                        <span className="block">{item.name}</span>
+                        <span className="block text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">{item.description}</span>
+                      </div>
                     </div>
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-[12px] text-slate-500 dark:text-slate-400">{item.category}</td>
-                  <td className="px-4 py-3 whitespace-nowrap text-[12px] text-slate-500 dark:text-slate-400">{item.uom}</td>
-                  <td className="px-4 py-3 whitespace-nowrap text-[12px] text-slate-500 dark:text-slate-400">{item.warehouse}</td>
-                  <td className="px-4 py-3 whitespace-nowrap text-[12px] text-slate-600 dark:text-slate-300">{item.currentStock.toLocaleString("id-ID")}</td>
-                  <td className="px-4 py-3 whitespace-nowrap text-[12px] text-slate-500 dark:text-slate-400">{item.minStock.toLocaleString("id-ID")}</td>
-                  <td className="px-4 py-3 whitespace-nowrap text-[12px] text-slate-500 dark:text-slate-400">{item.lastPurchasePrice}</td>
-                  <td className="px-4 py-3 whitespace-nowrap text-[12px] text-slate-500 dark:text-slate-400">{item.avgCost}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-[12px] text-slate-600 dark:text-slate-400">{item.category}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-[12px] text-slate-600 dark:text-slate-400">{item.brand}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-[12px] text-slate-600 dark:text-slate-400">{item.uom}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-[12px] text-slate-700 dark:text-slate-300 font-medium">Rp {item.unitPrice.toLocaleString("id-ID")}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-[12px] text-slate-600 dark:text-slate-400">Rp {item.costPrice.toLocaleString("id-ID")}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-[12px] text-slate-600 dark:text-slate-400">{item.minStock.toLocaleString("id-ID")}</td>
                   <td className="px-4 py-3 whitespace-nowrap">
                     <span className={`${item.statusColor} text-[11px] font-semibold px-2 py-0.5 rounded-full`}>{item.status}</span>
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-1.5">
-                      <button className="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-blue-50 dark:hover:bg-blue-950 hover:border-blue-200 flex items-center justify-center text-slate-400 hover:text-blue-500 transition-colors">
+                      <button className="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-blue-50 dark:hover:bg-blue-950 hover:border-blue-200 flex items-center justify-center text-slate-400 hover:text-blue-500 transition-colors" title="Edit">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5">
                           <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
                           <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
                         </svg>
                       </button>
-                      <button className="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-yellow-50 dark:hover:bg-yellow-950 hover:border-yellow-200 flex items-center justify-center text-slate-400 hover:text-yellow-500 transition-colors">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5">
-                          <rect x="3" y="11" width="18" height="11" rx="2" />
-                          <path d="M7 11V7a5 5 0 0110 0v4" />
-                        </svg>
-                      </button>
-                      <button className="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600 flex items-center justify-center text-slate-400 transition-colors">
+                      <button className="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600 flex items-center justify-center text-slate-400 transition-colors" title="More">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5">
                           <circle cx="12" cy="5" r="1" fill="currentColor" />
                           <circle cx="12" cy="12" r="1" fill="currentColor" />
@@ -202,10 +190,9 @@ export default function ItemMasterPage() {
               ))}
             </tbody>
           </table>
-        <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} filteredLength={filtered.length} itemsPerPage={itemsPerPage} />
-
-        
         </div>
+
+        <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} filteredLength={filtered.length} itemsPerPage={itemsPerPage} />
 
         {filtered.length === 0 && (
           <div className="py-12 text-center">
@@ -220,19 +207,23 @@ export default function ItemMasterPage() {
 
       <DrawerForm open={drawerOpen} title="Add Item" onClose={() => setDrawerOpen(false)}>
         <div>
-          <h3 className="text-[12px] font-bold text-slate-700 dark:text-slate-300 mb-3">Item Details</h3>
+          <h3 className="text-[12px] font-bold text-slate-700 dark:text-slate-300 mb-3">Item Information</h3>
           <div className="space-y-3">
             {[
               { label: "Item Code", type: "text", placeholder: "Enter item code", required: true },
+              { label: "Barcode", type: "text", placeholder: "Enter barcode (optional)", required: false },
               { label: "Item Name", type: "text", placeholder: "Enter item name", required: true },
+              { label: "Description", type: "textarea", placeholder: "Enter description", required: false },
               { label: "Category", type: "select", placeholder: "Select category", required: true, options: categories.filter((c) => c !== "All Category") },
               { label: "Brand", type: "select", placeholder: "Select brand", required: false, options: brands.filter((b) => b !== "All Brand") },
+              { label: "Item Group", type: "select", placeholder: "Select item group", required: false, options: itemGroups.filter((g) => g !== "All Group") },
+              { label: "Item Type", type: "select", placeholder: "Select item type", required: false, options: itemTypes.filter((t) => t !== "All Type") },
               { label: "UOM", type: "select", placeholder: "Select UOM", required: true, options: uoms.filter((u) => u !== "All UOM") },
-              { label: "Warehouse", type: "select", placeholder: "Select warehouse", required: true, options: warehouses.filter((w) => w !== "All Warehouse") },
-              { label: "Current Stock", type: "text", placeholder: "Enter current stock", required: true },
+              { label: "Unit Price", type: "text", placeholder: "Enter unit price", required: true },
+              { label: "Cost Price", type: "text", placeholder: "Enter cost price", required: true },
               { label: "Min Stock", type: "text", placeholder: "Enter minimum stock", required: true },
-              { label: "Last Purchase Price", type: "text", placeholder: "Enter last purchase price", required: true },
-              { label: "Avg. Cost", type: "text", placeholder: "Enter average cost", required: true },
+              { label: "Max Stock", type: "text", placeholder: "Enter maximum stock", required: false },
+              { label: "Reorder Point", type: "text", placeholder: "Enter reorder point", required: false },
               { label: "Status", type: "select", placeholder: "Select status", required: true, options: ["Select status", "Active", "Inactive"] },
             ].map((field) => (
               <div key={field.label}>
@@ -245,6 +236,12 @@ export default function ItemMasterPage() {
                       <option key={`${field.label}-${index}`} value={option}>{option}</option>
                     ))}
                   </select>
+                ) : field.type === "textarea" ? (
+                  <textarea
+                    placeholder={field.placeholder}
+                    rows={3}
+                    className="w-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg px-3 py-2 text-[12px] text-slate-700 dark:text-slate-300 placeholder:text-slate-300 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900 resize-none"
+                  />
                 ) : (
                   <input
                     type={field.type}

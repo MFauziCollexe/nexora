@@ -16,7 +16,7 @@ class StoreBusinessPartnerGroupRequest extends FormRequest
         return [
             'code' => 'required|string|max:50|unique:business_partner_groups,code',
             'name' => 'required|string|max:255',
-            'is_active' => 'boolean',
+            'status' => 'sometimes|string|in:active,inactive',
         ];
     }
 }

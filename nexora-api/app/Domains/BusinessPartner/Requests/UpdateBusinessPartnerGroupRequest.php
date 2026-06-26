@@ -16,7 +16,7 @@ class UpdateBusinessPartnerGroupRequest extends FormRequest
         return [
             'code' => 'sometimes|string|max:50|unique:business_partner_groups,code,' . $this->route('id'),
             'name' => 'sometimes|string|max:255',
-            'is_active' => 'boolean',
+            'status' => 'sometimes|string|in:active,inactive',
         ];
     }
 }

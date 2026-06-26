@@ -30,6 +30,7 @@ export const MENU_CODES = {
   CUSTOMER: "C01",
   SUPPLIER: "C02",
   VENDOR: "C03",
+  BUSINESS_PARTNER_GROUP: "C07",
 
   // Master Data > Inventory (S02)
   INVENTORY_SUBMENU: "S02",
@@ -38,6 +39,12 @@ export const MENU_CODES = {
   BRAND: "C03",
   UOM: "C04",
   WAREHOUSE: "C05",
+  BIN_LOCATION: "C06",
+  ITEM_GROUP: "C07",
+  ITEM_TYPE: "C08",
+  BATCH_LOT_MASTER: "C09",
+  SERIAL_NUMBER_MASTER: "C10",
+  REORDER_POINT: "C11",
 
   // Master Data > Asset Management (S03)
   ASSET_MANAGEMENT: "S03",

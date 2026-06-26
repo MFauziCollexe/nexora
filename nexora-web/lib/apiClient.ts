@@ -47,7 +47,10 @@ export async function apiClient<T = unknown>(
     headers: requestHeaders,
   };
 
-  if (body) {
+  if (body instanceof FormData) {
+    delete requestHeaders["Content-Type"];
+    fetchOptions.body = body;
+  } else if (body) {
     fetchOptions.body = JSON.stringify(body);
   }
 

@@ -24,6 +24,22 @@ export const brands = [
   "Philips",
 ];
 
+export const itemGroups = [
+  "All Group",
+  "Raw Material",
+  "Finished Good",
+  "Sparepart",
+  "Consumable",
+  "Asset",
+];
+
+export const itemTypes = [
+  "All Type",
+  "Inventory",
+  "Service",
+  "Non-Inventory",
+];
+
 export const uoms = [
   "All UOM",
   "PCS (Pieces)",
@@ -34,23 +50,15 @@ export const uoms = [
   "Meter",
 ];
 
-export const warehouses = [
-  "All Warehouse",
-  "Gudang Cold Storage A",
-  "Gudang Sparepart",
-  "Gudang Elektrikal",
-  "Gudang APD",
-];
-
 export const items = [
-  { id: 1, image: "AC", code: "ITM-0001", name: "Freon R404A", category: "Refrigeration Material", brand: "Panasonic", uom: "KG", warehouse: "Gudang Cold Storage A", currentStock: 50, minStock: 10, lastPurchasePrice: "Rp 150.000", avgCost: "Rp 145.000", status: "Active", statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400" },
-  { id: 2, image: "OL", code: "ITM-0002", name: "Oli Compressor", category: "Lubricant", brand: "-", uom: "Liter", warehouse: "Gudang Sparepart", currentStock: 25, minStock: 5, lastPurchasePrice: "Rp 45.000", avgCost: "Rp 43.000", status: "Active", statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400" },
-  { id: 3, image: "BR", code: "ITM-0003", name: "Bearing 6205", category: "Sparepart", brand: "-", uom: "Pcs", warehouse: "Gudang Sparepart", currentStock: 120, minStock: 20, lastPurchasePrice: "Rp 28.000", avgCost: "Rp 26.500", status: "Active", statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400" },
-  { id: 4, image: "FK", code: "ITM-0004", name: "Kabel NYY 2.5 mm", category: "Elektrikal", brand: "-", uom: "Meter", warehouse: "Gudang Elektrikal", currentStock: 200, minStock: 50, lastPurchasePrice: "Rp 12.500", avgCost: "Rp 11.800", status: "Active", statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400" },
-  { id: 5, image: "LP", code: "ITM-0005", name: "Lampu LED 18W", category: "Elektrikal", brand: "Philips", uom: "Pcs", warehouse: "Gudang Elektrikal", currentStock: 75, minStock: 15, lastPurchasePrice: "Rp 25.000", avgCost: "Rp 23.500", status: "Active", statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400" },
-  { id: 6, image: "SF", code: "ITM-0006", name: "Stretch Film", category: "Packaging", brand: "-", uom: "Roll", warehouse: "Gudang Cold Storage A", currentStock: 150, minStock: 20, lastPurchasePrice: "Rp 85.000", avgCost: "Rp 80.000", status: "Active", statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400" },
-  { id: 7, image: "KB", code: "ITM-0007", name: "Kardus Box 60x40x40", category: "Packaging", brand: "-", uom: "Pcs", warehouse: "Gudang Cold Storage A", currentStock: 300, minStock: 50, lastPurchasePrice: "Rp 5.500", avgCost: "Rp 5.000", status: "Active", statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400" },
-  { id: 8, image: "SG", code: "ITM-0008", name: "Sarung Tangan Safety", category: "Safety & APD", brand: "-", uom: "Pcs", warehouse: "Gudang APD", currentStock: 60, minStock: 10, lastPurchasePrice: "Rp 18.000", avgCost: "Rp 17.000", status: "Active", statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400" },
+  { id: 1, image: "AC", code: "ITM-0001", barcode: "8991234567890", name: "Freon R404A", description: "Refrigerant gas untuk mesin pendingin", category: "AC & Pendingin", brand: "Panasonic", itemGroup: "Raw Material", itemType: "Inventory", uom: "KG", unitPrice: 150000, costPrice: 145000, minStock: 10, maxStock: 100, reorderPoint: 20, status: "Active", statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400" },
+  { id: 2, image: "OL", code: "ITM-0002", barcode: "8991234567891", name: "Oli Compressor", description: "Oli pelumas untuk kompresor", category: "AC & Pendingin", brand: "-", itemGroup: "Consumable", itemType: "Inventory", uom: "Liter", unitPrice: 45000, costPrice: 43000, minStock: 5, maxStock: 50, reorderPoint: 10, status: "Active", statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400" },
+  { id: 3, image: "BR", code: "ITM-0003", barcode: "8991234567892", name: "Bearing 6205", description: "Bearing untuk motor listrik", category: "Peralatan Listrik", brand: "-", itemGroup: "Sparepart", itemType: "Inventory", uom: "PCS", unitPrice: 28000, costPrice: 26500, minStock: 20, maxStock: 200, reorderPoint: 50, status: "Active", statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400" },
+  { id: 4, image: "FK", code: "ITM-0004", barcode: "8991234567893", name: "Kabel NYY 2.5 mm", description: "Kabel listrik NYY 2.5 mm per meter", category: "Peralatan Listrik", brand: "-", itemGroup: "Raw Material", itemType: "Inventory", uom: "Meter", unitPrice: 12500, costPrice: 11800, minStock: 50, maxStock: 500, reorderPoint: 100, status: "Active", statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400" },
+  { id: 5, image: "LP", code: "ITM-0005", barcode: "8991234567894", name: "Lampu LED 18W", description: "Lampu LED 18 watt Philips", category: "Peralatan Listrik", brand: "Philips", itemGroup: "Finished Good", itemType: "Inventory", uom: "PCS", unitPrice: 25000, costPrice: 23500, minStock: 15, maxStock: 150, reorderPoint: 30, status: "Active", statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400" },
+  { id: 6, image: "SF", code: "ITM-0006", barcode: "8991234567895", name: "Stretch Film", description: "Plastic stretch film untuk packaging", category: "Peralatan Gudang", brand: "-", itemGroup: "Consumable", itemType: "Inventory", uom: "ROLL", unitPrice: 85000, costPrice: 80000, minStock: 20, maxStock: 200, reorderPoint: 40, status: "Active", statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400" },
+  { id: 7, image: "KB", code: "ITM-0007", barcode: null, name: "Kardus Box 60x40x40", description: "Kardus box ukuran 60x40x40 cm", category: "Peralatan Gudang", brand: "-", itemGroup: "Finished Good", itemType: "Inventory", uom: "PCS", unitPrice: 5500, costPrice: 5000, minStock: 50, maxStock: 500, reorderPoint: 100, status: "Active", statusColor: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400" },
+  { id: 8, image: "SG", code: "ITM-0008", barcode: null, name: "Sarung Tangan Safety", description: "Sarung tangan safety untuk pekerja gudang", category: "Peralatan Gudang", brand: "-", itemGroup: "Consumable", itemType: "Inventory", uom: "PCS", unitPrice: 18000, costPrice: 17000, minStock: 10, maxStock: 100, reorderPoint: 25, status: "Inactive", statusColor: "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400" },
 ];
 
 export default items;

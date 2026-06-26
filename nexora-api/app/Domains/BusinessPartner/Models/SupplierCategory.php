@@ -2,23 +2,16 @@
 
 namespace App\Domains\BusinessPartner\Models;
 
-use Shared\Infrastructure\Persistence\Models\Traits\HasAudit;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class SupplierCategory extends Model
 {
-    use HasFactory, SoftDeletes, HasAudit;
+    use HasFactory;
 
     protected $fillable = [
-        'code', 'name', 'description', 'is_active', 'company_id', 'created_by', 'updated_by',
+        'code', 'name', 'status',
     ];
-
-    protected function casts(): array
-    {
-        return ['is_active' => 'boolean'];
-    }
 
     public function suppliers()
     {

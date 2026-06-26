@@ -16,7 +16,7 @@ class StoreSupplierTypeRequest extends FormRequest
         return [
             'code' => 'required|string|max:50|unique:supplier_types,code',
             'name' => 'required|string|max:255',
-            'is_active' => 'boolean',
+            'status' => 'sometimes|string|in:active,inactive',
         ];
     }
 }

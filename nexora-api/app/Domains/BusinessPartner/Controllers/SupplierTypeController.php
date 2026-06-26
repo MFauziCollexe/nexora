@@ -18,7 +18,7 @@ class SupplierTypeController extends ApiController
 
     public function index(Request $request): JsonResponse
     {
-        $filters = $request->only(['search', 'is_active']);
+        $filters = $request->only(['search', 'status']);
         $data = $this->service->paginate($request->input('per_page', 15), $filters);
         return $this->success(SupplierTypeResource::collection($data), 'List retrieved successfully', 200, [
             'pagination' => [
